@@ -14,8 +14,8 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../app/src/main/res;file://$MODULE_DIR$/../../../app/src/debug/res;file://$MODULE_DIR$/../../../../build/app/generated/res/google-services/debug;file://$MODULE_DIR$/../../../../build/app/generated/res/rs/debug;file://$MODULE_DIR$/../../../../build/app/generated/res/resValues/debug" />
-        <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../app/src/androidTest/res;file://$MODULE_DIR$/../../../app/src/androidTestDebug/res;file://$MODULE_DIR$/../../../../build/app/generated/res/rs/androidTest/debug;file://$MODULE_DIR$/../../../../build/app/generated/res/resValues/androidTest/debug" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="" />
+        <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
@@ -33,10 +33,10 @@
           <option name="jvmTarget" value="1.8" />
           <option name="languageVersion" value="1.5" />
           <option name="apiVersion" value="1.5" />
-          <option name="pluginOptions">
+          <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="pluginClasspaths">
+          <option name="pluginOptions">
             <array />
           </option>
           <option name="errors">
@@ -53,7 +53,7 @@
     <content url="file://$MODULE_DIR$/../../../app">
       <excludeFolder url="file://$MODULE_DIR$/../../../app/.gradle" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 33 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 33, extension level 3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

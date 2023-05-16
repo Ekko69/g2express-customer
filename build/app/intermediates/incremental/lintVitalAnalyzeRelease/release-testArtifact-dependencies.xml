@@ -1,0 +1,705 @@
+<dependencies>
+  <compile
+      roots="__local_aars__:C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\build\app\intermediates\flutter\release\libs.jar:unspecified@jar,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:app::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_messaging::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:cloud_firestore::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_dynamic_links::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_auth::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_core::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fl_location::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:geolocator_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttercontactpicker::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:path_provider_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:qr_code_scanner::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_facebook_auth::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:wakelock::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:just_audio::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:shared_preferences_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_inappwebview::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:map_launcher::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_keyboard_visibility::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttertoast::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:share::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:image_picker_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:video_player_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sign_in_with_apple::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_crashlytics::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_plugin_android_lifecycle::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:awesome_notifications::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sqflite::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:in_app_review::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:url_launcher_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_maps_flutter_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_sign_in_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_native_splash::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:webview_flutter_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info_plus::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:device_info_plus::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_api_headers::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:location::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:audio_session::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_image_compress::release,com.google.firebase:firebase-messaging-ktx:23.1.0@aar,com.google.firebase:firebase-auth-ktx:21.1.0@aar,com.google.firebase:firebase-common-ktx:20.2.0@aar,io.flutter:flutter_embedding_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,com.google.android.gms:play-services-location:20.0.0@aar,com.google.firebase:firebase-messaging:23.1.0@aar,com.google.firebase:firebase-auth:21.1.0@aar,com.google.firebase:firebase-datatransport:18.1.7@aar,com.google.firebase:firebase-installations:17.1.0@aar,com.google.firebase:firebase-auth-interop:20.0.0@aar,com.google.firebase:firebase-common:20.2.0@aar,com.google.android.gms:play-services-auth-api-phone:18.0.1@aar,com.google.android.gms:play-services-safetynet:17.0.0@aar,com.google.android.gms:play-services-base:18.0.1@aar,com.google.android.gms:play-services-cloud-messaging:17.0.1@aar,com.google.firebase:firebase-iid-interop:17.1.0@aar,com.google.firebase:firebase-installations-interop:17.1.0@aar,com.google.android.gms:play-services-tasks:18.0.1@aar,com.google.android.gms:play-services-stats:17.0.2@aar,com.google.firebase:firebase-measurement-connector:19.0.0@aar,com.google.android.gms:play-services-basement:18.1.0@aar,androidx.fragment:fragment:1.3.6@aar,androidx.activity:activity:1.5.1@aar,androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1@aar,androidx.window:window-java:1.0.0-beta04@aar,androidx.window:window:1.0.0-beta04@aar,org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4@jar,org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4@jar,org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20@jar,androidx.multidex:multidex:2.0.0@aar,com.google.guava:guava:31.1-android@jar,androidx.browser:browser:1.4.0@aar,io.flutter:armeabi_v7a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,io.flutter:arm64_v8a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,io.flutter:x86_64_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,androidx.viewpager:viewpager:1.0.0@aar,androidx.legacy:legacy-support-core-utils:1.0.0@aar,androidx.loader:loader:1.0.0@aar,androidx.customview:customview:1.0.0@aar,androidx.core:core-ktx:1.8.0@aar,androidx.core:core:1.8.0@aar,androidx.versionedparcelable:versionedparcelable:1.1.1@aar,androidx.collection:collection:1.1.0@jar,com.google.firebase:firebase-components:17.0.1@aar,androidx.lifecycle:lifecycle-common-java8:2.5.1@jar,androidx.lifecycle:lifecycle-runtime:2.5.1@aar,androidx.lifecycle:lifecycle-livedata:2.2.0@aar,androidx.lifecycle:lifecycle-livedata-core:2.5.1@aar,androidx.lifecycle:lifecycle-common:2.5.1@jar,com.google.android.datatransport:transport-backend-cct:3.1.8@aar,com.google.android.datatransport:transport-runtime:3.1.8@aar,com.google.android.datatransport:transport-api:3.0.0@aar,com.google.firebase:firebase-encoders-json:18.0.0@aar,com.google.firebase:firebase-encoders-proto:16.0.0@jar,com.google.firebase:firebase-encoders:17.0.0@jar,androidx.localbroadcastmanager:localbroadcastmanager:1.1.0@aar,androidx.arch.core:core-runtime:2.1.0@aar,androidx.arch.core:core-common:2.1.0@jar,androidx.lifecycle:lifecycle-viewmodel:2.5.1@aar,androidx.savedstate:savedstate:1.2.0@aar,androidx.documentfile:documentfile:1.0.0@aar,androidx.print:print:1.0.0@aar,androidx.annotation:annotation:1.5.0@jar,org.jetbrains.kotlin:kotlin-stdlib:1.7.20@jar,org.jetbrains.kotlin:kotlin-stdlib-common:1.7.20@jar,org.jetbrains:annotations:13.0@jar,com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar,androidx.annotation:annotation-experimental:1.1.0@aar,androidx.tracing:tracing:1.0.0@aar,com.google.firebase:firebase-annotations:16.1.0@jar,com.google.errorprone:error_prone_annotations:2.14.0@jar,com.google.code.findbugs:jsr305:3.0.2@jar,com.google.guava:failureaccess:1.0.1@jar,org.checkerframework:checker-qual:3.12.0@jar,com.google.j2objc:j2objc-annotations:1.3@jar,javax.inject:javax.inject:1@jar">
+    <dependency
+        name="__local_aars__:C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\build\app\intermediates\flutter\release\libs.jar:unspecified@jar"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:app::release"
+        simpleName=":"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_messaging::release"
+        simpleName="io.flutter.plugins.firebasemessaging:firebase_messaging"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:cloud_firestore::release"
+        simpleName="io.flutter.plugins.firebase.cloudfirestore:cloud_firestore"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_dynamic_links::release"
+        simpleName="io.flutter.plugins.firebase.dynamiclinks:firebase_dynamic_links"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_auth::release"
+        simpleName="io.flutter.plugins.firebase.auth:firebase_auth"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_core::release"
+        simpleName="io.flutter.plugins.firebase.core:firebase_core"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fl_location::release"
+        simpleName="com.pravera.fl_location:fl_location"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:geolocator_android::release"
+        simpleName="com.baseflow.geolocator:geolocator_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttercontactpicker::release"
+        simpleName="me.schlaubi.fluttercontactpicker:fluttercontactpicker"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:path_provider_android::release"
+        simpleName="io.flutter.plugins.pathprovider:path_provider_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:qr_code_scanner::release"
+        simpleName="net.touchcapture.qr.flutterqr:qr_code_scanner"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_facebook_auth::release"
+        simpleName="app.meedu.flutter_facebook_auth:flutter_facebook_auth"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:wakelock::release"
+        simpleName="creativemaybeno.wakelock:wakelock"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:just_audio::release"
+        simpleName="com.ryanheise.just_audio:just_audio"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:shared_preferences_android::release"
+        simpleName="io.flutter.plugins.sharedpreferences:shared_preferences_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_inappwebview::release"
+        simpleName="com.pichillilorenzo.flutter_inappwebview:flutter_inappwebview"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:map_launcher::release"
+        simpleName="com.alexmiller.map_launcher:map_launcher"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_keyboard_visibility::release"
+        simpleName="com.jrai.flutter_keyboard_visibility:flutter_keyboard_visibility"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttertoast::release"
+        simpleName="com.example.FlutterToast:fluttertoast"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:share::release"
+        simpleName="io.flutter.plugins.share:share"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:image_picker_android::release"
+        simpleName="io.flutter.plugins.imagepicker:image_picker_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:video_player_android::release"
+        simpleName="io.flutter.plugins.videoplayer:video_player_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info::release"
+        simpleName="io.flutter.plugins.packageinfo:package_info"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sign_in_with_apple::release"
+        simpleName="com.aboutyou.dart_packages.sign_in_with_apple:sign_in_with_apple"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_crashlytics::release"
+        simpleName="io.flutter.plugins.firebase.crashlytics:firebase_crashlytics"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_plugin_android_lifecycle::release"
+        simpleName="io.flutter.plugins.flutter_plugin_android_lifecycle:flutter_plugin_android_lifecycle"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:awesome_notifications::release"
+        simpleName="me.carda.awesome_notifications:awesome_notifications"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sqflite::release"
+        simpleName="com.tekartik.sqflite:sqflite"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:in_app_review::release"
+        simpleName="dev.britannio.in_app_review:in_app_review"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:url_launcher_android::release"
+        simpleName="io.flutter.plugins.urllauncher:url_launcher_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_maps_flutter_android::release"
+        simpleName="io.flutter.plugins.googlemaps:google_maps_flutter_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_sign_in_android::release"
+        simpleName="io.flutter.plugins.googlesignin:google_sign_in_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_native_splash::release"
+        simpleName="net.jonhanson.flutter_native_splash:flutter_native_splash"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:webview_flutter_android::release"
+        simpleName="io.flutter.plugins.webviewflutter:webview_flutter_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info_plus::release"
+        simpleName="io.flutter.plugins.packageinfo:package_info_plus"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:device_info_plus::release"
+        simpleName="dev.fluttercommunity.plus.device_info:device_info_plus"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_api_headers::release"
+        simpleName="io.github.zeshuaro.google_api_headers:google_api_headers"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:location::release"
+        simpleName="com.lyokone.location:location"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:audio_session::release"
+        simpleName="com.ryanheise.audio_session:audio_session"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_image_compress::release"
+        simpleName="com.fluttercandies.flutter_image_compress:flutter_image_compress"/>
+    <dependency
+        name="com.google.firebase:firebase-messaging-ktx:23.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-auth-ktx:21.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-common-ktx:20.2.0@aar"/>
+    <dependency
+        name="io.flutter:flutter_embedding_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="com.google.android.gms:play-services-location:20.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-messaging:23.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-auth:21.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-datatransport:18.1.7@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-installations:17.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-auth-interop:20.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-common:20.2.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-auth-api-phone:18.0.1@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-safetynet:17.0.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-base:18.0.1@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-cloud-messaging:17.0.1@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-iid-interop:17.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-installations-interop:17.1.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-tasks:18.0.1@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-stats:17.0.2@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-measurement-connector:19.0.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-basement:18.1.0@aar"/>
+    <dependency
+        name="androidx.fragment:fragment:1.3.6@aar"/>
+    <dependency
+        name="androidx.activity:activity:1.5.1@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1@aar"/>
+    <dependency
+        name="androidx.window:window-java:1.0.0-beta04@aar"/>
+    <dependency
+        name="androidx.window:window:1.0.0-beta04@aar"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4@jar"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4@jar"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4@jar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20@jar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20@jar"/>
+    <dependency
+        name="androidx.multidex:multidex:2.0.0@aar"/>
+    <dependency
+        name="com.google.guava:guava:31.1-android@jar"/>
+    <dependency
+        name="androidx.browser:browser:1.4.0@aar"/>
+    <dependency
+        name="io.flutter:armeabi_v7a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="io.flutter:arm64_v8a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="io.flutter:x86_64_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="androidx.viewpager:viewpager:1.0.0@aar"/>
+    <dependency
+        name="androidx.legacy:legacy-support-core-utils:1.0.0@aar"/>
+    <dependency
+        name="androidx.loader:loader:1.0.0@aar"/>
+    <dependency
+        name="androidx.customview:customview:1.0.0@aar"/>
+    <dependency
+        name="androidx.core:core-ktx:1.8.0@aar"/>
+    <dependency
+        name="androidx.core:core:1.8.0@aar"/>
+    <dependency
+        name="androidx.versionedparcelable:versionedparcelable:1.1.1@aar"/>
+    <dependency
+        name="androidx.collection:collection:1.1.0@jar"/>
+    <dependency
+        name="com.google.firebase:firebase-components:17.0.1@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-common-java8:2.5.1@jar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-runtime:2.5.1@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-livedata:2.2.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-livedata-core:2.5.1@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-common:2.5.1@jar"/>
+    <dependency
+        name="com.google.android.datatransport:transport-backend-cct:3.1.8@aar"/>
+    <dependency
+        name="com.google.android.datatransport:transport-runtime:3.1.8@aar"/>
+    <dependency
+        name="com.google.android.datatransport:transport-api:3.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-encoders-json:18.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-encoders-proto:16.0.0@jar"/>
+    <dependency
+        name="com.google.firebase:firebase-encoders:17.0.0@jar"/>
+    <dependency
+        name="androidx.localbroadcastmanager:localbroadcastmanager:1.1.0@aar"/>
+    <dependency
+        name="androidx.arch.core:core-runtime:2.1.0@aar"/>
+    <dependency
+        name="androidx.arch.core:core-common:2.1.0@jar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-viewmodel:2.5.1@aar"/>
+    <dependency
+        name="androidx.savedstate:savedstate:1.2.0@aar"/>
+    <dependency
+        name="androidx.documentfile:documentfile:1.0.0@aar"/>
+    <dependency
+        name="androidx.print:print:1.0.0@aar"/>
+    <dependency
+        name="androidx.annotation:annotation:1.5.0@jar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib:1.7.20@jar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib-common:1.7.20@jar"/>
+    <dependency
+        name="org.jetbrains:annotations:13.0@jar"/>
+    <dependency
+        name="com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar"/>
+    <dependency
+        name="androidx.annotation:annotation-experimental:1.1.0@aar"/>
+    <dependency
+        name="androidx.tracing:tracing:1.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-annotations:16.1.0@jar"/>
+    <dependency
+        name="com.google.errorprone:error_prone_annotations:2.14.0@jar"/>
+    <dependency
+        name="com.google.code.findbugs:jsr305:3.0.2@jar"/>
+    <dependency
+        name="com.google.guava:failureaccess:1.0.1@jar"/>
+    <dependency
+        name="org.checkerframework:checker-qual:3.12.0@jar"/>
+    <dependency
+        name="com.google.j2objc:j2objc-annotations:1.3@jar"/>
+    <dependency
+        name="javax.inject:javax.inject:1@jar"/>
+  </compile>
+  <package
+      roots="__local_aars__:C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\build\app\intermediates\flutter\release\libs.jar:unspecified@jar,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_messaging::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_crashlytics::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:cloud_firestore::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_dynamic_links::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_auth::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_core::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fl_location::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:geolocator_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttercontactpicker::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:path_provider_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:qr_code_scanner::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_facebook_auth::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:wakelock::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:just_audio::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:shared_preferences_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_inappwebview::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:map_launcher::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_keyboard_visibility::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttertoast::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:share::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:image_picker_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:video_player_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sign_in_with_apple::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_maps_flutter_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_plugin_android_lifecycle::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:awesome_notifications::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sqflite::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:in_app_review::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:url_launcher_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_sign_in_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_native_splash::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:webview_flutter_android::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_api_headers::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info_plus::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:device_info_plus::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:location::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:audio_session::release,C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_image_compress::release,com.google.firebase:firebase-auth-ktx:21.1.0@aar,com.google.firebase:firebase-messaging-ktx:23.1.0@aar,com.google.firebase:firebase-common-ktx:20.2.0@aar,io.flutter:flutter_embedding_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,androidx.window:window-java:1.0.0-beta04@aar,androidx.window:window:1.0.0-beta04@aar,com.facebook.android:facebook-login:14.1.1@aar,com.facebook.android:facebook-common:14.1.1@aar,androidx.appcompat:appcompat-resources:1.5.1@aar,androidx.appcompat:appcompat:1.5.1@aar,androidx.legacy:legacy-support-v4:1.0.0@aar,com.google.android.gms:play-services-maps:18.1.0@aar,com.google.android.gms:play-services-auth:20.0.1@aar,com.google.firebase:firebase-auth:21.1.0@aar,com.google.android.gms:play-services-location:20.0.0@aar,com.google.firebase:firebase-firestore:24.4.0@aar,com.google.firebase:firebase-messaging:23.1.0@aar,com.google.firebase:firebase-dynamic-links:21.1.0@aar,com.google.android.gms:play-services-auth-api-phone:18.0.1@aar,com.google.android.gms:play-services-auth-base:18.0.1@aar,com.google.android.gms:play-services-safetynet:17.0.0@aar,com.google.firebase:firebase-appcheck-interop:16.1.0@aar,com.google.firebase:firebase-database-collection:18.0.1@aar,com.google.android.gms:play-services-base:18.0.1@aar,com.google.firebase:firebase-iid:21.1.0@aar,com.google.firebase:firebase-crashlytics:18.3.2@aar,com.google.firebase:firebase-installations:17.1.0@aar,com.google.firebase:firebase-auth-interop:20.0.0@aar,com.google.firebase:firebase-datatransport:18.1.7@aar,com.google.firebase:firebase-common:20.2.0@aar,com.google.firebase:firebase-iid-interop:17.1.0@aar,com.google.android.gms:play-services-cloud-messaging:17.0.1@aar,com.google.firebase:firebase-installations-interop:17.1.0@aar,com.google.android.gms:play-services-tasks:18.0.1@aar,com.google.android.gms:play-services-stats:17.0.2@aar,com.google.firebase:firebase-measurement-connector:19.0.0@aar,com.google.android.gms:play-services-basement:18.1.0@aar,androidx.fragment:fragment:1.3.6@aar,androidx.activity:activity:1.5.1@aar,com.facebook.android:facebook-core:14.1.1@aar,androidx.legacy:legacy-support-core-ui:1.0.0@aar,androidx.legacy:legacy-support-core-utils:1.0.0@aar,androidx.loader:loader:1.0.0@aar,androidx.lifecycle:lifecycle-viewmodel:2.5.1@aar,androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1@aar,org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4@jar,org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4@jar,org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20@jar,org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20@jar,androidx.multidex:multidex:2.0.0@aar,com.google.android.exoplayer:exoplayer-dash:2.18.1@aar,com.google.android.exoplayer:exoplayer-hls:2.18.1@aar,com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.1@aar,com.google.android.exoplayer:exoplayer-core:2.18.1@aar,com.google.android.exoplayer:exoplayer-datasource:2.18.1@aar,com.google.android.exoplayer:exoplayer-extractor:2.18.1@aar,com.google.android.exoplayer:exoplayer-decoder:2.18.1@aar,com.google.android.exoplayer:exoplayer-database:2.18.1@aar,com.google.android.exoplayer:exoplayer-common:2.18.1@aar,io.grpc:grpc-android:1.48.1@aar,io.grpc:grpc-okhttp:1.48.1@jar,io.grpc:grpc-protobuf-lite:1.48.1@jar,io.grpc:grpc-stub:1.48.1@jar,io.grpc:grpc-core:1.48.1@jar,io.grpc:grpc-api:1.48.1@jar,com.google.guava:guava:31.1-android@jar,androidx.browser:browser:1.4.0@aar,io.flutter:armeabi_v7a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,io.flutter:arm64_v8a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,io.flutter:x86_64_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar,androidx.webkit:webkit:1.5.0@aar,androidx.swiperefreshlayout:swiperefreshlayout:1.1.0@aar,com.facebook.android:facebook-bolts:14.1.1@aar,androidx.core:core-ktx:1.8.0@aar,androidx.drawerlayout:drawerlayout:1.0.0@aar,androidx.emoji2:emoji2-views-helper:1.2.0@aar,androidx.emoji2:emoji2:1.2.0@aar,androidx.media2:media2-session:1.2.0@aar,androidx.media2:media2-common:1.2.0@aar,androidx.viewpager:viewpager:1.0.0@aar,androidx.vectordrawable:vectordrawable-animated:1.1.0@aar,androidx.vectordrawable:vectordrawable:1.1.0@aar,androidx.coordinatorlayout:coordinatorlayout:1.0.0@aar,androidx.slidingpanelayout:slidingpanelayout:1.0.0@aar,androidx.customview:customview:1.0.0@aar,androidx.asynclayoutinflater:asynclayoutinflater:1.0.0@aar,androidx.media:media:1.4.1@aar,androidx.core:core:1.8.0@aar,androidx.localbroadcastmanager:localbroadcastmanager:1.1.0@aar,androidx.lifecycle:lifecycle-reactivestreams:2.2.0@aar,androidx.exifinterface:exifinterface:1.3.3@aar,androidx.heifwriter:heifwriter:1.0.0@aar,androidx.lifecycle:lifecycle-process:2.4.1@aar,androidx.startup:startup-runtime:1.1.1@aar,androidx.tracing:tracing:1.0.0@aar,androidx.concurrent:concurrent-futures:1.0.0@jar,androidx.versionedparcelable:versionedparcelable:1.1.1@aar,androidx.collection:collection:1.1.0@jar,androidx.interpolator:interpolator:1.0.0@aar,androidx.lifecycle:lifecycle-service:2.2.0@aar,androidx.lifecycle:lifecycle-runtime:2.5.1@aar,androidx.cursoradapter:cursoradapter:1.0.0@aar,androidx.resourceinspection:resourceinspection-annotation:1.0.1@jar,androidx.savedstate:savedstate:1.2.0@aar,androidx.lifecycle:lifecycle-livedata:2.2.0@aar,androidx.lifecycle:lifecycle-livedata-core:2.5.1@aar,androidx.arch.core:core-runtime:2.1.0@aar,androidx.arch.core:core-common:2.1.0@jar,com.google.firebase:firebase-components:17.0.1@aar,com.google.android.datatransport:transport-backend-cct:3.1.8@aar,com.google.android.datatransport:transport-runtime:3.1.8@aar,com.google.android.datatransport:transport-api:3.0.0@aar,com.google.firebase:firebase-encoders-json:18.0.0@aar,com.google.firebase:firebase-encoders-proto:16.0.0@jar,com.google.firebase:firebase-encoders:17.0.0@jar,androidx.cardview:cardview:1.0.0@aar,androidx.lifecycle:lifecycle-common-java8:2.5.1@jar,androidx.lifecycle:lifecycle-common:2.5.1@jar,androidx.documentfile:documentfile:1.0.0@aar,androidx.print:print:1.0.0@aar,androidx.annotation:annotation:1.5.0@jar,com.google.code.gson:gson:2.9.0@jar,com.journeyapps:zxing-android-embedded:4.3.0@aar,com.google.zxing:core:3.5.0@jar,com.squareup.okhttp3:okhttp:3.14.9@jar,me.leolin:ShortcutBadger:1.1.22@aar,com.google.android.play:core:1.10.0@aar,org.jetbrains.kotlin:kotlin-stdlib:1.7.20@jar,commons-io:commons-io:2.6@jar,androidx.annotation:annotation-experimental:1.1.0@aar,com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar,com.squareup.okio:okio:1.17.5@jar,com.google.guava:failureaccess:1.0.1@jar,com.google.code.findbugs:jsr305:3.0.2@jar,com.google.errorprone:error_prone_annotations:2.14.0@jar,com.google.j2objc:j2objc-annotations:1.3@jar,org.reactivestreams:reactive-streams:1.0.0@jar,org.jetbrains.kotlin:kotlin-stdlib-common:1.7.20@jar,org.jetbrains:annotations:13.0@jar,com.google.firebase:firebase-annotations:16.1.0@jar,com.google.firebase:protolite-well-known-types:18.0.0@aar,com.android.installreferrer:installreferrer:1.0@aar,com.google.protobuf:protobuf-javalite:3.21.1@jar,io.perfmark:perfmark-api:0.25.0@jar,javax.inject:javax.inject:1@jar,org.checkerframework:checker-qual:3.12.0@jar,com.google.android:annotations:4.1.1.4@jar,org.codehaus.mojo:animal-sniffer-annotations:1.21@jar,io.grpc:grpc-context:1.48.1@jar">
+    <dependency
+        name="__local_aars__:C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\build\app\intermediates\flutter\release\libs.jar:unspecified@jar"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_messaging::release"
+        simpleName="io.flutter.plugins.firebasemessaging:firebase_messaging"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_crashlytics::release"
+        simpleName="io.flutter.plugins.firebase.crashlytics:firebase_crashlytics"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:cloud_firestore::release"
+        simpleName="io.flutter.plugins.firebase.cloudfirestore:cloud_firestore"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_dynamic_links::release"
+        simpleName="io.flutter.plugins.firebase.dynamiclinks:firebase_dynamic_links"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_auth::release"
+        simpleName="io.flutter.plugins.firebase.auth:firebase_auth"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:firebase_core::release"
+        simpleName="io.flutter.plugins.firebase.core:firebase_core"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fl_location::release"
+        simpleName="com.pravera.fl_location:fl_location"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:geolocator_android::release"
+        simpleName="com.baseflow.geolocator:geolocator_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttercontactpicker::release"
+        simpleName="me.schlaubi.fluttercontactpicker:fluttercontactpicker"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:path_provider_android::release"
+        simpleName="io.flutter.plugins.pathprovider:path_provider_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:qr_code_scanner::release"
+        simpleName="net.touchcapture.qr.flutterqr:qr_code_scanner"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_facebook_auth::release"
+        simpleName="app.meedu.flutter_facebook_auth:flutter_facebook_auth"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:wakelock::release"
+        simpleName="creativemaybeno.wakelock:wakelock"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:just_audio::release"
+        simpleName="com.ryanheise.just_audio:just_audio"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:shared_preferences_android::release"
+        simpleName="io.flutter.plugins.sharedpreferences:shared_preferences_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_inappwebview::release"
+        simpleName="com.pichillilorenzo.flutter_inappwebview:flutter_inappwebview"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:map_launcher::release"
+        simpleName="com.alexmiller.map_launcher:map_launcher"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_keyboard_visibility::release"
+        simpleName="com.jrai.flutter_keyboard_visibility:flutter_keyboard_visibility"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:fluttertoast::release"
+        simpleName="com.example.FlutterToast:fluttertoast"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:share::release"
+        simpleName="io.flutter.plugins.share:share"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:image_picker_android::release"
+        simpleName="io.flutter.plugins.imagepicker:image_picker_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:video_player_android::release"
+        simpleName="io.flutter.plugins.videoplayer:video_player_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info::release"
+        simpleName="io.flutter.plugins.packageinfo:package_info"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sign_in_with_apple::release"
+        simpleName="com.aboutyou.dart_packages.sign_in_with_apple:sign_in_with_apple"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_maps_flutter_android::release"
+        simpleName="io.flutter.plugins.googlemaps:google_maps_flutter_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_plugin_android_lifecycle::release"
+        simpleName="io.flutter.plugins.flutter_plugin_android_lifecycle:flutter_plugin_android_lifecycle"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:awesome_notifications::release"
+        simpleName="me.carda.awesome_notifications:awesome_notifications"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:sqflite::release"
+        simpleName="com.tekartik.sqflite:sqflite"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:in_app_review::release"
+        simpleName="dev.britannio.in_app_review:in_app_review"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:url_launcher_android::release"
+        simpleName="io.flutter.plugins.urllauncher:url_launcher_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_sign_in_android::release"
+        simpleName="io.flutter.plugins.googlesignin:google_sign_in_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_native_splash::release"
+        simpleName="net.jonhanson.flutter_native_splash:flutter_native_splash"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:webview_flutter_android::release"
+        simpleName="io.flutter.plugins.webviewflutter:webview_flutter_android"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:google_api_headers::release"
+        simpleName="io.github.zeshuaro.google_api_headers:google_api_headers"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:package_info_plus::release"
+        simpleName="io.flutter.plugins.packageinfo:package_info_plus"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:device_info_plus::release"
+        simpleName="dev.fluttercommunity.plus.device_info:device_info_plus"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:location::release"
+        simpleName="com.lyokone.location:location"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:audio_session::release"
+        simpleName="com.ryanheise.audio_session:audio_session"/>
+    <dependency
+        name="C:\Users\jerec\Desktop\G2-Express Repo\g2express-customer\android@@:flutter_image_compress::release"
+        simpleName="com.fluttercandies.flutter_image_compress:flutter_image_compress"/>
+    <dependency
+        name="com.google.firebase:firebase-auth-ktx:21.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-messaging-ktx:23.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-common-ktx:20.2.0@aar"/>
+    <dependency
+        name="io.flutter:flutter_embedding_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="androidx.window:window-java:1.0.0-beta04@aar"/>
+    <dependency
+        name="androidx.window:window:1.0.0-beta04@aar"/>
+    <dependency
+        name="com.facebook.android:facebook-login:14.1.1@aar"/>
+    <dependency
+        name="com.facebook.android:facebook-common:14.1.1@aar"/>
+    <dependency
+        name="androidx.appcompat:appcompat-resources:1.5.1@aar"/>
+    <dependency
+        name="androidx.appcompat:appcompat:1.5.1@aar"/>
+    <dependency
+        name="androidx.legacy:legacy-support-v4:1.0.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-maps:18.1.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-auth:20.0.1@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-auth:21.1.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-location:20.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-firestore:24.4.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-messaging:23.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-dynamic-links:21.1.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-auth-api-phone:18.0.1@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-auth-base:18.0.1@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-safetynet:17.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-appcheck-interop:16.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-database-collection:18.0.1@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-base:18.0.1@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-iid:21.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-crashlytics:18.3.2@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-installations:17.1.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-auth-interop:20.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-datatransport:18.1.7@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-common:20.2.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-iid-interop:17.1.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-cloud-messaging:17.0.1@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-installations-interop:17.1.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-tasks:18.0.1@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-stats:17.0.2@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-measurement-connector:19.0.0@aar"/>
+    <dependency
+        name="com.google.android.gms:play-services-basement:18.1.0@aar"/>
+    <dependency
+        name="androidx.fragment:fragment:1.3.6@aar"/>
+    <dependency
+        name="androidx.activity:activity:1.5.1@aar"/>
+    <dependency
+        name="com.facebook.android:facebook-core:14.1.1@aar"/>
+    <dependency
+        name="androidx.legacy:legacy-support-core-ui:1.0.0@aar"/>
+    <dependency
+        name="androidx.legacy:legacy-support-core-utils:1.0.0@aar"/>
+    <dependency
+        name="androidx.loader:loader:1.0.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-viewmodel:2.5.1@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1@aar"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4@jar"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4@jar"/>
+    <dependency
+        name="org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4@jar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.20@jar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20@jar"/>
+    <dependency
+        name="androidx.multidex:multidex:2.0.0@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-dash:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-hls:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-core:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-datasource:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-extractor:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-decoder:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-database:2.18.1@aar"/>
+    <dependency
+        name="com.google.android.exoplayer:exoplayer-common:2.18.1@aar"/>
+    <dependency
+        name="io.grpc:grpc-android:1.48.1@aar"/>
+    <dependency
+        name="io.grpc:grpc-okhttp:1.48.1@jar"/>
+    <dependency
+        name="io.grpc:grpc-protobuf-lite:1.48.1@jar"/>
+    <dependency
+        name="io.grpc:grpc-stub:1.48.1@jar"/>
+    <dependency
+        name="io.grpc:grpc-core:1.48.1@jar"/>
+    <dependency
+        name="io.grpc:grpc-api:1.48.1@jar"/>
+    <dependency
+        name="com.google.guava:guava:31.1-android@jar"/>
+    <dependency
+        name="androidx.browser:browser:1.4.0@aar"/>
+    <dependency
+        name="io.flutter:armeabi_v7a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="io.flutter:arm64_v8a_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="io.flutter:x86_64_release:1.0.0-248290d6d50a1bf1a6a246544347c03acda867a5@jar"/>
+    <dependency
+        name="androidx.webkit:webkit:1.5.0@aar"/>
+    <dependency
+        name="androidx.swiperefreshlayout:swiperefreshlayout:1.1.0@aar"/>
+    <dependency
+        name="com.facebook.android:facebook-bolts:14.1.1@aar"/>
+    <dependency
+        name="androidx.core:core-ktx:1.8.0@aar"/>
+    <dependency
+        name="androidx.drawerlayout:drawerlayout:1.0.0@aar"/>
+    <dependency
+        name="androidx.emoji2:emoji2-views-helper:1.2.0@aar"/>
+    <dependency
+        name="androidx.emoji2:emoji2:1.2.0@aar"/>
+    <dependency
+        name="androidx.media2:media2-session:1.2.0@aar"/>
+    <dependency
+        name="androidx.media2:media2-common:1.2.0@aar"/>
+    <dependency
+        name="androidx.viewpager:viewpager:1.0.0@aar"/>
+    <dependency
+        name="androidx.vectordrawable:vectordrawable-animated:1.1.0@aar"/>
+    <dependency
+        name="androidx.vectordrawable:vectordrawable:1.1.0@aar"/>
+    <dependency
+        name="androidx.coordinatorlayout:coordinatorlayout:1.0.0@aar"/>
+    <dependency
+        name="androidx.slidingpanelayout:slidingpanelayout:1.0.0@aar"/>
+    <dependency
+        name="androidx.customview:customview:1.0.0@aar"/>
+    <dependency
+        name="androidx.asynclayoutinflater:asynclayoutinflater:1.0.0@aar"/>
+    <dependency
+        name="androidx.media:media:1.4.1@aar"/>
+    <dependency
+        name="androidx.core:core:1.8.0@aar"/>
+    <dependency
+        name="androidx.localbroadcastmanager:localbroadcastmanager:1.1.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-reactivestreams:2.2.0@aar"/>
+    <dependency
+        name="androidx.exifinterface:exifinterface:1.3.3@aar"/>
+    <dependency
+        name="androidx.heifwriter:heifwriter:1.0.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-process:2.4.1@aar"/>
+    <dependency
+        name="androidx.startup:startup-runtime:1.1.1@aar"/>
+    <dependency
+        name="androidx.tracing:tracing:1.0.0@aar"/>
+    <dependency
+        name="androidx.concurrent:concurrent-futures:1.0.0@jar"/>
+    <dependency
+        name="androidx.versionedparcelable:versionedparcelable:1.1.1@aar"/>
+    <dependency
+        name="androidx.collection:collection:1.1.0@jar"/>
+    <dependency
+        name="androidx.interpolator:interpolator:1.0.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-service:2.2.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-runtime:2.5.1@aar"/>
+    <dependency
+        name="androidx.cursoradapter:cursoradapter:1.0.0@aar"/>
+    <dependency
+        name="androidx.resourceinspection:resourceinspection-annotation:1.0.1@jar"/>
+    <dependency
+        name="androidx.savedstate:savedstate:1.2.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-livedata:2.2.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-livedata-core:2.5.1@aar"/>
+    <dependency
+        name="androidx.arch.core:core-runtime:2.1.0@aar"/>
+    <dependency
+        name="androidx.arch.core:core-common:2.1.0@jar"/>
+    <dependency
+        name="com.google.firebase:firebase-components:17.0.1@aar"/>
+    <dependency
+        name="com.google.android.datatransport:transport-backend-cct:3.1.8@aar"/>
+    <dependency
+        name="com.google.android.datatransport:transport-runtime:3.1.8@aar"/>
+    <dependency
+        name="com.google.android.datatransport:transport-api:3.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-encoders-json:18.0.0@aar"/>
+    <dependency
+        name="com.google.firebase:firebase-encoders-proto:16.0.0@jar"/>
+    <dependency
+        name="com.google.firebase:firebase-encoders:17.0.0@jar"/>
+    <dependency
+        name="androidx.cardview:cardview:1.0.0@aar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-common-java8:2.5.1@jar"/>
+    <dependency
+        name="androidx.lifecycle:lifecycle-common:2.5.1@jar"/>
+    <dependency
+        name="androidx.documentfile:documentfile:1.0.0@aar"/>
+    <dependency
+        name="androidx.print:print:1.0.0@aar"/>
+    <dependency
+        name="androidx.annotation:annotation:1.5.0@jar"/>
+    <dependency
+        name="com.google.code.gson:gson:2.9.0@jar"/>
+    <dependency
+        name="com.journeyapps:zxing-android-embedded:4.3.0@aar"/>
+    <dependency
+        name="com.google.zxing:core:3.5.0@jar"/>
+    <dependency
+        name="com.squareup.okhttp3:okhttp:3.14.9@jar"/>
+    <dependency
+        name="me.leolin:ShortcutBadger:1.1.22@aar"/>
+    <dependency
+        name="com.google.android.play:core:1.10.0@aar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib:1.7.20@jar"/>
+    <dependency
+        name="commons-io:commons-io:2.6@jar"/>
+    <dependency
+        name="androidx.annotation:annotation-experimental:1.1.0@aar"/>
+    <dependency
+        name="com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar"/>
+    <dependency
+        name="com.squareup.okio:okio:1.17.5@jar"/>
+    <dependency
+        name="com.google.guava:failureaccess:1.0.1@jar"/>
+    <dependency
+        name="com.google.code.findbugs:jsr305:3.0.2@jar"/>
+    <dependency
+        name="com.google.errorprone:error_prone_annotations:2.14.0@jar"/>
+    <dependency
+        name="com.google.j2objc:j2objc-annotations:1.3@jar"/>
+    <dependency
+        name="org.reactivestreams:reactive-streams:1.0.0@jar"/>
+    <dependency
+        name="org.jetbrains.kotlin:kotlin-stdlib-common:1.7.20@jar"/>
+    <dependency
+        name="org.jetbrains:annotations:13.0@jar"/>
+    <dependency
+        name="com.google.firebase:firebase-annotations:16.1.0@jar"/>
+    <dependency
+        name="com.google.firebase:protolite-well-known-types:18.0.0@aar"/>
+    <dependency
+        name="com.android.installreferrer:installreferrer:1.0@aar"/>
+    <dependency
+        name="com.google.protobuf:protobuf-javalite:3.21.1@jar"/>
+    <dependency
+        name="io.perfmark:perfmark-api:0.25.0@jar"/>
+    <dependency
+        name="javax.inject:javax.inject:1@jar"/>
+    <dependency
+        name="org.checkerframework:checker-qual:3.12.0@jar"/>
+    <dependency
+        name="com.google.android:annotations:4.1.1.4@jar"/>
+    <dependency
+        name="org.codehaus.mojo:animal-sniffer-annotations:1.21@jar"/>
+    <dependency
+        name="io.grpc:grpc-context:1.48.1@jar"/>
+  </package>
+</dependencies>

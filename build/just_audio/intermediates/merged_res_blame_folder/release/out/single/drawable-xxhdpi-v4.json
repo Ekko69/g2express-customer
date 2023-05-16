@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\jerec\\Desktop\\G2-Express Repo\\g2express-customer\\build\\just_audio\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_pause.png",
+        "source": "C:\\Users\\jerec\\.gradle\\caches\\transforms-3\\ee0a20344ec86758ff22b3239d4be5e3\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_pause.png"
+    },
+    {
+        "merged": "C:\\Users\\jerec\\Desktop\\G2-Express Repo\\g2express-customer\\build\\just_audio\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_music_note.png",
+        "source": "C:\\Users\\jerec\\.gradle\\caches\\transforms-3\\ee0a20344ec86758ff22b3239d4be5e3\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_music_note.png"
+    },
+    {
+        "merged": "C:\\Users\\jerec\\Desktop\\G2-Express Repo\\g2express-customer\\build\\just_audio\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_play.png",
+        "source": "C:\\Users\\jerec\\.gradle\\caches\\transforms-3\\ee0a20344ec86758ff22b3239d4be5e3\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_play.png"
+    },
+    {
+        "merged": "C:\\Users\\jerec\\Desktop\\G2-Express Repo\\g2express-customer\\build\\just_audio\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_next.png",
+        "source": "C:\\Users\\jerec\\.gradle\\caches\\transforms-3\\ee0a20344ec86758ff22b3239d4be5e3\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_next.png"
+    },
+    {
+        "merged": "C:\\Users\\jerec\\Desktop\\G2-Express Repo\\g2express-customer\\build\\just_audio\\intermediates\\merged_res\\release\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_previous.png",
+        "source": "C:\\Users\\jerec\\.gradle\\caches\\transforms-3\\ee0a20344ec86758ff22b3239d4be5e3\\transformed\\jetified-media2-session-1.2.0\\res\\drawable-xxhdpi-v4\\media_session_service_notification_ic_skip_to_previous.png"
+    }
+]
