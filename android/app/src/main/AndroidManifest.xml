@@ -89,7 +89,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
-                    android:host="g2-express.com"
+                    android:host="g2-express.shop"
                     android:scheme="https"/>
             </intent-filter>
 
@@ -103,5 +103,15 @@
 
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyD1hXRa9UWC_nv7VzOwWEZyQMng0MdMMyE"/>
+
+        <provider
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider"
+            android:authorities="${applicationId}.flutter_inappwebview_android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 </manifest>

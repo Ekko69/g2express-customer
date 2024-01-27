@@ -12,48 +12,49 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class DigitialProductOrderDownload extends StatelessWidget {
-  const DigitialProductOrderDownload(this.order, this.orderProduct, {Key key})
+  const DigitialProductOrderDownload(this.order, this.orderProduct, {Key? key})
       : super(key: key);
 
   final Order order;
   final OrderProduct orderProduct;
   @override
   Widget build(BuildContext context) {
-    final downloadLink = (orderProduct.product.digitalFiles != null &&
-            orderProduct.product.digitalFiles.isNotEmpty)
-        ? (orderProduct.product.digitalFiles[0].link ?? "")
+    final downloadLink = (orderProduct.product?.digitalFiles != null &&
+            orderProduct.product!.digitalFiles!.isNotEmpty)
+        ? (orderProduct.product!.digitalFiles![0].link ?? "")
         : "";
     //
-    return Visibility(
-      visible: order.isCompleted && orderProduct.product.isDigital,
-      child: HStack(
-        [
-          CustomButton(
-            title: "Download".tr(),
-            child: HStack(
-              [
-                "Download".tr().text.make(),
-                UiSpacer.hSpace(10),
-                Icon(
-                  FlutterIcons.download_ant,
-                  size: 20,
+    return (order.isCompleted &&
+            orderProduct.product != null &&
+            orderProduct.product!.isDigital)
+        ? HStack(
+            [
+              CustomButton(
+                title: "Download".tr(),
+                child: HStack(
+                  [
+                    "Download".tr().text.make(),
+                    UiSpacer.hSpace(10),
+                    Icon(
+                      FlutterIcons.download_ant,
+                      size: 20,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            onPressed: () => openDownloadLink(downloadLink),
-          ).box.clip(Clip.antiAlias).roundedLg.make().expand(),
-          UiSpacer.hSpace(),
-          CustomButton(
-            child: Icon(
-              FlutterIcons.copy_ent,
-              size: 20,
-              color: Utils.textColorByTheme(),
-            ),
-            onPressed: () => copyDownloadLink(downloadLink),
-          ).box.clip(Clip.antiAlias).roundedLg.make(),
-        ],
-      ),
-    );
+                onPressed: () => openDownloadLink(downloadLink),
+              ).box.clip(Clip.antiAlias).roundedLg.make().expand(),
+              UiSpacer.hSpace(),
+              CustomButton(
+                child: Icon(
+                  FlutterIcons.copy_ent,
+                  size: 20,
+                  color: Utils.textColorByTheme(),
+                ),
+                onPressed: () => copyDownloadLink(downloadLink),
+              ).box.clip(Clip.antiAlias).roundedLg.make(),
+            ],
+          )
+        : 0.heightBox;
   }
 
   //Link

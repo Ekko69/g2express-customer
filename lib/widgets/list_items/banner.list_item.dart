@@ -4,17 +4,17 @@ import 'package:velocity_x/velocity_x.dart';
 
 class BannerListItem extends StatelessWidget {
   const BannerListItem({
-    this.imageUrl,
+    required this.imageUrl,
     this.onPressed,
     this.radius = 4,
     this.noMargin = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final String imageUrl;
   final double radius;
   final bool noMargin;
-  final Function onPressed;
+  final Function? onPressed;
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
@@ -22,7 +22,7 @@ class BannerListItem extends StatelessWidget {
       fit: BoxFit.fill,
       width: double.infinity,
     )
-        .onInkTap(this.onPressed)
+        .onInkTap(this.onPressed != null ? () => this.onPressed!() : null)
         .box
         .withRounded(value: radius)
         .clip(Clip.antiAlias)

@@ -4,12 +4,12 @@ import 'package:velocity_x/velocity_x.dart';
 class DropdownInput extends StatefulWidget {
   DropdownInput({
     this.title,
-    @required this.options,
-    this.onChanged,
-    Key key,
+    required this.options,
+    required this.onChanged,
+    Key? key,
   }) : super(key: key);
 
-  final String title;
+  final String? title;
   final List<dynamic> options;
   final Function(dynamic) onChanged;
 
@@ -48,7 +48,7 @@ class _DropdownInputState extends State<DropdownInput> {
       ),
       style: TextStyle(
         fontSize: 12,
-        color: context.textTheme.bodyLarge.color,
+        color: context.textTheme.bodyLarge!.color,
       ),
       value: selectedValue ?? widget.options.first,
       items: widget.options.map((option) {
@@ -58,9 +58,7 @@ class _DropdownInputState extends State<DropdownInput> {
         );
       }).toList(),
       onChanged: (value) {
-        if (widget.onChanged != null) {
-          widget.onChanged(value);
-        }
+        widget.onChanged(value);
         //
         setState(() {
           selectedValue = value;

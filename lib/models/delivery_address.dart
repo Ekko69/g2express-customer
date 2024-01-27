@@ -29,23 +29,23 @@ class DeliveryAddress {
     this.can_deliver,
   });
 
-  int id;
-  String name;
-  String description;
-  String address;
-  String city;
-  String state;
-  String country;
-  double latitude;
-  double longitude;
-  int isDefault;
-  int userId;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String formattedDate;
-  String photo;
-  double distance;
-  bool can_deliver;
+  int? id;
+  String? name;
+  String? description;
+  String? address;
+  String? city;
+  String? state;
+  String? country;
+  double? latitude;
+  double? longitude;
+  int? isDefault;
+  int? userId;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? formattedDate;
+  String? photo;
+  double? distance;
+  bool? can_deliver;
 
   factory DeliveryAddress.fromJson(Map<String, dynamic> json) =>
       DeliveryAddress(
@@ -61,10 +61,14 @@ class DeliveryAddress {
         distance: json["distance"] == null
             ? null
             : double.parse(json["distance"].toString()),
-        isDefault: int.parse(json["is_default"].toString()),
-        userId: int.parse(json["user_id"].toString()),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        isDefault: int.tryParse(json["is_default"].toString()) ?? 0,
+        userId: int.tryParse(json["user_id"].toString()) ?? 0,
+        createdAt: json["created_at"] != null
+            ? DateTime.parse(json["created_at"])
+            : null,
+        updatedAt: json["updated_at"] != null
+            ? DateTime.parse(json["updated_at"])
+            : null,
         formattedDate: json["formatted_date"],
         photo: json["photo"],
         can_deliver: json["can_deliver"],
@@ -83,8 +87,8 @@ class DeliveryAddress {
         "distance": distance,
         "is_default": isDefault,
         "user_id": userId,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
         "formatted_date": formattedDate,
         "photo": photo,
         "can_deliver": can_deliver
@@ -104,17 +108,17 @@ class DeliveryAddress {
       };
 
   bool get defaultDeliveryAddress => isDefault == 1;
-  LatLng get latLng => LatLng(latitude, longitude);
+  LatLng get latLng => LatLng(latitude ?? 0.0, longitude ?? 0.0);
 
   DeliveryAddress copyWith({
-    String name,
-    String description,
-    String address,
-    String city,
-    String state,
-    String country,
-    double latitude,
-    double longitude,
+    String? name,
+    String? description,
+    String? address,
+    String? city,
+    String? state,
+    String? country,
+    double? latitude,
+    double? longitude,
   }) {
     return new DeliveryAddress(
       id: this.id,

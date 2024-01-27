@@ -7,7 +7,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({
-    Key key,
+    Key? key,
     this.imageUrl,
     this.title = "",
     this.actionText = "Action",
@@ -21,8 +21,8 @@ class EmptyState extends StatelessWidget {
   final String title;
   final String actionText;
   final String description;
-  final String imageUrl;
-  final Function actionPressed;
+  final String? imageUrl;
+  final Function? actionPressed;
   final bool showAction;
   final bool showImage;
   final bool auth;
@@ -33,8 +33,8 @@ class EmptyState extends StatelessWidget {
       child: VStack(
         [
           //
-          (imageUrl != null && imageUrl.isNotBlank)
-              ? Image.asset(imageUrl)
+          (imageUrl != null && imageUrl.isNotEmptyAndNotNull)
+              ? Image.asset(imageUrl!)
                   .wh(
                     context.percentWidth * 30,
                     context.percentWidth * 30,
@@ -46,7 +46,7 @@ class EmptyState extends StatelessWidget {
           UiSpacer.vSpace(5),
 
           //
-          (title != null && title.isNotEmpty)
+          (title.isNotEmpty)
               ? title.text.lg.semiBold.center.makeCentered()
               : SizedBox.shrink(),
 

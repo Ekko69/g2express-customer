@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/constants/app_map_settings.dart';
 import 'package:fuodz/constants/app_strings.dart';
@@ -7,6 +6,7 @@ import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/coordinates.dart';
 import 'package:fuodz/services/http.service.dart';
 import 'package:fuodz/services/location.service.dart';
+import 'package:fuodz/utils/utils.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:singleton/singleton.dart';
 
@@ -22,8 +22,9 @@ class GeocoderService extends HttpService {
   GeocoderService._() {}
 
   Future<List<Address>> findAddressesFromCoordinates(
-    Coordinates coordinates,
-  ) async {
+    Coordinates coordinates, {
+    int limit = 5,
+  }) async {
     //use backend api
     if (!AppMapSettings.useGoogleOnApp) {
       final apiresult = await get(
@@ -31,6 +32,7 @@ class GeocoderService extends HttpService {
         queryParameters: {
           "lat": coordinates.latitude,
           "lng": coordinates.longitude,
+          "limit": limit,
         },
       );
 
@@ -38,7 +40,14 @@ class GeocoderService extends HttpService {
       final apiResponse = ApiResponse.fromResponse(apiresult);
       if (apiResponse.allGood) {
         return (apiResponse.data).map((e) {
-          return Address().fromServerMap(e);
+          // return Address().fromServerMap(e);
+          Address address;
+          try {
+            address = Address().fromMap(e);
+          } catch (error) {
+            address = Address().fromServerMap(e);
+          }
+          return address;
         }).toList();
       }
 
@@ -47,7 +56,7 @@ class GeocoderService extends HttpService {
     //use in-app geocoding
     final apiKey = AppStrings.googleMapApiKey;
     String url =
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.toString()};key=$apiKey";
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.toString()};key=$apiKey&radius=200";
 
     final apiResult = await get(
       Api.externalRedirect,
@@ -74,12 +83,17 @@ class GeocoderService extends HttpService {
     //use in-app geocoding
     String myLatLng = "";
     if (LocationService.currenctAddress != null) {
-      myLatLng = "${LocationService?.currenctAddress?.coordinates?.latitude},";
-      myLatLng += "${LocationService?.currenctAddress?.coordinates?.longitude}";
+      myLatLng = "${LocationService.currenctAddress?.coordinates?.latitude},";
+      myLatLng += "${LocationService.currenctAddress?.coordinates?.longitude}";
     }
 
     //get current device region
-    String region = WidgetsBinding.instance.window.locale.countryCode;
+    String? region;
+    try {
+      region = await Utils.getCurrentCountryCode();
+    } catch (error) {
+      region = "";
+    }
 
     //use backend api
     if (!AppMapSettings.useGoogleOnApp) {
@@ -113,7 +127,7 @@ class GeocoderService extends HttpService {
     final apiKey = AppStrings.googleMapApiKey;
     address = address.replaceAll(" ", "+");
     String url =
-        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$address;key=$apiKey;location=$myLatLng;region=$region";
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$address;key=$apiKey;location=$myLatLng;region=$region;radius=200";
     final result = await get(
       Api.externalRedirect,
       queryParameters: {"endpoint": url},

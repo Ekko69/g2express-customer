@@ -20,16 +20,16 @@ class Banners extends StatelessWidget {
     this.disableCenter = false,
     this.padding = 5,
     this.itemRadius,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final VendorType vendorType;
+  final VendorType? vendorType;
   final double viewportFraction;
   final bool showIndicators;
   final bool featured;
   final bool disableCenter;
   final double padding;
-  final double itemRadius;
+  final double? itemRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +39,14 @@ class Banners extends StatelessWidget {
         vendorType,
         featured: featured,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return model.isBusy
             ? LoadingShimmer().px20().h(150)
             : Visibility(
-                visible: model.banners != null && model.banners.isNotEmpty,
+                visible: model.banners.isNotEmpty,
                 child: Padding(
-                  padding: EdgeInsets.all(padding ?? 0),
+                  padding: EdgeInsets.all(padding),
                   child: VStack(
                     [
                       CarouselSlider(
@@ -57,9 +57,9 @@ class Banners extends StatelessWidget {
                           autoPlay: true,
                           initialPage: 1,
                           height: (!model.isBusy && model.banners.length > 0)
-                              ? (AppStrings.bannerHeight ?? 150.0)
+                              ? (AppStrings.bannerHeight)
                               : 0.00,
-                          disableCenter: disableCenter ?? false,
+                          disableCenter: disableCenter,
                           onPageChanged: (index, reason) {
                             model.currentIndex = index;
                             model.notifyListeners();
@@ -68,8 +68,8 @@ class Banners extends StatelessWidget {
                         items: model.banners.map(
                           (banner) {
                             return BannerListItem(
-                              radius: itemRadius,
-                              imageUrl: banner.imageUrl,
+                              radius: itemRadius ?? 0.0,
+                              imageUrl: banner.imageUrl ?? "",
                               onPressed: () => model.bannerSelected(banner),
                             );
                           },
@@ -80,7 +80,7 @@ class Banners extends StatelessWidget {
                         visible: model.banners.length <= 10 || showIndicators,
                         child: AnimatedSmoothIndicator(
                           activeIndex: model.currentIndex,
-                          count: model.banners.length ?? 0,
+                          count: model.banners.length,
                           textDirection: Utils.isArabic
                               ? TextDirection.rtl
                               : TextDirection.ltr,

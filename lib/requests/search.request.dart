@@ -8,6 +8,7 @@ import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/services/http.service.dart';
 import 'package:fuodz/services/location.service.dart';
+import 'package:fuodz/services/search.service.dart';
 
 class SearchRequest extends HttpService {
   //
@@ -21,10 +22,10 @@ class SearchRequest extends HttpService {
         },
       ).toList();
     }
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
-  Future<SearchData> getSearchFilterData({int vendorTypeId}) async {
+  Future<SearchData> getSearchFilterData({int? vendorTypeId}) async {
     final apiResult = await get(
       Api.searchData,
       queryParameters: {
@@ -36,40 +37,45 @@ class SearchRequest extends HttpService {
     if (apiResponse.allGood) {
       return SearchData.fromJson(apiResponse.body);
     }
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   //
   Future<List<dynamic>> searchRequest({
     String keyword = "",
-    String type,
-    Search search,
+    String? type,
+    required Search search,
     int page = 1,
   }) async {
+    //save the search keyword
+    if (keyword.isNotEmpty) {
+      await SearchService.saveSearchHistory(keyword);
+    }
     //
     Map<String, dynamic> params = {
       "merge": "1",
       "page": page,
       "keyword": keyword,
       "category_id": (search.subcategory == null && search.category != null)
-          ? search.category.id
+          ? search.category?.id
           : null,
-      "subcategory_id": search.subcategory != null ? search.subcategory.id : '',
-      "vendor_type_id": search.vendorType != null ? search.vendorType.id : "",
+      "subcategory_id":
+          search.subcategory != null ? search.subcategory?.id : '',
+      "vendor_type_id": search.vendorType != null ? search.vendorType?.id : "",
       "vendor_id": search.vendorId != null ? search.vendorId : "",
       "type": type ?? search.type,
       "min_price": search.minPrice,
       "max_price": search.maxPrice,
       "sort": search.sort,
-      "tags": search.tags.map((e) => e.id).toList(),
+      "tags": search.tags?.map((e) => e.id).toList(),
     };
 
     //
     if (search.byLocation ?? true) {
       params = {
         ...params,
-        "latitude": LocationService?.currenctAddress?.coordinates?.latitude,
-        "longitude": LocationService?.currenctAddress?.coordinates?.longitude,
+        "latitude": LocationService.getFetchByLocationLat(),
+        "longitude": LocationService.getFetchByLocationLng(),
       };
     }
 
@@ -102,6 +108,6 @@ class SearchRequest extends HttpService {
       return result;
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 }

@@ -3,12 +3,16 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/extensions/string.dart';
 import 'package:fuodz/view_models/product_details.vm.dart';
 import 'package:fuodz/widgets/buttons/custom_button.dart';
+import 'package:fuodz/widgets/buttons/qty_stepper.dart';
 import 'package:fuodz/widgets/currency_hstack.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductDetailsCartBottomSheet extends StatelessWidget {
-  const ProductDetailsCartBottomSheet({this.model, Key key}) : super(key: key);
+  const ProductDetailsCartBottomSheet({
+    required this.model,
+    Key? key,
+  }) : super(key: key);
 
   final ProductDetailsViewModel model;
   @override
@@ -23,12 +27,12 @@ class ProductDetailsCartBottomSheet extends StatelessWidget {
               //
               "Quantity".tr().text.xl.medium.make().expand(),
               //
-              VxStepper(
-                defaultValue: model.product.selectedQty ?? 1,
+              QtyStepper(
+                defaultValue: model.product.selectedQty,
                 min: 1,
                 max: (model.product.availableQty != null &&
-                        model.product.availableQty > 0)
-                    ? model.product.availableQty
+                        model.product.availableQty! > 0)
+                    ? model.product.availableQty!
                     : 20,
                 disableInput: true,
                 onChange: model.updatedSelectedQty,
@@ -102,7 +106,7 @@ class ProductDetailsCartBottomSheet extends StatelessWidget {
         .p20()
         .box
         .color(context.theme.colorScheme.background)
-        .shadowXl
+        .shadowSm
         .make()
         .wFull(context);
   }

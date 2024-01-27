@@ -3,8 +3,8 @@
 //     final vehicleType = vehicleTypeFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:dartx/dartx.dart';
 import 'package:fuodz/models/currency.dart';
-import 'package:supercharged/supercharged.dart';
 
 VehicleType vehicleTypeFromJson(String str) =>
     VehicleType.fromJson(json.decode(str));
@@ -13,21 +13,21 @@ String vehicleTypeToJson(VehicleType data) => json.encode(data.toJson());
 
 class VehicleType {
   VehicleType({
-    this.id,
-    this.name,
-    this.slug,
-    this.baseFare,
-    this.distanceFare,
-    this.timeFare,
-    this.minFare,
-    this.isActive,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
-    this.photo,
-    this.total,
-    this.encrypted,
-    this.currency,
+    required this.id,
+    required this.name,
+    required this.slug,
+    required this.baseFare,
+    required this.distanceFare,
+    required this.timeFare,
+    required this.minFare,
+    required this.isActive,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.formattedDate,
+    required this.photo,
+    required this.total,
+    required this.encrypted,
+    required this.currency,
   });
 
   int id;
@@ -43,28 +43,29 @@ class VehicleType {
   DateTime updatedAt;
   String formattedDate;
   String photo;
-  String encrypted;
-  Currency currency;
+  String? encrypted;
+  Currency? currency;
 
-  factory VehicleType.fromJson(Map<String, dynamic> json) => VehicleType(
-        id: json["id"],
-        name: json["name"],
-        slug: json["slug"],
-        baseFare: json["base_fare"].toString().toDouble(),
-        distanceFare: json["distance_fare"].toString().toDouble(),
-        timeFare: json["time_fare"].toString().toDouble(),
-        minFare: json["min_fare"].toString().toDouble(),
-        total: json["total"].toString().toDouble(),
-        isActive: json["is_active"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        formattedDate: json["formatted_date"],
-        photo: json["photo"],
-        encrypted: json["encrypted"],
-        currency: json["currency"] != null
-            ? Currency.fromJSON(json["currency"])
-            : null,
-      );
+  factory VehicleType.fromJson(Map<String, dynamic> json) {
+    return VehicleType(
+      id: json["id"],
+      name: json["name"],
+      slug: json["slug"],
+      baseFare: json["base_fare"].toString().toDouble(),
+      distanceFare: json["distance_fare"].toString().toDouble(),
+      timeFare: json["time_fare"].toString().toDouble(),
+      minFare: json["min_fare"].toString().toDouble(),
+      total: json["total"].toString().toDouble(),
+      isActive: json["is_active"],
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
+      formattedDate: json["formatted_date"],
+      photo: json["photo"],
+      encrypted: json["encrypted"],
+      currency:
+          json["currency"] != null ? Currency.fromJSON(json["currency"]) : null,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -81,6 +82,6 @@ class VehicleType {
         "formatted_date": formattedDate,
         "photo": photo,
         "encrypted": encrypted,
-        "currency": currency != null ? currency.toJson() : null,
+        "currency": currency != null ? currency?.toJson() : null,
       };
 }

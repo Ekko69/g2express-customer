@@ -10,9 +10,12 @@ import 'package:velocity_x/velocity_x.dart';
 
 class SmallHorizontalProductListItem extends StatelessWidget {
   //
-  const SmallHorizontalProductListItem(this.product,
-      {this.onPressed, @required this.qtyUpdated, Key key})
-      : super(key: key);
+  const SmallHorizontalProductListItem(
+    this.product, {
+    required this.onPressed,
+    required this.qtyUpdated,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Product product;
@@ -30,7 +33,7 @@ class SmallHorizontalProductListItem extends StatelessWidget {
           [
             //
             Hero(
-              tag: product.heroTag,
+              tag: product.heroTag ?? product.id,
               child: CustomImage(imageUrl: product.photo)
                   // .wh(Vx.dp40, Vx.dp40)
                   .w(context.percentWidth * 18)
@@ -61,7 +64,12 @@ class SmallHorizontalProductListItem extends StatelessWidget {
                 CurrencyHStack(
                   [
                     currencySymbol.text.xs.make(),
-                    product.sellPrice.currencyValueFormat().text.sm.medium.make(),
+                    product.sellPrice
+                        .currencyValueFormat()
+                        .text
+                        .sm
+                        .medium
+                        .make(),
                   ],
                   crossAlignment: CrossAxisAlignment.end,
                 ),
@@ -87,7 +95,12 @@ class SmallHorizontalProductListItem extends StatelessWidget {
           child: Visibility(
             visible: product.showDiscount,
             child: VxBox(
-              child: "-${product.discountPercentage}%".text.xs.semiBold.white.make(),
+              child: "-${product.discountPercentage}%"
+                  .text
+                  .xs
+                  .semiBold
+                  .white
+                  .make(),
             ).p4.bottomRounded(value: 5).color(AppColor.primaryColor).make(),
           ),
         ),

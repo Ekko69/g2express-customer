@@ -10,7 +10,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderDetailsVendorInfoView extends StatelessWidget {
-  const OrderDetailsVendorInfoView(this.vm, {Key key}) : super(key: key);
+  const OrderDetailsVendorInfoView(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
 
   @override
@@ -28,22 +28,23 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
                     .gray500
                     .medium
                     .make(),
-                vm.order.vendor.name.text.medium.xl
+                vm.order.vendor!.name.text.medium.xl
                     .make()
                     .py8()
                     .pOnly(bottom: Vx.dp4),
               ],
             ).expand(),
             //call
-            vm.order.canChatVendor
-                ? CustomButton(
-                    icon: FlutterIcons.phone_call_fea,
-                    iconColor: Colors.white,
-                    color: AppColor.primaryColor,
-                    shapeRadius: Vx.dp20,
-                    onPressed: vm.callVendor,
-                  ).wh(Vx.dp64, Vx.dp40).p12()
-                : UiSpacer.emptySpace(),
+            Visibility(
+              visible: vm.order.canChatVendor && AppUISettings.canCallVendor,
+              child: CustomButton(
+                icon: FlutterIcons.phone_call_fea,
+                iconColor: Colors.white,
+                color: AppColor.primaryColor,
+                shapeRadius: Vx.dp20,
+                onPressed: vm.callVendor,
+              ).wh(Vx.dp64, Vx.dp40).p12(),
+            ),
           ],
         ),
 
@@ -76,6 +77,6 @@ class OrderDetailsVendorInfoView extends StatelessWidget {
               ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20)
             : UiSpacer.emptySpace(),
       ],
-    ).p12().card.make().p20();
+    ).px(20);
   }
 }

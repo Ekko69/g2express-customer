@@ -9,14 +9,14 @@ import 'step_one/new_taxi_order_entry.collapsed.dart';
 import 'step_one/new_taxi_order_entry.panel.dart';
 
 class NewTaxiOrderLocationEntryView extends StatelessWidget {
-  const NewTaxiOrderLocationEntryView(this.vm, {Key key}) : super(key: key);
+  const NewTaxiOrderLocationEntryView(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NewTaxiOrderLocationEntryViewModel>.reactive(
       viewModelBuilder: () => NewTaxiOrderLocationEntryViewModel(context, vm),
-      onModelReady: (vm) => WidgetsBinding.instance.addPostFrameCallback(
+      onViewModelReady: (vm) => WidgetsBinding.instance.addPostFrameCallback(
         (_) {
           vm.initialise();
         },

@@ -16,17 +16,17 @@ class OrderStop {
     this.attachments,
   });
 
-  int id;
-  int orderId;
-  int stopId;
-  String name;
-  String phone;
-  String note;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String formattedDate;
-  DeliveryAddress deliveryAddress;
-  List<OrderAttachment> attachments;
+  int? id;
+  int? orderId;
+  int? stopId;
+  String? name;
+  String? phone;
+  String? note;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? formattedDate;
+  DeliveryAddress? deliveryAddress;
+  List<OrderAttachment>? attachments;
 
   factory OrderStop.fromJson(Map<String, dynamic> json) {
     return OrderStop(
@@ -60,21 +60,20 @@ class OrderStop {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "order_id": orderId == null ? null : orderId,
+        "id": id,
+        "order_id": orderId,
         "stop_id": stopId == null && deliveryAddress != null
-            ? deliveryAddress.id
+            ? deliveryAddress?.id
             : stopId,
-        "name": name == null ? "" : name,
-        "phone": phone == null ? "" : phone,
-        "note": note == null ? "" : note,
-        "created_at": createdAt == null ? null : createdAt.toIso8601String(),
-        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
+        "name": name,
+        "phone": phone,
+        "note": note,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
         "formatted_date": formattedDate == null ? null : formattedDate,
-        "delivery_address":
-            deliveryAddress == null ? null : deliveryAddress.toJson(),
+        "delivery_address": deliveryAddress?.toJson(),
         "attachments": attachments != null
-            ? List<dynamic>.from(attachments.map((x) => x.toJson()))
+            ? List<dynamic>.from(attachments!.map((x) => x.toJson()))
             : [],
       };
 }

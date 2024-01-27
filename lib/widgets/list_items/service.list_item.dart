@@ -7,36 +7,35 @@ import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/widgets/cards/custom.visibility.dart';
 import 'package:fuodz/widgets/currency_hstack.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ServiceListItem extends StatelessWidget {
   const ServiceListItem({
-    this.service,
-    this.onPressed,
-    this.imgW,
-    this.height,
-    Key key,
+    required this.service,
+    required this.onPressed,
+    required this.imgW,
+    required this.height,
+    Key? key,
   }) : super(key: key);
 
   final Function(Service) onPressed;
   final Service service;
-  final double imgW;
-  final double height;
+  final double? imgW;
+  final double? height;
   @override
   Widget build(BuildContext context) {
     return HStack(
       [
         //service image
         CustomVisibilty(
-          visible: service.photos != null &&
-              service.photos.isNotEmpty &&
-              service.photos.firstOrNull() != null,
+          visible: service.photos != null && service.photos!.isNotEmpty,
           child: Hero(
-            tag: service.heroTag,
+            tag: service.heroTag ?? service.id,
             child: CustomImage(
-              imageUrl: service.photos.firstOrElse(() => null),
+              imageUrl: service.photos!.firstOrElse(() => ""),
               boxFit: BoxFit.cover,
-              width: imgW ?? (height != null ? (height * 2.2) : 75),
+              width: imgW ?? (height != null ? (height! * 2.2) : 75),
               height: height ?? 70,
             ).box.clip(Clip.antiAlias).make(),
           ),
@@ -49,8 +48,7 @@ class ServiceListItem extends StatelessWidget {
             service.name.text.base.make(),
             //description
             CustomVisibilty(
-              visible:
-                  service.description != null && service.description.isNotEmpty,
+              visible: service.description.isNotEmpty,
               child: service.description.text.gray600.sm.thin
                   .maxLines(1)
                   .overflow(TextOverflow.ellipsis)
@@ -60,6 +58,7 @@ class ServiceListItem extends StatelessWidget {
             FittedBox(
               child: HStack(
                 [
+                  "${service.hasOptions ? "From".tr() : ""} ".text.sm.make(),
                   CurrencyHStack(
                     [
                       "${AppStrings.currencySymbol}"
@@ -84,7 +83,8 @@ class ServiceListItem extends StatelessWidget {
                   //dsicount
                   Visibility(
                     visible: service.showDiscount,
-                    child: "- ${service.discountPercentage}%".text.red500.make(),
+                    child:
+                        "- ${service.discountPercentage}%".text.red500.make(),
                   ),
                 ],
               ),

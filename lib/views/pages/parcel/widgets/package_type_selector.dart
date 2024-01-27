@@ -8,7 +8,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PackageTypeSelector extends StatelessWidget {
-  const PackageTypeSelector({this.vm, Key key}) : super(key: key);
+  const PackageTypeSelector({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final NewParcelViewModel vm;
   @override
@@ -28,7 +31,7 @@ class PackageTypeSelector extends StatelessWidget {
             return PackageTypeListItem(
               packageType: packageType,
               selected: vm.selectedPackgeType == packageType,
-              onPressed: () => vm.changeSelectedPackageType(packageType),
+              onPressed: vm.changeSelectedPackageType,
             );
           },
           separatorBuilder: (context, index) =>

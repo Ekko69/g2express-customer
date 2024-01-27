@@ -1,6 +1,7 @@
 import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/extensions/dynamic.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/order.dart';
@@ -35,11 +36,11 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
   }
 
   void callVendor() {
-    launchUrlString("tel:${order.vendor.phone}");
+    launchUrlString("tel:${order.vendor?.phone}");
   }
 
   void callDriver() {
-    launchUrlString("tel:${order.driver.phone}");
+    launchUrlString("tel:${order.driver?.phone}");
   }
 
   void callRecipient() {
@@ -54,23 +55,24 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
         name: order.user.name,
         image: order.user.photo,
       ),
-      'vendor_${order.vendor.id}': PeerUser(
-        id: "vendor_${order.vendor.id}",
-        name: order.vendor.name,
-        image: order.vendor.logo,
+      'vendor_${order.vendor?.id}': PeerUser(
+        id: "vendor_${order.vendor?.id}",
+        name: order.vendor?.name ?? "",
+        image: order.vendor?.logo,
       ),
     };
     //
     final chatEntity = ChatEntity(
       onMessageSent: ChatService.sendChatMessage,
-      mainUser: peers['${order.userId}'],
+      mainUser: peers['${order.userId}']!,
       peers: peers,
       //don't translate this
       path: 'orders/' + order.code + "/customerVendor/chats",
       title: "Chat with vendor".tr(),
+      supportMedia: AppUISettings.canCustomerChatSupportMedia,
     );
     //
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.chatRoute,
       arguments: chatEntity,
     );
@@ -84,32 +86,31 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
         name: order.user.name,
         image: order.user.photo,
       ),
-      '${order.driver.id}': PeerUser(
-          id: "${order.driver.id}",
-          name: order.driver.name,
-          image: order.driver.photo),
+      '${order.driver?.id}': PeerUser(
+          id: "${order.driver?.id}",
+          name: order.driver?.name ?? "Driver".tr(),
+          image: order.driver?.photo),
     };
     //
     final chatEntity = ChatEntity(
-      mainUser: peers['${order.userId}'],
+      mainUser: peers['${order.userId}']!,
       peers: peers,
       //don't translate this
       path: 'orders/' + order.code + "/customerDriver/chats",
       title: "Chat with driver".tr(),
       onMessageSent: ChatService.sendChatMessage,
+      supportMedia: AppUISettings.canCustomerChatSupportMedia,
     );
     //
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.chatRoute,
       arguments: chatEntity,
     );
   }
 
   void fetchOrderDetails() async {
-    if (refreshController != null) {
-      refreshController.refreshCompleted();
-      notifyListeners();
-    }
+    refreshController.refreshCompleted();
+    notifyListeners();
     setBusy(true);
     try {
       order = await orderRequest.getOrderDetails(id: order.id);
@@ -163,8 +164,10 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
 
   //
   trackOrder() {
-    viewContext.navigator
-        .pushNamed(AppRoutes.orderTrackingRoute, arguments: order);
+    Navigator.of(viewContext).pushNamed(
+      AppRoutes.orderTrackingRoute,
+      arguments: order,
+    );
   }
 
   cancelOrder() async {
@@ -173,6 +176,7 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
       isScrollControlled: true,
       builder: (context) {
         return OrderCancellationBottomSheet(
+          order: order,
           onSubmit: (String reason) {
             viewContext.pop();
             processOrderCancellation(reason);
@@ -220,7 +224,7 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
         return Dialog(
           child: VStack(
             [
-              QrImage(
+              QrImageView(
                 data: order.verificationCode,
                 version: QrVersions.auto,
                 size: viewContext.percentWidth * 40,
@@ -262,7 +266,7 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
             .p20()
             .scrollVertical()
             .box
-            .color(contex.backgroundColor)
+            .color(contex.theme.colorScheme.background)
             .topRounded()
             .make();
       },
@@ -270,7 +274,7 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
   }
 
   changeSelectedPaymentMethod(
-    PaymentMethod paymentMethod, {
+    PaymentMethod? paymentMethod, {
     bool callTotal = true,
   }) async {
     //
@@ -280,14 +284,14 @@ class OrderDetailsViewModel extends CheckoutBaseViewModel {
       //
       ApiResponse apiResponse = await orderRequest.updateOrderPaymentMethod(
         id: order.id,
-        paymentMethodId: paymentMethod.id,
+        paymentMethodId: paymentMethod?.id,
         status: "pending",
       );
 
       //
       order = Order.fromJson(apiResponse.body["order"]);
-      if (!["wallet", "cash"].contains(paymentMethod.slug)) {
-        if (paymentMethod.slug == "offline") {
+      if (!["wallet", "cash"].contains(paymentMethod?.slug)) {
+        if (paymentMethod?.slug == "offline") {
           openExternalWebpageLink(order.paymentLink);
         } else {
           openWebpageLink(order.paymentLink);

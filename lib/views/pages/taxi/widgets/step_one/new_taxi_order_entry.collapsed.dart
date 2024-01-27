@@ -14,7 +14,7 @@ import 'package:measure_size/measure_size.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewTaxiOrderEntryCollapsed extends StatelessWidget {
-  const NewTaxiOrderEntryCollapsed(this.taxiNewOrderViewModel, {Key key})
+  const NewTaxiOrderEntryCollapsed(this.taxiNewOrderViewModel, {Key? key})
       : super(key: key);
 
   final NewTaxiOrderLocationEntryViewModel taxiNewOrderViewModel;
@@ -44,7 +44,7 @@ class NewTaxiOrderEntryCollapsed extends StatelessWidget {
                       ),
                       "Where to?".tr().text.semiBold.lg.make().px12().expand(),
                       CustomVisibilty(
-                        visible: AppStrings.canScheduleTaxiOrder ?? false,
+                        visible: AppStrings.canScheduleTaxiOrder,
                         child: Icon(
                           FlutterIcons.calendar_ant,
                           size: 18,
@@ -70,13 +70,10 @@ class NewTaxiOrderEntryCollapsed extends StatelessWidget {
                       ),
                   //previous history
                   Padding(
-                    padding:
-                        (taxiNewOrderViewModel.shortPreviousAddressesList ==
-                                    null ||
-                                taxiNewOrderViewModel
-                                    .shortPreviousAddressesList.isEmpty)
-                            ? EdgeInsets.all(5)
-                            : EdgeInsets.symmetric(vertical: 5),
+                    padding: (taxiNewOrderViewModel
+                            .shortPreviousAddressesList.isEmpty)
+                        ? EdgeInsets.all(5)
+                        : EdgeInsets.symmetric(vertical: 5),
                     child: CustomListView(
                       isLoading: taxiNewOrderViewModel.busy(
                         taxiNewOrderViewModel.previousAddresses,

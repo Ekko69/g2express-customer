@@ -4,7 +4,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ParcelOrderPayer extends StatelessWidget {
-  const ParcelOrderPayer(this.vm, {Key key}) : super(key: key);
+  const ParcelOrderPayer(this.vm, {Key? key}) : super(key: key);
 
   final NewParcelViewModel vm;
   @override
@@ -22,8 +22,8 @@ class ParcelOrderPayer extends StatelessWidget {
                 Radio(
                   value: true,
                   groupValue: vm.packageCheckout.payer,
-                  onChanged: (value) {
-                    vm.packageCheckout.payer = value;
+                  onChanged: (bool? value) {
+                    vm.packageCheckout.payer = value ?? false;
                     vm.notifyListeners();
                   },
                 ),
@@ -38,9 +38,12 @@ class ParcelOrderPayer extends StatelessWidget {
                 Radio(
                   value: false,
                   groupValue: vm.packageCheckout.payer,
-                  onChanged: (value) {
-                    vm.packageCheckout.payer = value;
+                  onChanged: (bool? value) {
+                    vm.packageCheckout.payer = value ?? false;
                     vm.notifyListeners();
+                    //set the payment method to cash
+                    //if no cash payment, throw error and set to other payment method
+                    vm.setupReceiverPaymentMethod();
                   },
                 ),
                 //receiver

@@ -14,10 +14,12 @@ import 'package:fuodz/widgets/custom_text_form_field.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:supercharged/supercharged.dart';
 
 class MultipleOrderCheckoutPage extends StatelessWidget {
-  const MultipleOrderCheckoutPage({this.checkout, Key key}) : super(key: key);
+  const MultipleOrderCheckoutPage({
+    required this.checkout,
+    Key? key,
+  }) : super(key: key);
 
   final CheckOut checkout;
 
@@ -25,7 +27,7 @@ class MultipleOrderCheckoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MultipleCheckoutViewModel>.reactive(
       viewModelBuilder: () => MultipleCheckoutViewModel(context, checkout),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,
@@ -58,19 +60,28 @@ class MultipleOrderCheckoutPage extends StatelessWidget {
 
               //order final price preview
               MultipleVendorOrderSummary(
-                subTotal: vm.checkout.subTotal,
-                discount: vm.checkout.discount,
+                subTotal: vm.checkout!.subTotal,
                 deliveryFee: vm.totalDeliveryFee,
-                tax: vm.checkout.tax,
+                discount: (vm.checkout!.coupon?.for_delivery ?? false)
+                    ? null
+                    : vm.checkout!.discount,
+                deliveryDiscount: (vm.checkout!.coupon?.for_delivery ?? false)
+                    ? vm.checkout!.discount
+                    : null,
+                totalTax: vm.taxes.sum(),
+                totalFee: vm.vendorFees.sum(),
                 taxes: vm.taxes,
                 vendors: vm.vendors,
                 subtotals: vm.subtotals,
-                driverTip: vm.driverTipTEC.text.toDouble() ?? 0.00,
-                total: vm.checkout.totalWithTip,
+                driverTip: double.tryParse(vm.driverTipTEC.text) ?? 0.00,
+                total: vm.checkout!.total,
               ),
 
               //show notice it driver should be paid in cash
-              CheckoutDriverCashDeliveryNoticeView(vm.checkout.deliveryAddress),
+              if (vm.checkout!.deliveryAddress != null)
+                CheckoutDriverCashDeliveryNoticeView(
+                  vm.checkout!.deliveryAddress!,
+                ),
               //
               CustomButton(
                 title: "PLACE ORDER".tr().padRight(14),

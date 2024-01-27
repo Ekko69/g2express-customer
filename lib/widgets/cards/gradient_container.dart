@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 
 class GradientContainer extends StatelessWidget {
   const GradientContainer({
-    this.colors,
-    this.stops,
+    required this.colors,
+    this.stops = const [0.0, 1.0],
     this.child,
     this.height,
     this.width,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final List<Color> colors;
   final List<double> stops;
-  final Widget child;
-  final double height;
-  final double width;
+  final Widget? child;
+  final double? height;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {

@@ -12,8 +12,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 class ViewAllVendorsView extends StatelessWidget {
   const ViewAllVendorsView({
-    Key key,
-    @required this.vendorType,
+    Key? key,
+    required this.vendorType,
   }) : super(key: key);
   final VendorType vendorType;
 

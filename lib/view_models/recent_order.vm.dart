@@ -8,12 +8,13 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class RecentOrderViewModel extends OrdersViewModel {
   //
-  RecentOrderViewModel(BuildContext context,{this.vendorType}) : super(null) {
+  RecentOrderViewModel(BuildContext context, {this.vendorType})
+      : super(context) {
     this.viewContext = context;
   }
 
   //
-  VendorType vendorType;
+  VendorType? vendorType;
   OrderRequest orderRequest = OrderRequest();
   RefreshController refreshController = RefreshController();
   List<Order> orders = [];
@@ -26,7 +27,7 @@ class RecentOrderViewModel extends OrdersViewModel {
     try {
       orders = await orderRequest.getOrders(
         params: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
         },
       );
       clearErrors();

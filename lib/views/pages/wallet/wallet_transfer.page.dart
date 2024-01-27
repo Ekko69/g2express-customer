@@ -8,6 +8,7 @@ import 'package:fuodz/models/user.dart';
 import 'package:fuodz/models/wallet.dart';
 import 'package:fuodz/services/validator.service.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
+import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/view_models/wallet_transfer.vm.dart';
 import 'package:fuodz/widgets/base.page.dart';
 import 'package:fuodz/widgets/buttons/custom_button.dart';
@@ -19,7 +20,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'widgets/selected_wallet_user.dart';
 
 class WalletTransferPage extends StatelessWidget {
-  const WalletTransferPage(this.wallet, {Key key}) : super(key: key);
+  const WalletTransferPage(this.wallet, {Key? key}) : super(key: key);
   //
   final Wallet wallet;
 
@@ -31,7 +32,7 @@ class WalletTransferPage extends StatelessWidget {
       showAppBar: true,
       body: ViewModelBuilder<WalletTransferViewModel>.reactive(
         viewModelBuilder: () => WalletTransferViewModel(context, wallet),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return Form(
             key: vm.formKey,
@@ -46,7 +47,7 @@ class WalletTransferPage extends StatelessWidget {
                   validator: (value) => FormValidator.validateCustom(
                     value,
                     name: "Amount".tr(),
-                    rules: "required|lt:${vm.wallet.balance}",
+                    rules: "required|lt:${vm.wallet?.balance}",
                   ),
                 ),
                 UiSpacer.formVerticalSpace(),
@@ -84,7 +85,7 @@ class WalletTransferPage extends StatelessWidget {
                         ),
                       ),
                       suggestionsCallback: vm.searchUsers,
-                      itemBuilder: (context, User suggestion) {
+                      itemBuilder: (context, User? suggestion) {
                         if (suggestion == null) {
                           return Divider();
                         }
@@ -95,7 +96,7 @@ class WalletTransferPage extends StatelessWidget {
                               [
                                 "${suggestion.name}".text.semiBold.lg.make(),
                                 UiSpacer.vSpace(5),
-                                "${suggestion.code ?? ''} - ${suggestion.phone != null ? (suggestion.phone ?? '').maskString(
+                                "${suggestion.code ?? ''} - ${suggestion.phone.isNotBlank ? suggestion.phone.maskString(
                                         start: 3,
                                         end: 8,
                                       ) : ''}"
@@ -115,6 +116,7 @@ class WalletTransferPage extends StatelessWidget {
                     Icon(
                       FlutterIcons.qrcode_ant,
                       size: 32,
+                      color: Utils.textColorByTheme(),
                     )
                         .p12()
                         .box
@@ -126,7 +128,8 @@ class WalletTransferPage extends StatelessWidget {
                   ],
                 ),
                 //selected user view
-                SelectedWalletUser(vm.selectedUser),
+                if (vm.selectedUser != null)
+                  SelectedWalletUser(vm.selectedUser!),
 
                 UiSpacer.formVerticalSpace(),
                 //account password

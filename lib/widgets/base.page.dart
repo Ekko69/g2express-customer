@@ -13,22 +13,24 @@ import 'package:velocity_x/velocity_x.dart';
 class BasePage extends StatefulWidget {
   final bool showAppBar;
   final bool showLeadingAction;
-  final bool extendBodyBehindAppBar;
-  final Function onBackPressed;
+  final bool? extendBodyBehindAppBar;
+  final Function? onBackPressed;
   final bool showCart;
-  final String title;
-  final List<Widget> actions;
-  final Widget leading;
+  final dynamic title;
+  final List<Widget>? actions;
+  final Widget? leading;
   final Widget body;
-  final Widget bottomSheet;
-  final Widget bottomNavigationBar;
-  final Widget fab;
+  final Widget? bottomSheet;
+  final Widget? bottomNavigationBar;
+  final Widget? fab;
+  final FloatingActionButtonLocation? fabLocation;
   final bool isLoading;
-  final Color appBarColor;
-  final double elevation;
-  final Color appBarItemColor;
-  final Color backgroundColor;
+  final Color? appBarColor;
+  final double? elevation;
+  final Color? appBarItemColor;
+  final Color? backgroundColor;
   final bool showCartView;
+  final PreferredSize? customAppbar;
 
   BasePage({
     this.showAppBar = false,
@@ -38,10 +40,11 @@ class BasePage extends StatefulWidget {
     this.showCart = false,
     this.title = "",
     this.actions,
-    this.body,
+    required this.body,
     this.bottomSheet,
     this.bottomNavigationBar,
     this.fab,
+    this.fabLocation,
     this.isLoading = false,
     this.appBarColor,
     this.appBarItemColor,
@@ -49,7 +52,8 @@ class BasePage extends StatefulWidget {
     this.elevation,
     this.extendBodyBehindAppBar,
     this.showCartView = false,
-    Key key,
+    this.customAppbar,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -70,48 +74,52 @@ class _BasePageState extends State<BasePage> {
       child: KeyboardDismisser(
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: widget.backgroundColor ??
-              AppColor.faintBgColor ??
-              Theme.of(context).colorScheme.background,
+          backgroundColor: widget.backgroundColor ?? AppColor.faintBgColor,
           extendBodyBehindAppBar: widget.extendBodyBehindAppBar ?? false,
-          appBar: widget.showAppBar
-              ? AppBar(
-                  backgroundColor: widget.appBarColor ?? context.primaryColor,
-                  elevation: widget.elevation,
-                  automaticallyImplyLeading: widget.showLeadingAction,
-                  leading: widget.showLeadingAction
-                      ? widget.leading == null
-                          ? IconButton(
-                              icon: Icon(
-                                !Utils.isArabic
-                                    ? FlutterIcons.arrow_left_fea
-                                    : FlutterIcons.arrow_right_fea,
-                                color: widget.appBarItemColor == null
-                                    ? Colors.white
-                                    : widget.appBarItemColor !=
-                                            Colors.transparent
-                                        ? widget.appBarItemColor
-                                        : AppColor.primaryColor,
-                              ),
-                              onPressed: widget.onBackPressed != null
-                                  ? widget.onBackPressed
-                                  : () => Navigator.pop(context),
-                            )
-                          : widget.leading
-                      : null,
-                  title: widget.title.text
-                      .maxLines(1)
-                      .overflow(TextOverflow.ellipsis)
-                      .color(widget.appBarItemColor ?? Colors.white)
-                      .make(),
-                  actions: widget.actions ??
-                      [
-                        widget.showCart
-                            ? PageCartAction()
-                            : UiSpacer.emptySpace(),
-                      ],
-                )
-              : null,
+          appBar: widget.customAppbar != null
+              ? widget.customAppbar
+              : widget.showAppBar
+                  ? AppBar(
+                      backgroundColor:
+                          widget.appBarColor ?? context.primaryColor,
+                      elevation: widget.elevation,
+                      automaticallyImplyLeading: widget.showLeadingAction,
+                      leading: widget.showLeadingAction
+                          ? widget.leading == null
+                              ? IconButton(
+                                  icon: Icon(
+                                    !Utils.isArabic
+                                        ? FlutterIcons.arrow_left_fea
+                                        : FlutterIcons.arrow_right_fea,
+                                    color: widget.appBarItemColor == null
+                                        ? Colors.white
+                                        : widget.appBarItemColor !=
+                                                Colors.transparent
+                                            ? widget.appBarItemColor
+                                            : AppColor.primaryColor,
+                                  ),
+                                  onPressed: widget.onBackPressed != null
+                                      ? () => widget.onBackPressed!()
+                                      : () => Navigator.pop(context),
+                                )
+                              : widget.leading
+                          : null,
+                      title: widget.title is Widget
+                          ? widget.title
+                          : "${widget.title}"
+                              .text
+                              .maxLines(1)
+                              .overflow(TextOverflow.ellipsis)
+                              .color(widget.appBarItemColor ?? Colors.white)
+                              .make(),
+                      actions: widget.actions ??
+                          [
+                            widget.showCart
+                                ? PageCartAction()
+                                : UiSpacer.emptySpace(),
+                          ],
+                    )
+                  : null,
           body: Stack(
             children: [
               //body
@@ -149,7 +157,7 @@ class _BasePageState extends State<BasePage> {
           bottomNavigationBar: widget.bottomNavigationBar,
           bottomSheet: widget.bottomSheet,
           floatingActionButton: widget.fab,
-          // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation: widget.fabLocation,
         ),
       ),
     );

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:fuodz/constants/app_strings.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fuodz/models/user.dart';
 import 'package:fuodz/requests/auth.request.dart';
@@ -13,14 +12,14 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EditProfileViewModel extends MyBaseViewModel {
-  User currentUser;
-  File newPhoto;
+  User? currentUser;
+  File? newPhoto;
   //the textediting controllers
   TextEditingController nameTEC = new TextEditingController();
   TextEditingController emailTEC = new TextEditingController();
   TextEditingController phoneTEC = new TextEditingController();
-  Country selectedCountry;
-  String accountPhoneNumber;
+  Country? selectedCountry;
+  String? accountPhoneNumber;
 
   //
   AuthRequest _authRequest = AuthRequest();
@@ -30,12 +29,7 @@ class EditProfileViewModel extends MyBaseViewModel {
     this.viewContext = context;
     try {
       this.selectedCountry = Country.parse(
-        AuthServices.currentUser.countryCode ??
-            AppStrings.countryCode
-                .toUpperCase()
-                .replaceAll(" ", "")
-                .replaceAll("AUTO,", "")
-                .split(",")[0],
+        AuthServices.currentUser!.countryCode!,
       );
     } catch (error) {
       this.selectedCountry = Country.parse("us");
@@ -45,9 +39,12 @@ class EditProfileViewModel extends MyBaseViewModel {
   void initialise() async {
     //
     currentUser = await AuthServices.getCurrentUser();
-    nameTEC.text = currentUser.name;
-    emailTEC.text = currentUser.email;
-    phoneTEC.text = currentUser.rawPhone ?? currentUser.phone;
+    nameTEC.text = currentUser!.name;
+    emailTEC.text = currentUser!.email;
+    String rawPhone = currentUser!.rawPhone ?? currentUser!.phone;
+    //remove non mobile number characters
+    rawPhone = rawPhone.replaceAll(RegExp(r"[^0-9]"), "");
+    phoneTEC.text = rawPhone;
     notifyListeners();
   }
 
@@ -80,12 +77,12 @@ class EditProfileViewModel extends MyBaseViewModel {
   //
   processUpdate() async {
     //
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       //
       setBusy(true);
 
       //
-      accountPhoneNumber = "+${selectedCountry.phoneCode}${phoneTEC.text}";
+      accountPhoneNumber = "+${selectedCountry?.phoneCode}${phoneTEC.text}";
       print("Phone ==> $accountPhoneNumber");
 
       final apiResponse = await _authRequest.updateProfile(
@@ -93,7 +90,7 @@ class EditProfileViewModel extends MyBaseViewModel {
         name: nameTEC.text,
         email: emailTEC.text,
         phone: accountPhoneNumber,
-        countryCode: selectedCountry.countryCode,
+        countryCode: selectedCountry?.countryCode,
       );
 
       //
@@ -102,7 +99,7 @@ class EditProfileViewModel extends MyBaseViewModel {
       //update local data if all good
       if (apiResponse.allGood) {
         //everything works well
-        await AuthServices.saveUser(apiResponse.body["user"]);
+        await AuthServices.saveUser(apiResponse.body["user"], reload: false);
       }
 
       //

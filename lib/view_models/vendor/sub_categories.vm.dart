@@ -75,7 +75,7 @@ class SubcategoriesViewModel extends MyBaseViewModel {
       vendorType: category.vendorType,
       category: category,
       subcategory: category,
-      showType: (category.vendorType.isService ?? false) ? 5 : 4,
+      showType: (category.vendorType?.isService ?? false) ? 5 : 4,
     );
     final page = NavigationService().searchPageWidget(search);
 

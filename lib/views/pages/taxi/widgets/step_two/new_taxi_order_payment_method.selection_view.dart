@@ -5,8 +5,10 @@ import 'package:fuodz/widgets/directional_chevron.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewTaxiOrderPaymentMethodSelectionView extends StatelessWidget {
-  const NewTaxiOrderPaymentMethodSelectionView({this.vm, Key key})
-      : super(key: key);
+  const NewTaxiOrderPaymentMethodSelectionView({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final NewTaxiOrderSummaryViewModel vm;
   @override
@@ -14,9 +16,9 @@ class NewTaxiOrderPaymentMethodSelectionView extends StatelessWidget {
     return HStack(
       [
         CustomImage(
-          imageUrl: vm.taxiViewModel.selectedPaymentMethod?.photo,
+          imageUrl: vm.taxiViewModel.selectedPaymentMethod!.photo,
         ).wh(40, 40),
-        "${vm.taxiViewModel.selectedPaymentMethod?.name}"
+        "${vm.taxiViewModel.selectedPaymentMethod!.name}"
             .text
             .make()
             .px12()

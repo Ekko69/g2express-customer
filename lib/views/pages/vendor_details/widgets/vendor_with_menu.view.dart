@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
-import 'package:fuodz/view_models/vendor_details.vm.dart';
+import 'package:fuodz/view_models/vendor_menu_details.vm.dart';
 import 'package:fuodz/views/pages/vendor_details/widgets/upload_prescription.btn.dart';
 import 'package:fuodz/views/pages/vendor_details/widgets/vendor_details_header.view.dart';
 import 'package:fuodz/widgets/busy_indicator.dart';
@@ -16,7 +16,10 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorDetailsWithMenuPage extends StatefulWidget {
-  VendorDetailsWithMenuPage({this.vendor, Key key}) : super(key: key);
+  VendorDetailsWithMenuPage({
+    required this.vendor,
+    Key? key,
+  }) : super(key: key);
 
   final Vendor vendor;
 
@@ -29,15 +32,15 @@ class _VendorDetailsWithMenuPageState extends State<VendorDetailsWithMenuPage>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<VendorDetailsViewModel>.reactive(
-      viewModelBuilder: () => VendorDetailsViewModel(
+    return ViewModelBuilder<VendorDetailsWithMenuViewModel>.reactive(
+      viewModelBuilder: () => VendorDetailsWithMenuViewModel(
         context,
         widget.vendor,
         tickerProvider: this,
       ),
-      onModelReady: (model) {
+      onViewModelReady: (model) {
         model.tabBarController = TabController(
-          length: model.vendor.menus.length ?? 0,
+          length: model.vendor?.menus.length ?? 0,
           vsync: this,
         );
         model.getVendorDetails();
@@ -77,7 +80,7 @@ class _VendorDetailsWithMenuPageState extends State<VendorDetailsWithMenuPage>
                     background:
                         //vendor image
                         CustomImage(
-                      imageUrl: model.vendor.featureImage,
+                      imageUrl: model.vendor!.featureImage,
                       height: 220,
                       canZoom: true,
                     ).wFull(context),
@@ -102,7 +105,7 @@ class _VendorDetailsWithMenuPageState extends State<VendorDetailsWithMenuPage>
                     indicatorColor: Colors.white,
                     indicatorWeight: 2,
                     controller: model.tabBarController,
-                    tabs: model.vendor.menus.map(
+                    tabs: model.vendor!.menus.map(
                       (menu) {
                         return Tab(
                           text: menu.name,
@@ -118,7 +121,7 @@ class _VendorDetailsWithMenuPageState extends State<VendorDetailsWithMenuPage>
                   ? BusyIndicator().p20().centered()
                   : TabBarView(
                       controller: model.tabBarController,
-                      children: model.vendor.menus.map(
+                      children: model.vendor!.menus.map(
                         (menu) {
                           //
                           return CustomListView(
@@ -138,7 +141,7 @@ class _VendorDetailsWithMenuPageState extends State<VendorDetailsWithMenuPage>
                             itemBuilder: (context, index) {
                               //
                               final product =
-                                  model.menuProducts[menu.id][index];
+                                  model.menuProducts[menu.id]?[index];
                               return HorizontalProductListItem(
                                 product,
                                 onPressed: model.productSelected,

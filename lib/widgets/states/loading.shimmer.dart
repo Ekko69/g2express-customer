@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LoadingShimmer extends StatelessWidget {
-  const LoadingShimmer({Key key}) : super(key: key);
-
+  const LoadingShimmer({this.loading = true, this.child, Key? key})
+      : super(key: key);
+  final Widget? child;
+  final bool loading;
   @override
   Widget build(BuildContext context) {
     //
     final linerHeight = (context.percentHeight * 8) * 0.17;
     //
+    if (!loading) {
+      return child ?? Container();
+    }
     return VxBox(
       child: VStack(
         [

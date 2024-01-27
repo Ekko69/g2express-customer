@@ -6,13 +6,16 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PackageTypeListItem extends StatelessWidget {
-  const PackageTypeListItem(
-      {this.packageType, this.selected = false, this.onPressed, Key key})
-      : super(key: key);
+  const PackageTypeListItem({
+    required this.packageType,
+    this.selected = false,
+    this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   final PackageType packageType;
   final bool selected;
-  final Function onPressed;
+  final Function(PackageType)? onPressed;
   @override
   Widget build(BuildContext context) {
     return HStack(
@@ -36,11 +39,17 @@ class PackageTypeListItem extends StatelessWidget {
       // alignment: MainAxisAlignment.start,
     )
         .p12()
-        .onInkTap(onPressed)
+        .onInkTap(
+          onPressed == null
+              ? null
+              : () {
+                  onPressed!(packageType);
+                },
+        )
         .box
         .roundedSM
         .border(
-          color: selected ? AppColor.primaryColor : Colors.grey[300],
+          color: selected ? AppColor.primaryColor : Colors.grey.shade300,
           width: selected ? 2 : 1,
         )
         .make();

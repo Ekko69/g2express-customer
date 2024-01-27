@@ -22,8 +22,8 @@ class OrdersViewModel extends PaymentViewModel {
   //
   int queryPage = 1;
   RefreshController refreshController = RefreshController();
-  StreamSubscription homePageChangeStream;
-  StreamSubscription refreshOrderStream;
+  StreamSubscription? homePageChangeStream;
+  StreamSubscription? refreshOrderStream;
 
   void initialise() async {
     await fetchMyOrders();
@@ -45,14 +45,8 @@ class OrdersViewModel extends PaymentViewModel {
   //
   dispose() {
     super.dispose();
-    //
-    if (homePageChangeStream != null) {
-      homePageChangeStream.cancel();
-    }
-    //
-    if (refreshOrderStream != null) {
-      refreshOrderStream.cancel();
-    }
+    homePageChangeStream?.cancel();
+    refreshOrderStream?.cancel();
   }
 
   //
@@ -94,7 +88,8 @@ class OrdersViewModel extends PaymentViewModel {
       );
       return;
     }
-    final result = await viewContext.navigator.pushNamed(
+
+    final result = await Navigator.of(viewContext).pushNamed(
       AppRoutes.orderDetailsRoute,
       arguments: order,
     );
@@ -112,7 +107,7 @@ class OrdersViewModel extends PaymentViewModel {
   }
 
   void openLogin() async {
-    await viewContext.navigator.pushNamed(AppRoutes.loginRoute);
+    await Navigator.of(viewContext).pushNamed(AppRoutes.loginRoute);
     notifyListeners();
     fetchMyOrders();
   }

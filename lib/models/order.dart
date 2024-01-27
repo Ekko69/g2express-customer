@@ -21,15 +21,16 @@ String orderToJson(Order data) => json.encode(data.toJson());
 
 class Order {
   Order({
-    this.id,
-    this.canRate,
-    this.rateDriver,
-    this.code,
-    this.verificationCode,
-    this.note,
-    this.type,
-    this.status,
-    this.paymentStatus,
+    required this.id,
+    this.canRate = false,
+    this.isCancellable = false,
+    this.rateDriver = false,
+    this.code = "",
+    this.verificationCode = "",
+    this.note = "",
+    this.type = "",
+    this.status = "pending",
+    this.paymentStatus = "pending",
     this.subTotal,
     this.discount,
     this.deliveryFee,
@@ -41,15 +42,15 @@ class Order {
     this.deliveryAddressId,
     this.paymentMethodId,
     this.vendorId,
-    this.userId,
+    this.userId = 0,
     this.driverId,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
-    this.paymentLink,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.formattedDate,
+    this.paymentLink = "",
     this.orderProducts,
     this.orderStops,
-    this.user,
+    required this.user,
     this.driver,
     this.deliveryAddress,
     this.paymentMethod,
@@ -67,7 +68,7 @@ class Order {
     this.length,
     this.weight,
     this.payer,
-    this.statuses,
+    this.statuses = const [],
     this.photo,
     this.attachments,
     this.fees,
@@ -75,6 +76,7 @@ class Order {
 
   int id;
   bool canRate;
+  bool isCancellable = false;
   bool rateDriver;
   String code;
   String verificationCode;
@@ -82,54 +84,70 @@ class Order {
   String type;
   String status;
   String paymentStatus;
-  double subTotal;
-  double discount;
-  double deliveryFee;
-  double comission;
-  double tax;
-  double taxRate;
-  double tip;
-  double total;
-  int deliveryAddressId;
-  int paymentMethodId;
-  int vendorId;
+  double? subTotal;
+  double? discount;
+  double? deliveryFee;
+  double? comission;
+  double? tax;
+  double? taxRate;
+  double? tip;
+  double? total;
+  int? deliveryAddressId;
+  int? paymentMethodId;
+  int? vendorId;
   int userId;
-  int driverId;
-  String pickupDate;
-  String pickupTime;
+  int? driverId;
+  String? pickupDate;
+  String? pickupTime;
   DateTime createdAt;
   DateTime updatedAt;
   String formattedDate;
   String paymentLink;
-  List<OrderProduct> orderProducts;
-  List<OrderStop> orderStops;
+  List<OrderProduct>? orderProducts;
+  List<OrderStop>? orderStops;
   User user;
-  Driver driver;
-  DeliveryAddress deliveryAddress;
-  PaymentMethod paymentMethod;
-  Vendor vendor;
-  OrderService orderService;
-  TaxiOrder taxiOrder;
+  Driver? driver;
+  DeliveryAddress? deliveryAddress;
+  PaymentMethod? paymentMethod;
+  Vendor? vendor;
+  OrderService? orderService;
+  TaxiOrder? taxiOrder;
   //Package related
-  PackageType packageType;
-  DeliveryAddress pickupLocation;
-  DeliveryAddress dropoffLocation;
-  String weight;
-  String length;
-  String height;
-  String width;
-  String payer;
-  String recipientName;
-  String recipientPhone;
+  PackageType? packageType;
+  DeliveryAddress? pickupLocation;
+  DeliveryAddress? dropoffLocation;
+  String? weight;
+  String? length;
+  String? height;
+  String? width;
+  String? payer;
+  String? recipientName;
+  String? recipientPhone;
   List<OrderStatus> statuses;
-  String photo;
-  List<OrderAttachment> attachments;
-  List<OrderFee> fees;
+  String? photo;
+  List<OrderAttachment>? attachments;
+  List<OrderFee>? fees;
 
   factory Order.fromJson(dynamic json) {
+    //parse fees
+    dynamic fees = json["fees"];
+    if (fees is String) {
+      try {
+        fees = jsonDecode(fees);
+      } catch (e) {
+        fees = jsonDecode(jsonDecode(fees));
+      }
+
+      //
+      if (fees is String) {
+        fees = jsonDecode(fees);
+      }
+    }
+
     return Order(
       id: json["id"] == null ? null : json["id"],
       canRate: json["can_rate"] == null ? null : json["can_rate"],
+      isCancellable: json["can_cancel"] == null ? null : json["can_cancel"],
       rateDriver:
           json["can_rate_driver"] == null ? false : json["can_rate_driver"],
       code: json["code"] == null ? null : json["code"],
@@ -171,24 +189,18 @@ class Order {
       vendorId: json["vendor_id"] == null
           ? null
           : int.parse(json["vendor_id"].toString()),
-      userId: json["user_id"] == null
-          ? null
-          : int.parse(json["user_id"].toString()),
+      userId: int.parse(json["user_id"].toString()),
       driverId: json["driver_id"] == null
           ? null
           : int.parse(json["driver_id"].toString()),
-      createdAt: json["created_at"] == null
-          ? null
-          : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null
-          ? null
-          : DateTime.parse(json["updated_at"]),
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
       formattedDate:
           json["formatted_date"] == null ? null : json["formatted_date"],
       paymentLink: json["payment_link"] == null ? "" : json["payment_link"],
       //
       statuses: json["statuses"] == null
-          ? null
+          ? []
           : List<OrderStatus>.from(
                   json["statuses"].map((x) => OrderStatus.fromJson(x)))
               .distinctBy((element) => element.name)
@@ -203,7 +215,7 @@ class Order {
           ? null
           : List<OrderStop>.from(
               json["stops"].map((x) => OrderStop.fromJson(x))),
-      user: json["user"] == null ? null : User.fromJson(json["user"]),
+      user: User.fromJson(json["user"]),
       driver: json["driver"] == null ? null : Driver.fromJson(json["driver"]),
       deliveryAddress: json["delivery_address"] == null
           ? null
@@ -237,11 +249,11 @@ class Order {
           json["pickup_date"] != null ? "${json["pickup_date"]} 00:00:00" : "",
       pickupTime: "${json["pickup_date"]} ${json["pickup_time"]}",
       // // Jiffy("${json["pickup_date"]} ${json["pickup_time"]}","yyyy-MM-dd hh:mm:ss").format("hh:mm a"),
-      weight: json["weight"].toString() ?? "",
-      length: json["length"].toString() ?? "",
-      height: json["height"].toString() ?? "",
-      width: json["width"].toString() ?? "",
-      payer: json["payer"].toString() ?? "1",
+      weight: json["weight"].toString(),
+      length: json["length"].toString(),
+      height: json["height"].toString(),
+      width: json["width"].toString(),
+      payer: json["payer"] != null ? json["payer"].toString() : "1",
       //attachments
       attachments: json["attachments"] == null
           ? []
@@ -250,7 +262,7 @@ class Order {
       fees: json["fees"] == null
           ? []
           : List<OrderFee>.from(
-              (jsonDecode(json["fees"])).map(
+              (fees as List).map(
                 (x) => OrderFee.fromJson(x),
               ),
             ),
@@ -284,18 +296,26 @@ class Order {
         "formatted_date": formattedDate,
         "payment_link": paymentLink,
         "statuses": List<dynamic>.from(statuses.map((x) => x.toJson())),
-        "products": List<dynamic>.from(orderProducts.map((x) => x.toJson())),
-        "stops": List<dynamic>.from(orderStops.map((x) => x.toJson())),
-        "user": user?.toJson(),
+        "products": orderProducts == null
+            ? []
+            : List<dynamic>.from(orderProducts!.map((x) => x.toJson())),
+        "stops": orderStops == null
+            ? []
+            : List<dynamic>.from(orderStops!.map((x) => x.toJson())),
+        "user": user.toJson(),
         "driver": driver?.toJson(),
-        "delivery_address": deliveryAddress.toJson(),
-        "payment_method": paymentMethod.toJson(),
-        "vendor": vendor.toJson(),
+        "delivery_address": deliveryAddress?.toJson(),
+        "payment_method": paymentMethod?.toJson(),
+        "vendor": vendor?.toJson(),
         "order_service": orderService?.toJson(),
         "taxi_order": taxiOrder?.toJson(),
         "payer": payer,
-        "attachments": List<dynamic>.from(attachments.map((x) => x.toJson())),
-        "fees": List<dynamic>.from(fees.map((x) => x.toJson())),
+        "attachments": attachments == null
+            ? []
+            : List<dynamic>.from(attachments!.map((x) => x.toJson())),
+        "fees": fees == null
+            ? []
+            : List<dynamic>.from(fees!.map((x) => x.toJson())),
       };
 
   //getters
@@ -304,19 +324,19 @@ class Order {
   get isPaymentPending =>
       paymentStatus == "pending" &&
       ["pending"].contains(status) &&
-      paymentMethod.isCash != 1;
+      (paymentMethod == null || paymentMethod?.isCash != 1);
 
   get isCompleted => ["delivered", "completed", "successful"].contains(status);
 
   get isPackageDelivery =>
       vendor?.vendorType != null &&
-      vendor?.vendorType?.slug == "parcel" &&
+      vendor?.vendorType.slug == "parcel" &&
       packageType != null;
   get isSerice =>
-      vendor?.vendorType != null && vendor?.vendorType?.slug == "service";
+      vendor?.vendorType != null && vendor?.vendorType.slug == "service";
   get isCommerce =>
       vendor?.vendorType != null &&
-      (vendor?.vendorType?.slug?.contains("commerce") ?? false);
+      (vendor?.vendorType.slug.contains("commerce") ?? false);
   //check if the order is a taxi order
   bool get isTaxi => taxiOrder != null;
   bool get canZoomOnPickupLocation =>
@@ -344,7 +364,13 @@ class Order {
     return driver != null && ["enroute"].contains(status);
   }
 
-  bool get canCancel => ["scheduled", "pending"].contains(status);
+  bool get canCancel {
+    if (['cancelled', 'failed', 'successful', 'completed'].contains(status)) {
+      return false;
+    }
+    return isCancellable || ["scheduled", "pending"].contains(status);
+  }
+
   bool get canCancelTaxi =>
       driverId == null ||
       ["scheduled", "pending", "preparing", "ready"].contains(status);
@@ -363,7 +389,7 @@ class Order {
         ["cancelled", "delivered"].contains(status);
   }
 
-  double get summaryDeliveryFee {
+  double? get summaryDeliveryFee {
     return deliveryAddressId != null || pickupLocation != null
         ? deliveryFee
         : null;
@@ -371,6 +397,10 @@ class Order {
 
   //
   List<OrderStatus> get totalStatuses {
+    if (statuses.isEmpty) {
+      return statuses;
+    }
+    //
     if (statuses.last.name == "scheduled") {
       statuses.add(OrderStatus(name: "pending", passed: false));
     }

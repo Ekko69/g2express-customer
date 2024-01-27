@@ -17,7 +17,10 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CommerceProductDetailsPage extends StatelessWidget {
-  CommerceProductDetailsPage({this.product, Key key}) : super(key: key);
+  CommerceProductDetailsPage({
+    required this.product,
+    Key? key,
+  }) : super(key: key);
 
   final Product product;
 
@@ -26,7 +29,7 @@ class CommerceProductDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProductDetailsViewModel>.reactive(
       viewModelBuilder: () => ProductDetailsViewModel(context, product),
-      onModelReady: (model) => model.getProductDetails(),
+      onViewModelReady: (model) => model.getProductDetails(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,
@@ -44,7 +47,7 @@ class CommerceProductDetailsPage extends StatelessWidget {
                   bottom: false,
                   top: false,
                   child: Hero(
-                    tag: model.product.heroTag,
+                    tag: model.product.heroTag ?? model.product.id,
                     child: ProductImagesGalleryView(model.product),
                   ),
                 ),

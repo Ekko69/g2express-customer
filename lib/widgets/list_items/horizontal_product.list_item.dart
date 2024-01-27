@@ -13,16 +13,16 @@ class HorizontalProductListItem extends StatelessWidget {
   const HorizontalProductListItem(
     this.product, {
     this.onPressed,
-    @required this.qtyUpdated,
+    required this.qtyUpdated,
     this.height,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
   final Product product;
-  final Function(Product) onPressed;
-  final Function(Product, int) qtyUpdated;
-  final double height;
+  final Function(Product)? onPressed;
+  final Function(Product, int)? qtyUpdated;
+  final double? height;
   @override
   Widget build(BuildContext context) {
     //
@@ -33,7 +33,7 @@ class HorizontalProductListItem extends StatelessWidget {
       [
         //
         Hero(
-          tag: product.heroTag,
+          tag: product.heroTag ?? product.id,
           child: CustomImage(imageUrl: product.photo)
               .wh(Vx.dp40, Vx.dp40)
               .box
@@ -50,7 +50,7 @@ class HorizontalProductListItem extends StatelessWidget {
                 .maxLines(2)
                 .overflow(TextOverflow.ellipsis)
                 .make(),
-            "${product?.vendor?.name}"
+            "${product.vendor.name}"
                 .text
                 .sm
                 .semiBold
@@ -99,16 +99,21 @@ class HorizontalProductListItem extends StatelessWidget {
                 : UiSpacer.emptySpace(),
 
             // plus/min icon here
-            ProductStockState(product, qtyUpdated: qtyUpdated),
+            ProductStockState(
+              product,
+              qtyUpdated: qtyUpdated,
+            ),
           ],
           crossAlignment: CrossAxisAlignment.end,
         ),
       ],
-    ).onInkTap(() => onPressed(product));
+    ).onInkTap(
+      onPressed == null ? null : () => onPressed!(product),
+    );
 
     //height set
     if (height != null) {
-      widget = widget.h(height);
+      widget = widget.h(height!);
     }
 
     //

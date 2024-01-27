@@ -20,7 +20,10 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:banner_carousel/banner_carousel.dart';
 
 class ProductDetailsPage extends StatelessWidget {
-  ProductDetailsPage({this.product, Key key}) : super(key: key);
+  ProductDetailsPage({
+    required this.product,
+    Key? key,
+  }) : super(key: key);
 
   final Product product;
 
@@ -29,7 +32,7 @@ class ProductDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProductDetailsViewModel>.reactive(
       viewModelBuilder: () => ProductDetailsViewModel(context, product),
-      onModelReady: (model) => model.getProductDetails(),
+      onViewModelReady: (model) => model.getProductDetails(),
       builder: (context, model, child) {
         return BasePage(
           title: model.product.name,
@@ -89,9 +92,9 @@ class ProductDetailsPage extends StatelessWidget {
                     //product header
                     ProductDetailsHeader(product: model.product),
                     //product description
-                    UiSpacer.divider(height: 4, thickness: 5).py12(),
+                    UiSpacer.divider(height: 1, thickness: 2).py12(),
                     HtmlTextView(model.product.description).px20(),
-                    UiSpacer.divider(height: 4, thickness: 5).py12(),
+                    UiSpacer.divider(height: 1, thickness: 2).py12(),
 
                     //options header
                     Visibility(

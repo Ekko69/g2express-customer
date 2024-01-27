@@ -12,9 +12,9 @@ import 'local_storage.service.dart';
 
 class HttpService {
   String host = Api.baseUrl;
-  BaseOptions baseOptions;
-  Dio dio;
-  SharedPreferences prefs;
+  BaseOptions? baseOptions;
+  Dio? dio;
+  SharedPreferences? prefs;
 
   Future<Map<String, String>> getHeaders() async {
     final userToken = await AuthServices.getAuthBearerToken();
@@ -31,12 +31,12 @@ class HttpService {
     baseOptions = new BaseOptions(
       baseUrl: host,
       validateStatus: (status) {
-        return status <= 500;
+        return status != null && status <= 500;
       },
       // connectTimeout: 300,
     );
     dio = new Dio(baseOptions);
-    dio.interceptors.add(getCacheManager().interceptor);
+    dio!.interceptors.add(getCacheManager().interceptor);
   }
 
   DioCacheManager getCacheManager() {
@@ -51,7 +51,7 @@ class HttpService {
   //for get api calls
   Future<Response> get(
     String url, {
-    Map<String, dynamic> queryParameters,
+    Map<String, dynamic>? queryParameters,
     bool includeHeaders = true,
   }) async {
     //preparing the api uri/url
@@ -67,12 +67,12 @@ class HttpService {
     Response response;
 
     try {
-      response = await dio.get(
+      response = await dio!.get(
         uri,
         options: mOptions,
         queryParameters: queryParameters,
       );
-    } catch (error) {
+    } on DioError catch (error) {
       response = formatDioExecption(error);
     }
 
@@ -97,12 +97,12 @@ class HttpService {
 
     Response response;
     try {
-      response = await dio.post(
+      response = await dio!.post(
         uri,
         data: body,
         options: mOptions,
       );
-    } catch (error) {
+    } on DioError catch (error) {
       response = formatDioExecption(error);
     }
 
@@ -126,12 +126,12 @@ class HttpService {
 
     Response response;
     try {
-      response = await dio.post(
+      response = await dio!.post(
         uri,
         data: body is FormData ? body : FormData.fromMap(body),
         options: mOptions,
       );
-    } catch (error) {
+    } on DioError catch (error) {
       response = formatDioExecption(error);
     }
 
@@ -144,14 +144,14 @@ class HttpService {
     Response response;
 
     try {
-      response = await dio.patch(
+      response = await dio!.patch(
         uri,
         data: body,
         options: Options(
           headers: await getHeaders(),
         ),
       );
-    } catch (error) {
+    } on DioError catch (error) {
       response = formatDioExecption(error);
     }
 
@@ -166,13 +166,13 @@ class HttpService {
 
     Response response;
     try {
-      response = await dio.delete(
+      response = await dio!.delete(
         uri,
         options: Options(
           headers: await getHeaders(),
         ),
       );
-    } catch (error) {
+    } on DioError catch (error) {
       response = formatDioExecption(error);
     }
     return response;
@@ -182,7 +182,7 @@ class HttpService {
     var response = Response(requestOptions: ex.requestOptions);
     print("type ==> ${ex.type}");
     response.statusCode = 400;
-    String msg = response.statusMessage;
+    String? msg = response.statusMessage;
 
     try {
       if (ex.type == DioErrorType.connectTimeout) {
@@ -205,8 +205,7 @@ class HttpService {
       response.data = {"message": msg};
     } catch (error) {
       response.statusCode = 400;
-      msg = error.message ??
-          "Please check your internet connection and try again".tr();
+      msg = "Please check your internet connection and try again".tr();
       response.data = {"message": msg};
     }
 
@@ -216,9 +215,9 @@ class HttpService {
   //NEUTRALS
   Future<Response> getExternal(
     String url, {
-    Map<String, dynamic> queryParameters,
+    Map<String, dynamic>? queryParameters,
   }) async {
-    return dio.get(
+    return dio!.get(
       url,
       queryParameters: queryParameters,
     );

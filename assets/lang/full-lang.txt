@@ -749,3 +749,103 @@ New Order
 Transfer
 Booking address is out of vendor service range
 Current Location
+Products
+Layout Type
+GridView
+ListView
+Trying to find your current location.
+Please wait while we get it
+OR
+Choose On Map
+Current Location
+Permission is denied permanently, please re-enable permission from app info on your device settings. Thank you
+We are unable to determine current location. Please try again or manually select location
+Try again
+Our services
+Tap for more info/action
+Coupons
+Copied to clipboard
+Products
+Vendors
+Coupon can be use with most products without restrictions
+Coupon can be use with most vendors without restrictions
+Skip
+Order failed
+Product Available
+or less
+Product avaiable qty is less than your selected qty. Please reduce selected qty to:
+Add %s Qty
+Timeout. Please check your internet connection and try again
+Connection timeout. Please check your internet connection and try again
+Please check your internet connection and try again
+Verification Code
+Enter Verification Code
+Enter the 6-digit verification code sent to
+Resend in
+Resend
+Edit Phone No.
+Verify
+Verification code required
+Didn't receive the code?
+Resend
+Rate Driver
+Did you like provided service by %s ?
+completed
+Thank you for using %s. To provide you with the best experience possible, our app needs access to your location. We use your location data to show you nearby vendors, enable you to set up a delivery address or location during checkout, and provide live tracking of your order and delivery persons. Your privacy is important to us, and we will never share your location data with third parties.
+Prescription
+Please upload prescription
+Prescription
+You can only upload %s prescription at a time
+Permission is denied permanently. You can skip the use for location and use the app manually. Thank you
+From
+Additional Options
+Please select option
+Aditional Option
+Please select an additional option
+Selected Options
+Selected Additional Options
+Options
+Quantity
+New Parcel Order
+Exchange Rate
+No Recent Earned Points
+There are currently no earned points to display. Keep participating in activities and making purchases to earn points and unlock exciting rewards.
+Google login failed
+Facebook login failed
+Trip cancelled successfully
+Failed to cancel trip
+Trip rated successfully
+Failed to rate trip
+Operation successful
+Operation failed
+Error loading wallet address
+Sorry, no vendor match your search. Please try again or explore different categories. Check back for updates. Happy searching!
+Sorry, no product match your search. Please try again or explore different categories. Check back for updates. Happy searching!
+Sorry, no service match your search. Please try again or explore different categories. Check back for updates. Happy searching!
+There seems to be no result
+Search History
+You can only select
+options for
+Max Selection:
+Cancel
+Ok
+Base Fare
+Trip Distance
+Trip Minutes
+Trip Duration
+Minute
+Age Restriction
+You must be 18 years or older to purchase this product/service. By clicking continue you confirm that you are 18 years or older.
+No, Cancel
+Yes, I'm 18+
+Deliver To
+Discount will be applied to delivery fee on checkout
+Top-Up
+Top-Up
+TOP-UP
+Wallet Transactions
+Promo
+Description
+Delivery Discount
+Ok
+Selected Options

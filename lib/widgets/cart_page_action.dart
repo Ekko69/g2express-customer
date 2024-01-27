@@ -15,7 +15,7 @@ class PageCartAction extends StatefulWidget {
     this.iconSize = 24,
     this.badgeSize = 14,
     this.padding = 10,
-    Key key,
+    Key? key,
   }) : super(key: key);
   final Color color;
   final Color textColor;
@@ -51,8 +51,8 @@ class _PageCartActionState extends State<PageCartAction> {
                   .badge(
                     count: snapshot.data,
                     size: widget.badgeSize,
-                    color: widget.color ?? Colors.white,
-                    textStyle: context.textTheme.bodyLarge.copyWith(
+                    color: widget.color,
+                    textStyle: context.textTheme.bodyLarge?.copyWith(
                       fontSize: widget.fontSize,
                       color: widget.textColor,
                     ),

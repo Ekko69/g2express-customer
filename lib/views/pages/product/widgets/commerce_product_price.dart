@@ -8,14 +8,17 @@ import 'package:fuodz/widgets/currency_hstack.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CommerceProductPrice extends StatelessWidget {
-  const CommerceProductPrice({this.model, Key key}) : super(key: key);
+  const CommerceProductPrice({
+    required this.model,
+    Key? key,
+  }) : super(key: key);
 
   final ProductDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
 //price
-  final currencySymbol = AppStrings.currencySymbol;
+    final currencySymbol = AppStrings.currencySymbol;
     return HStack(
       [
         "Price:".text.make().expand(flex: 2),

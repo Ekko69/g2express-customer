@@ -9,8 +9,8 @@ class PaymentOptionListItem extends StatelessWidget {
   const PaymentOptionListItem(
     this.paymentMethod, {
     this.selected = false,
-    Key key,
-    this.onSelected,
+    Key? key,
+    required this.onSelected,
   }) : super(key: key);
 
   final bool selected;
@@ -38,7 +38,7 @@ class PaymentOptionListItem extends StatelessWidget {
         .border(
           color: selected
               ? AppColor.primaryColor
-              : context.textTheme.bodyLarge.color.withOpacity(0.20),
+              : context.textTheme.bodyLarge!.color!.withOpacity(0.20),
           width: selected ? 2 : 1,
         )
         .make()

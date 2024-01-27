@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SafetyView extends StatelessWidget {
-  const SafetyView({Key key}) : super(key: key);
+  const SafetyView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class SafetyView extends StatelessWidget {
           color: Colors.white,
         ).p12().box.roundedFull.shadowSm.red500.makeCentered().onInkTap(
           () {
-            launchUrlString("tel:${AppStrings.emergencyContact ?? 911}");
+            launchUrlString("tel:${AppStrings.emergencyContact}");
           },
         ),
         "Safety".tr().text.makeCentered().py4(),

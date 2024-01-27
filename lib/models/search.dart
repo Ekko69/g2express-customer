@@ -3,23 +3,23 @@ import 'package:fuodz/models/tag.dart';
 import 'package:fuodz/models/vendor_type.dart';
 
 class Search {
-  String type = "";
-  Category category;
-  Category subcategory;
-  VendorType vendorType;
-  int vendorId;
-  int showType;
-  SearchType viewType;
-  bool byLocation = true;
-  bool showProductsTag = false;
-  bool showVendorsTag = false;
-  bool showServicesTag = false;
-  bool showProvidesTag = false;
-  String sort = "asc";
-  String layoutType = "grid";
-  String minPrice;
-  String maxPrice;
-  List<Tag> tags = [];
+  String? type = "";
+  Category? category;
+  Category? subcategory;
+  VendorType? vendorType;
+  int? vendorId;
+  int? showType;
+  SearchType? viewType;
+  bool? byLocation = true;
+  bool? showProductsTag = false;
+  bool? showVendorsTag = false;
+  bool? showServicesTag = false;
+  bool? showProvidesTag = false;
+  String? sort = "asc";
+  String? layoutType = "grid";
+  String? minPrice;
+  String? maxPrice;
+  List<Tag>? tags = [];
 
   Search({
     this.type = "",
@@ -57,23 +57,25 @@ class Search {
   }
 
   bool showVendors() {
-    return ([
-          SearchType.vendors,
-          SearchType.vendorProducts,
-          SearchType.vendorServices
-        ].contains(viewType)) ??
-        [1, 4, 5].contains(showType);
+    List<int> showTypeCheckes = [1, 4, 5];
+    List<SearchType> viewTypeCheckes = [
+      SearchType.vendors,
+      SearchType.vendorProducts,
+      SearchType.vendorServices
+    ];
+    return viewTypeCheckes.contains(viewType) ||
+        showTypeCheckes.contains(showType);
   }
 
   bool showProducts() {
     return ([SearchType.vendorProducts, SearchType.products]
-            .contains(viewType)) ??
+            .contains(viewType)) ||
         [2, 4].contains(showType);
   }
 
   bool showServices() {
     return ([SearchType.vendorServices, SearchType.services]
-            .contains(viewType)) ??
+            .contains(viewType)) ||
         [3, 5].contains(showType);
   }
 }

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/constants/app_ui_styles.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorTypeVerticalListItem extends StatelessWidget {
-  const VendorTypeVerticalListItem(this.vendorType, {this.onPressed, Key key})
-      : super(key: key);
+  const VendorTypeVerticalListItem(
+    this.vendorType, {
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   final VendorType vendorType;
   final Function onPressed;
@@ -24,7 +28,7 @@ class VendorTypeVerticalListItem extends StatelessWidget {
         verticalOffset: 50.0,
         child: FadeInAnimation(
           child: InkWell(
-            onTap: onPressed,
+            onTap: () => onPressed(),
             child: VStack(
               [
                 //image + details
@@ -35,25 +39,27 @@ class VendorTypeVerticalListItem extends StatelessWidget {
                       //
                       CustomImage(
                         imageUrl: vendorType.logo,
-                        boxFit: BoxFit.contain,
-                        width: 50,
-                        height: 50,
+                        boxFit: AppUIStyles.vendorTypeImageStyle,
+                        height: AppUIStyles.vendorTypeHeight,
+                        width: AppUIStyles.vendorTypeWidth,
                       ).p12().centered(),
                       //
                       VStack(
                         [
                           vendorType.name.text.lg
                               .color(textColor)
-                              .semiBold.center
+                              .semiBold
+                              .center
                               .makeCentered(),
                           Visibility(
-                            visible: vendorType.description != null && vendorType.description.isNotEmpty,
+                            visible: vendorType.description.isNotEmpty,
                             child: "${vendorType.description}"
                                 .text
                                 .color(textColor)
                                 .center
                                 .sm
-                                .makeCentered().pOnly(top: 5),
+                                .makeCentered()
+                                .pOnly(top: 5),
                           ),
                         ],
                       ).py4(),
@@ -66,9 +72,9 @@ class VendorTypeVerticalListItem extends StatelessWidget {
                   visible: AppStrings.showVendorTypeImageOnly,
                   child: CustomImage(
                     imageUrl: vendorType.logo,
-                    width: context.percentWidth * 100,
-                    height: 150,
-                    boxFit: BoxFit.contain,
+                    boxFit: AppUIStyles.vendorTypeImageStyle,
+                    height: AppUIStyles.vendorTypeHeight,
+                    width: AppUIStyles.vendorTypeWidth,
                   ),
                 ),
               ],

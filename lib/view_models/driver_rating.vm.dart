@@ -5,6 +5,7 @@ import 'package:fuodz/requests/vendor.request.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 class DriverRatingViewModel extends MyBaseViewModel {
   //
   VendorRequest vendorRequest = VendorRequest();
@@ -29,7 +30,7 @@ class DriverRatingViewModel extends MyBaseViewModel {
       rating: rating,
       review: reviewTEC.text,
       orderId: order.id,
-      driverId: order.driverId,
+      driverId: order.driverId!,
     );
     setBusy(false);
 

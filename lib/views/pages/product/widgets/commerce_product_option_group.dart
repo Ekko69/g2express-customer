@@ -3,11 +3,15 @@ import 'package:fuodz/models/option_group.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/view_models/product_details.vm.dart';
 import 'package:fuodz/widgets/list_items/commerce_option.list_item.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CommerceProductOptionGroup extends StatelessWidget {
-  const CommerceProductOptionGroup({this.optionGroup, this.model, Key key})
-      : super(key: key);
+  const CommerceProductOptionGroup({
+    required this.optionGroup,
+    required this.model,
+    Key? key,
+  }) : super(key: key);
 
   final OptionGroup optionGroup;
   final ProductDetailsViewModel model;
@@ -16,7 +20,14 @@ class CommerceProductOptionGroup extends StatelessWidget {
     return VStack(
       [
         //group name
-        optionGroup.name.text.base.semiBold.make(),
+        "${optionGroup.name}".text.lg.semiBold.make(),
+        Visibility(
+          visible: optionGroup.maxOptions != null,
+          child: ("Max Selection: ".tr() + "${optionGroup.maxOptions}")
+              .text
+              .sm
+              .make(),
+        ),
         UiSpacer.vSpace(6),
 
         //options

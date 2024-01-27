@@ -1,4 +1,4 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/vendor.dart';
@@ -20,7 +20,7 @@ class TopVendorsViewModel extends MyBaseViewModel {
   //
   List<Vendor> vendors = [];
   final VendorType vendorType;
-  final Map<String, dynamic> params;
+  final Map<String, dynamic>? params;
 
   int selectedType = 1;
   final bool enableFilter;
@@ -43,7 +43,7 @@ class TopVendorsViewModel extends MyBaseViewModel {
         byLocation: AppStrings.enableFatchByLocation,
         params: {
           "vendor_type_id": vendorType.id,
-          ...(params != null ? params : {})
+          ...?(params != null ? params : {})
         },
       );
 
@@ -71,7 +71,8 @@ class TopVendorsViewModel extends MyBaseViewModel {
   }
 
   vendorSelected(Vendor vendor) async {
-    viewContext.navigator.pushNamed(
+    //navigate to vendor details
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.vendorDetails,
       arguments: vendor,
     );

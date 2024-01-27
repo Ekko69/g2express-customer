@@ -7,12 +7,12 @@ class DynamicProductListItem extends StatelessWidget {
     this.product, {
     this.onPressed,
     this.h,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Product product;
-  final Function(Product) onPressed;
-  final double h;
+  final Function(Product)? onPressed;
+  final double? h;
   @override
   Widget build(BuildContext context) {
     return FoodHorizontalProductListItem(

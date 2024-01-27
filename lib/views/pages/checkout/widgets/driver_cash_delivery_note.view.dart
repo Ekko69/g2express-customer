@@ -5,7 +5,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CheckoutDriverCashDeliveryNoticeView extends StatelessWidget {
-  const CheckoutDriverCashDeliveryNoticeView(this.dAddress, {Key key})
+  const CheckoutDriverCashDeliveryNoticeView(this.dAddress, {Key? key})
       : super(key: key);
 
   final DeliveryAddress dAddress;
@@ -13,7 +13,7 @@ class CheckoutDriverCashDeliveryNoticeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: dAddress != null && AppFinanceSettings.collectDeliveryFeeInCash,
+      visible: AppFinanceSettings.collectDeliveryFeeInCash,
       child: VxBox(
         child: "".richText.withTextSpanChildren(
           [

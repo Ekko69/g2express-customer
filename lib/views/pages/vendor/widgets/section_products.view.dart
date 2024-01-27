@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/enums/product_fetch_data_type.enum.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/view_models/products.vm.dart';
@@ -27,24 +26,24 @@ class SectionProductsView extends StatelessWidget {
     this.listHeight = 195,
     this.separator,
     this.byLocation = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
   final Axis scrollDirection;
   final ProductFetchDataType type;
   final String title;
-  final double itemWidth;
-  final double itemHeight;
+  final double? itemWidth;
+  final double? itemHeight;
   final dynamic viewType;
-  final double listHeight;
-  final Widget separator;
+  final double? listHeight;
+  final Widget? separator;
   final bool byLocation;
 
   @override
   Widget build(BuildContext context) {
     return CustomVisibilty(
-      visible: !AppStrings.enableSingleVendor,
+      // visible: !AppStrings.enableSingleVendor,
       child: ViewModelBuilder<ProductsViewModel>.reactive(
         viewModelBuilder: () => ProductsViewModel(
           context,
@@ -52,7 +51,7 @@ class SectionProductsView extends StatelessWidget {
           type,
           byLocation: byLocation,
         ),
-        onModelReady: (model) => model.initialise(),
+        onViewModelReady: (model) => model.initialise(),
         builder: (context, model, child) {
           //
           //listview
@@ -92,7 +91,7 @@ class SectionProductsView extends StatelessWidget {
                 );
               } else {
                 //grocery product list item
-                if (product?.vendor?.vendorType?.isGrocery ?? false) {
+                if (product.vendor.vendorType.isGrocery) {
                   itemView = GroceryProductListItem(
                     product: product,
                     onPressed: model.productSelected,
@@ -108,13 +107,13 @@ class SectionProductsView extends StatelessWidget {
 
               //
               if (itemWidth != null) {
-                return itemView.w(itemWidth);
+                return itemView.w(itemWidth!);
               }
               return itemView;
             },
             emptyWidget: EmptyVendor(),
             separatorBuilder:
-                separator != null ? (ctx, index) => separator : null,
+                separator != null ? (ctx, index) => separator! : null,
           );
           //
           return CustomVisibilty(
@@ -127,7 +126,7 @@ class SectionProductsView extends StatelessWidget {
                 if (model.products.isEmpty)
                   listView.h(240)
                 else if (listHeight != null)
-                  listView.h(listHeight)
+                  listView.h(listHeight!)
                 else
                   listView
               ],

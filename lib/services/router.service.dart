@@ -1,6 +1,13 @@
 import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
+import 'package:fuodz/models/checkout.dart';
+import 'package:fuodz/models/delivery_address.dart';
+import 'package:fuodz/models/notification.dart';
+import 'package:fuodz/models/order.dart';
+import 'package:fuodz/models/product.dart';
+import 'package:fuodz/models/search.dart';
+import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/views/pages/auth/forgot_password.page.dart';
 import 'package:fuodz/views/pages/auth/login.page.dart';
 import 'package:fuodz/views/pages/auth/register.page.dart';
@@ -48,21 +55,23 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case AppRoutes.search:
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.search),
-        builder: (context) => SearchPage(search: settings.arguments),
+        builder: (context) => SearchPage(search: settings.arguments as Search),
       );
 
     //Product details
     case AppRoutes.product:
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.product),
-        builder: (context) => ProductDetailsPage(product: settings.arguments),
+        builder: (context) =>
+            ProductDetailsPage(product: settings.arguments as Product),
       );
 
     //Vendor details
     case AppRoutes.vendorDetails:
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.vendorDetails),
-        builder: (context) => VendorDetailsPage(vendor: settings.arguments),
+        builder: (context) =>
+            VendorDetailsPage(vendor: settings.arguments as Vendor),
       );
 
     //Checkout page
@@ -70,7 +79,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.checkoutRoute),
         builder: (context) => CheckoutPage(
-          checkout: settings.arguments,
+          checkout: settings.arguments as CheckOut,
         ),
       );
 
@@ -79,7 +88,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.orderDetailsRoute),
         builder: (context) => OrderDetailsPage(
-          order: settings.arguments,
+          order: settings.arguments as Order,
         ),
       );
     //order tracking page
@@ -87,13 +96,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.orderTrackingRoute),
         builder: (context) => OrderTrackingPage(
-          order: settings.arguments,
+          order: settings.arguments as Order,
         ),
       );
     //chat page
     case AppRoutes.chatRoute:
       return FirestoreChat().chatPageWidget(
-        settings.arguments,
+        settings.arguments as ChatEntity,
       );
 
     //
@@ -125,7 +134,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         settings: RouteSettings(name: AppRoutes.editDeliveryAddressesRoute),
         builder: (context) => EditDeliveryAddressesPage(
-          deliveryAddress: settings.arguments,
+          deliveryAddress: settings.arguments as DeliveryAddress,
         ),
       );
 
@@ -157,7 +166,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         settings: RouteSettings(
             name: AppRoutes.notificationDetailsRoute, arguments: Map()),
         builder: (context) => NotificationDetailsPage(
-          notification: settings.arguments,
+          notification: settings.arguments as NotificationModel,
         ),
       );
 

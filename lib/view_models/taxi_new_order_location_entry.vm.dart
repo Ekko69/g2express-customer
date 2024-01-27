@@ -29,10 +29,10 @@ class NewTaxiOrderLocationEntryViewModel extends MyBaseViewModel {
   PanelController panelController = PanelController();
   double customViewHeight = AppUISizes.taxiNewOrderIdleHeight;
   bool showChooseOnMap = false;
-  DateTime selectedDate;
-  TimeOfDay selectedTime;
-  Timer _debounce;
-  List<Address> places = [];
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  Timer? _debounce;
+  List<Address>? places = [];
 
   initialise() {
     fetchHistoryAddresses();
@@ -122,13 +122,13 @@ class NewTaxiOrderLocationEntryViewModel extends MyBaseViewModel {
   //
   onDestinationSelected(TaxiOrderLocationHistory value) async {
     DeliveryAddress mDeliveryAddress = DeliveryAddress();
-    taxiViewModel.checkout.deliveryAddress = null;
+    taxiViewModel.checkout?.deliveryAddress = null;
 
     mDeliveryAddress.address = value.address;
     mDeliveryAddress.latitude = value.latitude;
     mDeliveryAddress.longitude = value.longitude;
     //
-    taxiViewModel.checkout.deliveryAddress = mDeliveryAddress;
+    taxiViewModel.checkout?.deliveryAddress = mDeliveryAddress;
     //
     await runBusyFuture(
       getLocationCityName(mDeliveryAddress),
@@ -136,9 +136,9 @@ class NewTaxiOrderLocationEntryViewModel extends MyBaseViewModel {
     );
     //
     taxiViewModel.deliveryAddress = mDeliveryAddress;
-    taxiViewModel.dropoffLocation = taxiViewModel.checkout.deliveryAddress;
+    taxiViewModel.dropoffLocation = taxiViewModel.checkout?.deliveryAddress;
     taxiViewModel.dropoffLocationTEC.text =
-        taxiViewModel.checkout.deliveryAddress?.address;
+        taxiViewModel.checkout?.deliveryAddress?.address ?? "";
     await panelController.open();
     taxiViewModel.notifyListeners();
   }
@@ -182,18 +182,19 @@ class NewTaxiOrderLocationEntryViewModel extends MyBaseViewModel {
     }
 
     //both selected
-    String formattedDate = DateFormat("y-MM-d", "en").format(selectedDate);
-    taxiViewModel.checkout.pickupDate = formattedDate;
+    String formattedDate = DateFormat("y-MM-d", "en").format(selectedDate!);
+    taxiViewModel.checkout?.pickupDate = formattedDate;
 
-    taxiViewModel.checkout.pickupTime =
-        "${selectedTime.hourOfPeriod.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}";
+    String pTime = "${selectedTime!.hour.toString().padLeft(2, '0')}";
+    pTime += ":${selectedTime!.minute.toString().padLeft(2, '0')}";
+    taxiViewModel.checkout?.pickupTime = pTime;
     notifyListeners();
   }
 
   //
   void clearScheduleSelection() {
-    taxiViewModel.checkout.pickupTime = null;
-    taxiViewModel.checkout.pickupDate = null;
+    taxiViewModel.checkout?.pickupTime = null;
+    taxiViewModel.checkout?.pickupDate = null;
     taxiViewModel.notifyListeners();
     notifyListeners();
   }
@@ -220,7 +221,7 @@ class NewTaxiOrderLocationEntryViewModel extends MyBaseViewModel {
 
   void searchPlace(String keyword) async {
     clearAlreadySelected();
-    if (_debounce?.isActive ?? false) _debounce.cancel();
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(
       const Duration(milliseconds: 1000),
       () async {
@@ -244,15 +245,15 @@ class NewTaxiOrderLocationEntryViewModel extends MyBaseViewModel {
       address = await GeocoderService().fecthPlaceDetails(address);
       DeliveryAddress mDeliveryAddress = new DeliveryAddress(
         address: address.addressLine,
-        latitude: address.coordinates.latitude,
-        longitude: address.coordinates.longitude,
+        latitude: address.coordinates?.latitude,
+        longitude: address.coordinates?.longitude,
         city: address.locality,
         state: address.adminArea,
         country: address.countryName,
       );
       //
       taxiViewModel.deliveryAddress = mDeliveryAddress;
-      taxiViewModel.checkout.deliveryAddress = mDeliveryAddress;
+      taxiViewModel.checkout?.deliveryAddress = mDeliveryAddress;
 
       // taxiViewModel.deliveryAddress = await getLocationCityName(
       //   taxiViewModel.deliveryAddress,
@@ -281,8 +282,7 @@ class NewTaxiOrderLocationEntryViewModel extends MyBaseViewModel {
 
   ///
   moveToNextStep() async {
-    if (taxiViewModel.pickupLocation == null ||
-        taxiViewModel.dropoffLocation == null) {
+    if (taxiViewModel.dropoffLocation == null) {
       toastError("Please select pickup and drop-off location".tr());
     } else {
       taxiViewModel.checkLocationAvailabilityForStep2();

@@ -8,9 +8,9 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductReviewSumupView extends StatelessWidget {
-  const ProductReviewSumupView(this.product, {Key key}) : super(key: key);
+  const ProductReviewSumupView(this.product, {Key? key}) : super(key: key);
   final Product product;
-  
+
   @override
   Widget build(BuildContext context) {
     return VStack(
@@ -23,16 +23,18 @@ class ProductReviewSumupView extends StatelessWidget {
             VxRating(
               size: 20,
               maxRating: 5.0,
-              value: product.rating,
+              value: product.rating ?? 0.0,
               isSelectable: false,
-              onRatingUpdate: null,
+              onRatingUpdate: (value) {},
               selectionColor: AppColor.ratingColor,
             ),
             UiSpacer.hSpace(10),
             "%s out of %s"
                 .tr()
-                .fill(
-                    [double.parse(product.rating.toStringAsExponential(1)), 5])
+                .fill([
+                  double.parse((product.rating ?? 0).toStringAsExponential(1)),
+                  5
+                ])
                 .text
                 .color(AppColor.primaryColor)
                 .make(),

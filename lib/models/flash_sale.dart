@@ -15,15 +15,15 @@ class FlashSale {
     this.id,
     this.name,
     this.vendorTypeId,
-    this.expiresAt,
+    required this.expiresAt,
     this.items,
   });
 
-  int id;
-  String name;
-  int vendorTypeId;
-  DateTime expiresAt;
-  List<Product> items;
+  int? id;
+  String? name;
+  int? vendorTypeId;
+  DateTime? expiresAt;
+  List<Product>? items;
 
   factory FlashSale.fromJson(Map<String, dynamic> json) => FlashSale(
         id: json["id"],
@@ -36,14 +36,14 @@ class FlashSale {
         "id": id,
         "name": name,
         "vendor_type_id": vendorTypeId,
-        "expires_at": expiresAt.toIso8601String(),
+        "expires_at": expiresAt?.toIso8601String(),
       };
 
   Duration get countDownDuration {
-    return expiresAt.difference(DateTime.now());
+    return expiresAt!.difference(DateTime.now());
   }
 
   bool get isExpired {
-    return expiresAt.difference(DateTime.now()).inSeconds <= 0;
+    return expiresAt!.difference(DateTime.now()).inSeconds <= 0;
   }
 }

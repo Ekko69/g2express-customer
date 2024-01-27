@@ -13,7 +13,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorReviewsPage extends StatefulWidget {
-  const VendorReviewsPage(this.vendor, {Key key}) : super(key: key);
+  const VendorReviewsPage(this.vendor, {Key? key}) : super(key: key);
 
   final Vendor vendor;
   @override
@@ -31,7 +31,7 @@ class _VendorReviewsPageState extends State<VendorReviewsPage> {
       key: pageKey,
       body: ViewModelBuilder<VendorReviewsViewModel>.reactive(
         viewModelBuilder: () => VendorReviewsViewModel(context, widget.vendor),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return CustomListView(
             canPullUp: true,

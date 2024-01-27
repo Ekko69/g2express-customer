@@ -12,7 +12,10 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorDetailsWithSubcategoryPage extends StatelessWidget {
-  VendorDetailsWithSubcategoryPage({this.vendor, Key key}) : super(key: key);
+  VendorDetailsWithSubcategoryPage({
+    required this.vendor,
+    Key? key,
+  }) : super(key: key);
 
   final Vendor vendor;
 
@@ -20,7 +23,7 @@ class VendorDetailsWithSubcategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<VendorDetailsViewModel>.reactive(
       viewModelBuilder: () => VendorDetailsViewModel(context, vendor),
-      onModelReady: (model) => model.getVendorDetails(),
+      onViewModelReady: (model) => model.getVendorDetails(),
       builder: (context, model, child) {
         return VStack(
           [
@@ -39,10 +42,10 @@ class VendorDetailsWithSubcategoryPage extends StatelessWidget {
                       AppStrings.categoryImageHeight + 35,
                     ),
                     crossAxisCount: AppStrings.categoryPerRow,
-                    dataSet: model.vendor.categories,
+                    dataSet: model.vendor!.categories,
                     padding: EdgeInsets.all(20),
                     itemBuilder: (ctx, index) {
-                      final category = model.vendor.categories[index];
+                      final category = model.vendor!.categories[index];
                       return CategoryListItem(
                         h: AppStrings.categoryImageHeight + 20,
                         category: category,
@@ -51,7 +54,7 @@ class VendorDetailsWithSubcategoryPage extends StatelessWidget {
                           context.nextPage(
                             VendorCategoryProductsPage(
                               category: category,
-                              vendor: model.vendor,
+                              vendor: model.vendor!,
                             ),
                           );
                         },

@@ -12,17 +12,17 @@ class ForYouProducts extends StatelessWidget {
   const ForYouProducts(
     this.vendorType, {
     this.imageHeight,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
-  final double imageHeight;
+  final double? imageHeight;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ForYouProductsViewModel>.reactive(
       viewModelBuilder: () => ForYouProductsViewModel(context, vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [

@@ -15,13 +15,13 @@ class ParcelVendorListItem extends StatelessWidget {
     this.vendor, {
     this.selected = false,
     this.onPressed,
-    this.vm,
-    Key key,
+    required this.vm,
+    Key? key,
   }) : super(key: key);
 
   final Vendor vendor;
   final bool selected;
-  final Function onPressed;
+  final Function(Vendor)? onPressed;
   final NewParcelViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class ParcelVendorListItem extends StatelessWidget {
         ),
         //scheduleing
         CustomVisibilty(
-          visible: vm != null && selected,
+          visible: selected,
           child: VStack(
             [
               //ParcelScheduleView
@@ -63,7 +63,7 @@ class ParcelVendorListItem extends StatelessWidget {
               //SCHEDULE
               Visibility(
                 visible: vm.selectedVendor != null &&
-                    !vm.selectedVendor.allowScheduleOrder,
+                    !vm.selectedVendor!.allowScheduleOrder,
                 child: VStack(
                   [
                     UiSpacer.divider().py4(),
@@ -71,7 +71,7 @@ class ParcelVendorListItem extends StatelessWidget {
                     "Vendor does not allow order scheduling. So you order will be processed as soon as you place them"
                         .tr()
                         .text
-                        .color(context.textTheme.bodyLarge.color)
+                        .color(context.textTheme.bodyLarge!.color)
                         .sm
                         .make(),
                   ],
@@ -83,12 +83,16 @@ class ParcelVendorListItem extends StatelessWidget {
       ],
     )
         .p12()
-        .onInkTap(onPressed)
+        .onInkTap(() {
+          if (onPressed != null) {
+            onPressed!(vendor);
+          }
+        })
         .box
         // .color(context.cardColor)
         .roundedSM
         .border(
-          color: selected ? AppColor.primaryColor : Colors.grey[300],
+          color: selected ? AppColor.primaryColor : Colors.grey.shade300,
           width: selected ? 2 : 1,
         )
         .make();

@@ -18,13 +18,15 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CouponDetailsPage extends StatelessWidget {
-  const CouponDetailsPage(this.coupon, {Key key}) : super(key: key);
+  const CouponDetailsPage(this.coupon, {Key? key}) : super(key: key);
 
   final Coupon coupon;
 
   @override
   Widget build(BuildContext context) {
-    Color bgColor = Vx.hexToColor(coupon.color) ?? AppColor.primaryColor;
+    Color bgColor = coupon.color != null
+        ? Vx.hexToColor(coupon.color!)
+        : AppColor.primaryColor;
     Color textColor = Utils.textColorByColor(bgColor);
     //
     return BasePage(
@@ -53,7 +55,7 @@ class CouponDetailsPage extends StatelessWidget {
       ],
       body: ViewModelBuilder<CouponsViewModel>.reactive(
         viewModelBuilder: () => CouponsViewModel(context, null, coupon: coupon),
-        onModelReady: (vm) => vm.fetchCouponDetails(),
+        onViewModelReady: (vm) => vm.fetchCouponDetails(),
         builder: (context, vm, child) {
           //
           return VStack(
@@ -61,13 +63,13 @@ class CouponDetailsPage extends StatelessWidget {
               //header
               VStack(
                 [
-                  "${vm.coupon.code}"
+                  "${vm.coupon?.code}"
                       .text
                       .xl3
                       .extraBlack
                       .color(textColor)
                       .makeCentered(),
-                  "${vm.coupon.description ?? ''}"
+                  "${vm.coupon?.description}"
                       .text
                       .sm
                       .medium
@@ -80,8 +82,7 @@ class CouponDetailsPage extends StatelessWidget {
               VStack(
                 [
                   Visibility(
-                    visible: vm.coupon.products != null &&
-                        vm.coupon.products.isNotEmpty,
+                    visible: vm.coupon!.products.isNotEmpty,
                     child: "Products".tr().text.semiBold.xl.make().py(10),
                   ),
                   //vendor/products
@@ -89,10 +90,10 @@ class CouponDetailsPage extends StatelessWidget {
                     noScrollPhysics: true,
                     padding: EdgeInsets.zero,
                     isLoading: vm.busy(vm.coupon),
-                    dataSet: vm.coupon.products,
+                    dataSet: vm.coupon!.products,
                     separatorBuilder: ((p0, p1) => UiSpacer.vSpace(0)),
                     itemBuilder: (context, index) {
-                      final product = vm.coupon.products[index];
+                      final product = vm.coupon!.products[index];
                       return DynamicProductListItem(
                         product,
                         onPressed: (product) {
@@ -115,18 +116,17 @@ class CouponDetailsPage extends StatelessWidget {
 
                   UiSpacer.vSpace(),
                   Visibility(
-                    visible: vm.coupon.vendors != null &&
-                        vm.coupon.vendors.isNotEmpty,
+                    visible: vm.coupon!.vendors.isNotEmpty,
                     child: "Vendors".tr().text.semiBold.xl.make().py(10),
                   ),
                   CustomListView(
                     noScrollPhysics: true,
                     padding: EdgeInsets.zero,
                     isLoading: vm.busy(vm.coupon),
-                    dataSet: vm.coupon.vendors,
+                    dataSet: vm.coupon!.vendors,
                     separatorBuilder: ((p0, p1) => UiSpacer.vSpace(0)),
                     itemBuilder: (context, index) {
-                      final vendor = vm.coupon.vendors[index];
+                      final vendor = vm.coupon!.vendors[index];
                       return VendorListItem(
                         vendor: vendor,
                         onPressed: (vendor) {

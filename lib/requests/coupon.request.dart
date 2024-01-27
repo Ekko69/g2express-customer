@@ -9,17 +9,13 @@ class CouponRequest extends HttpService {
   Future<List<Coupon>> fetchCoupons({
     int page = 1,
     bool byLocation = false,
-    Map params,
+    Map? params,
   }) async {
     Map<String, dynamic> queryParameters = {
       ...(params != null ? params : {}),
       "page": "$page",
-      "latitude": byLocation
-          ? LocationService?.currenctAddress?.coordinates?.latitude
-          : null,
-      "longitude": byLocation
-          ? LocationService?.currenctAddress?.coordinates?.longitude
-          : null,
+      "latitude": byLocation ? LocationService.getFetchByLocationLat() : null,
+      "longitude": byLocation ? LocationService.getFetchByLocationLng() : null,
     };
 
     //
@@ -37,7 +33,7 @@ class CouponRequest extends HttpService {
           .toList();
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   Future<Coupon> fetchCoupon(int id) async {
@@ -47,6 +43,6 @@ class CouponRequest extends HttpService {
       return Coupon.fromJson(apiResponse.body);
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 }

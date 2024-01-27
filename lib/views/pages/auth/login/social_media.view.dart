@@ -11,7 +11,7 @@ class SocialMediaView extends StatelessWidget {
   const SocialMediaView(
     this.model, {
     this.bottomPadding = Vx.dp48,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final LoginViewModel model;

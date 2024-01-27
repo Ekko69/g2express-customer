@@ -7,22 +7,22 @@ import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 class CustomHorizontalListView extends StatelessWidget {
   //
 
-  final Widget loadingWidget;
-  final Widget errorWidget;
-  final Widget emptyWidget;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
+  final Widget? emptyWidget;
   final bool isLoading;
   final bool hasError;
   final bool reversed;
   final bool noScrollPhysics;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
   final List<Widget> itemsViews;
 
   //
   final bool canRefresh;
-  final RefreshController refreshController;
-  final Function onRefresh;
-  final Function onLoading;
-  final bool canPullUp;
+  final RefreshController? refreshController;
+  final Function? onRefresh;
+  final Function? onLoading;
+  final bool? canPullUp;
 
   const CustomHorizontalListView({
     this.loadingWidget,
@@ -32,7 +32,7 @@ class CustomHorizontalListView extends StatelessWidget {
     this.hasError = false,
     this.reversed = false,
     this.noScrollPhysics = false,
-    @required this.itemsViews,
+    required this.itemsViews,
     this.padding,
 
     //
@@ -41,7 +41,7 @@ class CustomHorizontalListView extends StatelessWidget {
     this.onRefresh,
     this.onLoading,
     this.canPullUp = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

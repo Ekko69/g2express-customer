@@ -18,8 +18,8 @@ class CouponsViewModel extends MyBaseViewModel {
 
   //
   List<Coupon> coupons = [];
-  Coupon coupon;
-  VendorType vendorType;
+  Coupon? coupon;
+  VendorType? vendorType;
   bool byLocation;
   CouponRequest couponRequest = CouponRequest();
 
@@ -52,13 +52,13 @@ class CouponsViewModel extends MyBaseViewModel {
   }
 
   fetchCouponDetails() async {
-    setBusyForObject(coupon, true);
+    setBusyForObject("coupon", true);
     try {
-      coupon = await couponRequest.fetchCoupon(coupon.id);
+      coupon = await couponRequest.fetchCoupon(coupon!.id);
     } catch (error) {
       toastError("$error");
       setError(error);
     }
-    setBusyForObject(coupon, false);
+    setBusyForObject("coupon", false);
   }
 }

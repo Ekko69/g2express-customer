@@ -5,8 +5,8 @@ import 'package:fuodz/widgets/buttons/custom_outline_button.dart';
 
 class ProductFavButton extends StatelessWidget {
   const ProductFavButton({
-    this.model,
-    Key key,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   final ProductDetailsViewModel model;

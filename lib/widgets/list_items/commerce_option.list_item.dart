@@ -10,10 +10,10 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CommerceOptionListItem extends StatelessWidget {
   const CommerceOptionListItem({
-    this.option,
-    this.optionGroup,
-    this.model,
-    Key key,
+    required this.option,
+    required this.optionGroup,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   final Option option;
@@ -30,7 +30,7 @@ class CommerceOptionListItem extends StatelessWidget {
         .make()
         .box
         .p8
-        .withRounded(value: 2)
+        .roundedSM
         .border(
             color: model.isOptionSelected(option)
                 ? AppColor.primaryColor

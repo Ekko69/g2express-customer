@@ -14,7 +14,7 @@ import 'package:velocity_x/velocity_x.dart';
 class NewTaxiOrderSummaryCollapsed extends StatelessWidget {
   const NewTaxiOrderSummaryCollapsed(
     this.newTaxiOrderSummaryViewModel, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final NewTaxiOrderSummaryViewModel newTaxiOrderSummaryViewModel;

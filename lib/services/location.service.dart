@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/services/app.service.dart';
+import 'package:fuodz/services/local_storage.service.dart';
 import 'package:fuodz/widgets/bottomsheets/location_permission.bottomsheet.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
@@ -15,16 +18,19 @@ class LocationService {
   //
   static Location location = new Location();
 
-  static bool serviceEnabled;
-  static PermissionStatus _permissionGranted;
-  static LocationData _locationData;
-  static Address currenctAddress;
-  static DeliveryAddress deliveryaddress;
-  static StreamSubscription currentLocationListener;
+  static bool? serviceEnabled;
+  static PermissionStatus? _permissionGranted;
+  static LocationData? _locationData;
+  static Address? currenctAddress;
+  static DeliveryAddress? deliveryaddress;
+  static StreamSubscription? currentLocationListener;
 
   //
   static BehaviorSubject<Address> currenctAddressSubject =
       BehaviorSubject<Address>();
+  // stream for delivery address
+  static BehaviorSubject<DeliveryAddress> currenctDeliveryAddressSubject =
+      BehaviorSubject<DeliveryAddress>();
   // static Stream<Address> get currenctAddressStream =>
   //     _currenctAddressSubject.stream;
 
@@ -45,9 +51,9 @@ class LocationService {
     }
 
     serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
+    if (serviceEnabled == null || serviceEnabled! == false) {
       serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
+      if (serviceEnabled == null || serviceEnabled! == false) {
         return;
       }
     }
@@ -60,7 +66,7 @@ class LocationService {
     var requestResult = false;
     //
     await showDialog(
-      context: AppService().navigatorKey.currentContext,
+      context: AppService().navigatorKey.currentContext!,
       builder: (context) {
         return LocationPermissionDialog(onResult: (result) {
           requestResult = result;
@@ -100,11 +106,12 @@ class LocationService {
   }
 
   //
-  static geocodeCurrentLocation([bool closeListener = false]) async {
+  static Future<void> geocodeCurrentLocation(
+      [bool closeListener = false]) async {
     if (_locationData != null) {
       final coordinates = new Coordinates(
-        _locationData.latitude,
-        _locationData.longitude,
+        _locationData?.latitude ?? 0.0,
+        _locationData?.longitude ?? 0.0,
       );
 
       try {
@@ -115,7 +122,19 @@ class LocationService {
         //
         currenctAddress = addresses.first;
         //
-        currenctAddressSubject.add(currenctAddress);
+        if (currenctAddress != null) {
+          currenctAddressSubject.add(currenctAddress!);
+          //set and save for next time
+          final mDeliveryaddress = DeliveryAddress(
+            name: currenctAddress!.featureName,
+            address: currenctAddress!.addressLine,
+            latitude: currenctAddress!.coordinates?.latitude,
+            longitude: currenctAddress!.coordinates?.longitude,
+          );
+          if (deliveryaddress == null) {
+            saveSelectedAddressLocally(mDeliveryaddress);
+          }
+        }
       } catch (error) {
         print("Error get location ==> $error");
       }
@@ -129,11 +148,11 @@ class LocationService {
   }
 
   //coordinates to address
-  static Future<Address> addressFromCoordinates({
-    @required double lat,
-    @required double lng,
+  static Future<Address?> addressFromCoordinates({
+    required double lat,
+    required double lng,
   }) async {
-    Address address;
+    Address? address;
     final coordinates = new Coordinates(
       lat,
       lng,
@@ -150,5 +169,52 @@ class LocationService {
       print("Issue with addressFromCoordinates ==> $error");
     }
     return address;
+  }
+
+  //Helper methods
+
+  //get current lat
+  static double? get cLat {
+    return LocationService.currenctAddress?.coordinates?.latitude;
+  }
+
+  //get current lng
+  static double? get cLng {
+    return LocationService.currenctAddress?.coordinates?.longitude;
+  }
+
+  //
+  static saveSelectedAddressLocally(DeliveryAddress? mDeliveryaddress) async {
+    deliveryaddress = mDeliveryaddress;
+    if (mDeliveryaddress != null) {
+      final pref = await LocalStorageService.getPrefs();
+      await pref.setString(
+        "LOCAL_ADDRESS",
+        jsonEncode(mDeliveryaddress.toJson()),
+      );
+      //
+      currenctDeliveryAddressSubject.add(mDeliveryaddress);
+    }
+  }
+
+  //
+  static Future<DeliveryAddress?> getLocallySaveAddress() async {
+    final pref = await LocalStorageService.getPrefs();
+    final rawData = pref.getString("LOCAL_ADDRESS");
+    if (rawData != null && rawData.isNotNullOrBlank) {
+      return DeliveryAddress.fromJson(jsonDecode(rawData));
+    }
+    return null;
+  }
+
+  //MISC.
+  static double? getFetchByLocationLat() {
+    return LocationService.deliveryaddress?.latitude ??
+        LocationService.currenctAddress?.coordinates?.latitude;
+  }
+
+  static double? getFetchByLocationLng() {
+    return LocationService.deliveryaddress?.longitude ??
+        LocationService.currenctAddress?.coordinates?.longitude;
   }
 }

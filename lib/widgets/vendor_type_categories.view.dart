@@ -19,16 +19,16 @@ class VendorTypeCategories extends StatefulWidget {
     this.showTitle = true,
     this.crossAxisCount,
     this.childAspectRatio,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
   final VendorType vendorType;
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   final bool showTitle;
-  final int crossAxisCount;
-  final double childAspectRatio;
+  final int? crossAxisCount;
+  final double? childAspectRatio;
   @override
   _VendorTypeCategoriesState createState() => _VendorTypeCategoriesState();
 }
@@ -41,7 +41,7 @@ class _VendorTypeCategoriesState extends State<VendorTypeCategories> {
     return ViewModelBuilder<CategoriesViewModel>.reactive(
       viewModelBuilder: () =>
           CategoriesViewModel(context, vendorType: widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [
@@ -53,7 +53,7 @@ class _VendorTypeCategoriesState extends State<VendorTypeCategories> {
                     widget.showTitle
                         ? ((widget.title != null
                                 ? widget.title
-                                : "We are here for you")
+                                : "We are here for you")!
                             .tr()
                             .text
                             .lg
@@ -62,7 +62,7 @@ class _VendorTypeCategoriesState extends State<VendorTypeCategories> {
                         : UiSpacer.emptySpace(),
                     (widget.description != null
                             ? widget.description
-                            : "How can we help?")
+                            : "How can we help?")!
                         .tr()
                         .text
                         .xl

@@ -1,22 +1,23 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/models/api_response.dart';
+import 'package:fuodz/services/firebase_token.service.dart';
 import 'package:fuodz/services/http.service.dart';
 
 class AuthRequest extends HttpService {
   //
   Future<ApiResponse> loginRequest({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
     final apiResult = await post(
       Api.login,
       {
         "email": email,
         "password": password,
+        "tokens": await FirebaseTokenService().getDeviceToken(),
       },
     );
 
@@ -25,12 +26,13 @@ class AuthRequest extends HttpService {
 
   //
   Future<ApiResponse> qrLoginRequest({
-    @required String code,
+    required String code,
   }) async {
     final apiResult = await post(
       Api.qrlogin,
       {
         "code": code,
+        "tokens": await FirebaseTokenService().getDeviceToken(),
       },
     );
 
@@ -39,9 +41,10 @@ class AuthRequest extends HttpService {
 
   //
   Future<ApiResponse> resetPasswordRequest({
-    @required String phone,
-    @required String password,
-    @required String firebaseToken,
+    required String phone,
+    required String password,
+    String? firebaseToken,
+    String? customToken,
   }) async {
     final apiResult = await post(
       Api.forgotPassword,
@@ -49,6 +52,7 @@ class AuthRequest extends HttpService {
         "phone": phone,
         "password": password,
         "firebase_id_token": firebaseToken,
+        "verification_token": customToken,
       },
     );
 
@@ -57,11 +61,11 @@ class AuthRequest extends HttpService {
 
   //
   Future<ApiResponse> registerRequest({
-    @required String name,
-    @required String email,
-    @required String phone,
-    @required String countryCode,
-    @required String password,
+    required String name,
+    required String email,
+    required String phone,
+    required String countryCode,
+    required String password,
     String code = "",
   }) async {
     final apiResult = await post(
@@ -74,6 +78,7 @@ class AuthRequest extends HttpService {
         "password": password,
         "code": code,
         "role": "client",
+        "tokens": await FirebaseTokenService().getDeviceToken(),
       },
     );
 
@@ -88,11 +93,11 @@ class AuthRequest extends HttpService {
 
   //
   Future<ApiResponse> updateProfile({
-    File photo,
-    String name,
-    String email,
-    String phone,
-    String countryCode,
+    File? photo,
+    String? name,
+    String? email,
+    String? phone,
+    String? countryCode,
   }) async {
     final apiResult = await postWithFiles(
       Api.updateProfile,
@@ -113,9 +118,9 @@ class AuthRequest extends HttpService {
   }
 
   Future<ApiResponse> updatePassword({
-    String password,
-    String new_password,
-    String new_password_confirmation,
+    String? password,
+    String? new_password,
+    String? new_password_confirmation,
   }) async {
     final apiResult = await post(
       Api.updatePassword,
@@ -154,7 +159,7 @@ class AuthRequest extends HttpService {
     if (apiResponse.allGood) {
       return apiResponse;
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message ?? apiResponse;
     }
   }
 
@@ -166,13 +171,14 @@ class AuthRequest extends HttpService {
         "phone": phoneNumber,
         "code": code,
         "is_login": isLogin,
+        "tokens": await FirebaseTokenService().getDeviceToken(),
       },
     );
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
       return apiResponse;
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message ?? apiResponse;
     }
   }
 
@@ -193,17 +199,17 @@ class AuthRequest extends HttpService {
     if (apiResponse.allGood) {
       return apiResponse;
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message ?? apiResponse;
     }
   }
 
   //
-  Future<ApiResponse> socialLogin(
+  Future<ApiResponse?> socialLogin(
     String email,
-    String firebaseVerificationId,
+    String? firebaseVerificationId,
     String provider, {
-    String nonce,
-    String uid,
+    String? nonce,
+    String? uid,
   }) async {
     //
     final apiResult = await post(
@@ -214,6 +220,7 @@ class AuthRequest extends HttpService {
         "firebase_id_token": firebaseVerificationId,
         "nonce": nonce,
         "uid": uid,
+        "tokens": await FirebaseTokenService().getDeviceToken(),
       },
     );
     final apiResponse = ApiResponse.fromResponse(apiResult);
@@ -222,17 +229,30 @@ class AuthRequest extends HttpService {
     } else if (apiResponse.code == 401) {
       return null;
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 
-  Future<ApiResponse> deleteProfile({String password, String reason}) async {
+  Future<ApiResponse> deleteProfile({
+    String? password,
+    String? reason,
+  }) async {
     final apiResult = await post(
       Api.accountDelete,
       {
         "_method": "DELETE",
         "password": password,
         "reason": reason,
+      },
+    );
+    return ApiResponse.fromResponse(apiResult);
+  }
+
+  Future<ApiResponse> updateDeviceToken(String token) async {
+    final apiResult = await post(
+      Api.tokenSync,
+      {
+        "tokens": token,
       },
     );
     return ApiResponse.fromResponse(apiResult);

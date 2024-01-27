@@ -8,7 +8,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class GroceryCategories extends StatefulWidget {
-  const GroceryCategories(this.vendorType, {Key key}) : super(key: key);
+  const GroceryCategories(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -23,12 +23,12 @@ class _GroceryCategoriesState extends State<GroceryCategories> {
     return ViewModelBuilder<CategoriesViewModel>.reactive(
       viewModelBuilder: () =>
           CategoriesViewModel(context, vendorType: widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [
             //
-             VendorTypeCategories(
+            VendorTypeCategories(
               widget.vendorType,
               showTitle: true,
               title: "What are you getting today?".tr(),

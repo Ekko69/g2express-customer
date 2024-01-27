@@ -17,7 +17,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductReviewsPage extends StatelessWidget {
-  const ProductReviewsPage(this.product, {Key key}) : super(key: key);
+  const ProductReviewsPage(this.product, {Key? key}) : super(key: key);
 
   final Product product;
   @override
@@ -28,7 +28,7 @@ class ProductReviewsPage extends StatelessWidget {
       showLeadingAction: true,
       body: ViewModelBuilder<ProductReviewViewModel>.reactive(
         viewModelBuilder: () => ProductReviewViewModel(context, product, false),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return VStack(
             [
@@ -74,7 +74,8 @@ class ProductReviewsPage extends StatelessWidget {
           "%s star"
               .tr()
               .fill([productReviewStat.rate])
-              .text.medium
+              .text
+              .medium
               .color(AppColor.primaryColor)
               .make()
               .expand(flex: 2),
@@ -99,7 +100,8 @@ class ProductReviewsPage extends StatelessWidget {
           UiSpacer.hSpace(8),
           //
           "${NumberFormat("#.##").format(productReviewStat.percentage)}%"
-              .text.medium
+              .text
+              .medium
               .color(AppColor.primaryColor)
               .maxLines(1)
               .make()

@@ -30,7 +30,7 @@ class VendorRatingViewModel extends MyBaseViewModel {
       rating: rating,
       review: reviewTEC.text,
       orderId: order.id,
-      vendorId: order.vendor.id,
+      vendorId: order.vendor!.id,
     );
     setBusy(false);
 

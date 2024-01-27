@@ -19,7 +19,7 @@ class PackageStopRecipientView extends StatefulWidget {
     this.recipientNameTEC,
     this.recipientPhoneTEC,
     this.noteTEC, {
-    Key key,
+    Key? key,
     this.isOpen = false,
     this.viewKey,
     this.index = 1,
@@ -30,7 +30,7 @@ class PackageStopRecipientView extends StatefulWidget {
   final TextEditingController recipientPhoneTEC;
   final TextEditingController noteTEC;
   final bool isOpen;
-  final Key viewKey;
+  final Key? viewKey;
   final int index;
 
   @override
@@ -168,15 +168,19 @@ class _PackageStopRecipientViewState extends State<PackageStopRecipientView> {
     }
 
     if (granted) {
-      final PhoneContact contact =
-          await FlutterContactPicker.pickPhoneContact();
+      try {
+        final PhoneContact contact =
+            await FlutterContactPicker.pickPhoneContact();
 
+        setState(() {
+          widget.recipientNameTEC.text = contact.fullName ?? "";
+          widget.recipientPhoneTEC.text =
+              contact.phoneNumber?.number?.removeAllWhiteSpace() ?? "";
+        });
+      } catch (e) {
+        print(e);
+      }
       //
-      setState(() {
-        widget.recipientNameTEC.text = contact?.fullName;
-        widget.recipientPhoneTEC.text =
-            contact?.phoneNumber?.number?.removeAllWhiteSpace();
-      });
     } else {
       Fluttertoast.showToast(
         msg: "Permission Denied".tr(),

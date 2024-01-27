@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/requests/auth.request.dart';
+import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/widgets/bottomsheets/account_verification_entry.dart';
 import 'package:fuodz/widgets/bottomsheets/new_password_entry.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -17,17 +18,23 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
   AuthRequest _authRequest = AuthRequest();
   FirebaseAuth auth = FirebaseAuth.instance;
   bool otpLogin = AppStrings.enableOTPLogin;
-  Country selectedCountry;
-  String accountPhoneNumber;
+  Country? selectedCountry;
+  String? accountPhoneNumber;
   //
-  String firebaseToken;
-  String firebaseVerificationId;
+  String? firebaseToken;
+  String? firebaseVerificationId;
 
   ForgotPasswordViewModel(BuildContext context) {
     this.viewContext = context;
-    this.selectedCountry = Country.parse(
-      WidgetsBinding.instance.window.locale.countryCode ?? "US",
-    );
+    this.selectedCountry = Country.parse("US");
+  }
+
+  void initialise() async {
+    try {
+      this.selectedCountry = Country.parse(await Utils.getCurrentCountryCode());
+    } catch (error) {
+      print(error);
+    }
   }
 
 //
@@ -47,13 +54,13 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
 
   //verify on the server to see if there is an account associated with the supplied phone number
   processForgotPassword() async {
-    accountPhoneNumber = "+${selectedCountry.phoneCode}${phoneTEC.text}";
+    accountPhoneNumber = "+${selectedCountry?.phoneCode}${phoneTEC.text}";
     // Validate returns true if the form is valid, otherwise false.
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       //
       setBusy(true);
       final apiResponse =
-          await _authRequest.verifyPhoneAccount(accountPhoneNumber);
+          await _authRequest.verifyPhoneAccount(accountPhoneNumber!);
       if (apiResponse.allGood) {
         //
         final phoneNumber = apiResponse.body["phone"];
@@ -90,7 +97,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
         );
 
         //fetch user id token
-        firebaseToken = await userCredential.user.getIdToken();
+        firebaseToken = await userCredential.user?.getIdToken();
         firebaseVerificationId = credential.verificationId;
 
         //
@@ -101,11 +108,11 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
         if (e.code == 'invalid-phone-number') {
           viewContext.showToast(msg: "Invalid Phone Number".tr());
         } else {
-          viewContext.showToast(msg: e.message);
+          viewContext.showToast(msg: e.message ?? "Error".tr());
         }
         setBusy(false);
       },
-      codeSent: (String verificationId, int resendToken) {
+      codeSent: (String verificationId, int? resendToken) {
         firebaseVerificationId = verificationId;
         showVerificationEntry();
         setBusy(false);
@@ -139,7 +146,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
       (context) {
         return AccountVerificationEntry(
           vm: this,
-          phone: accountPhoneNumber,
+          phone: accountPhoneNumber!,
           onSubmit: (smsCode) {
             //
             if (!AppStrings.isCustomOtp) {
@@ -153,14 +160,14 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
               ? () async {
                   try {
                     final response = await _authRequest.sendOTP(
-                      accountPhoneNumber,
+                      accountPhoneNumber!,
                     );
-                    toastSuccessful(response.message);
+                    toastSuccessful(response.message ?? "Success".tr());
                   } catch (error) {
                     viewContext.showToast(msg: "$error", bgColor: Colors.red);
                   }
                 }
-              : null,
+              : () {},
         );
       },
     );
@@ -176,7 +183,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
     try {
       // Create a PhoneAuthCredential with the code
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-        verificationId: firebaseVerificationId,
+        verificationId: firebaseVerificationId!,
         smsCode: smsCode,
       );
 
@@ -184,7 +191,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
         phoneAuthCredential,
       );
       //
-      firebaseToken = await userCredential.user.getIdToken();
+      firebaseToken = await userCredential.user?.getIdToken();
       showNewPasswordEntry();
     } catch (error) {
       viewContext.showToast(msg: "$error", bgColor: Colors.red);
@@ -200,7 +207,11 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
 
     // Sign the user in (or link) with the credential
     try {
-      await _authRequest.verifyOTP(accountPhoneNumber, smsCode);
+      final apiResponse = await _authRequest.verifyOTP(
+        accountPhoneNumber!,
+        smsCode,
+      );
+      firebaseToken = apiResponse.body["token"];
       showNewPasswordEntry();
     } catch (error) {
       viewContext.showToast(msg: "$error", bgColor: Colors.red);
@@ -234,9 +245,10 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
 
     setBusy(true);
     final apiResponse = await _authRequest.resetPasswordRequest(
-      phone: accountPhoneNumber,
+      phone: accountPhoneNumber!,
       password: passwordTEC.text,
-      firebaseToken: firebaseToken,
+      firebaseToken: !AppStrings.isCustomOtp ? firebaseToken : null,
+      customToken: AppStrings.isCustomOtp ? firebaseToken : null,
     );
     setBusy(false);
 
@@ -246,7 +258,7 @@ class ForgotPasswordViewModel extends MyBaseViewModel {
       title: "Forgot Password".tr(),
       text: apiResponse.message,
       onConfirmBtnTap: () {
-        viewContext.navigator.popUntil((route) => route.isFirst);
+        Navigator.of(viewContext).popUntil((route) => route.isFirst);
       },
     );
   }

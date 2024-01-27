@@ -17,15 +17,15 @@ import 'package:google_places_flutter/model/prediction.dart';
 class AddressSearchView extends StatefulWidget {
   const AddressSearchView(
     this.vm, {
-    Key key,
+    Key? key,
     this.addressSelected,
     this.selectOnMap,
   }) : super(key: key);
 
   //
   final dynamic vm;
-  final Function(dynamic) addressSelected;
-  final Function selectOnMap;
+  final Function(dynamic)? addressSelected;
+  final Function? selectOnMap;
 
   @override
   _AddressSearchViewState createState() => _AddressSearchViewState();
@@ -74,14 +74,17 @@ class _AddressSearchViewState extends State<AddressSearchView> {
                 isLoading = false;
               });
               context.pop();
-              widget.addressSelected(prediction);
+              if (widget.addressSelected != null) {
+                widget.addressSelected!(prediction);
+              }
+
               widget.vm.placeSearchTEC.clear();
             }, // this callback is called when isLatLngRequired is true
-            itmClick: (Prediction prediction) {
+            itemClick: (Prediction prediction) {
               // //
               widget.vm.placeSearchTEC.text = prediction.description;
               widget.vm.placeSearchTEC.selection = TextSelection.fromPosition(
-                TextPosition(offset: prediction.description.length),
+                TextPosition(offset: prediction.description?.length ?? 0),
               );
               //
               setState(() {
@@ -111,7 +114,9 @@ class _AddressSearchViewState extends State<AddressSearchView> {
             ),
             debounceTime: 800,
             onselected: (Address prediction) {
-              widget.addressSelected(prediction);
+              if (widget.addressSelected != null) {
+                widget.addressSelected!(prediction);
+              }
               context.pop();
             },
           ),
@@ -126,7 +131,9 @@ class _AddressSearchViewState extends State<AddressSearchView> {
           onPressed: () {
             print("done");
             context.pop();
-            widget.selectOnMap();
+            if (widget.selectOnMap != null) {
+              widget.selectOnMap!();
+            }
           },
         ),
       ],

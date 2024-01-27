@@ -11,10 +11,10 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CommerceProductDetailsHeader extends StatelessWidget {
   const CommerceProductDetailsHeader({
-    this.product,
+    required this.product,
     this.showVendor = true,
-    Key key,
-    this.model,
+    Key? key,
+    required this.model,
   }) : super(key: key);
 
   final Product product;

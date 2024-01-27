@@ -17,7 +17,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'widgets/top_service_vendors.view.dart';
 
 class ServicePage extends StatefulWidget {
-  const ServicePage(this.vendorType, {Key key}) : super(key: key);
+  const ServicePage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -38,7 +38,7 @@ class _ServicePageState extends State<ServicePage>
 
     return ViewModelBuilder<ServiceViewModel>.reactive(
       viewModelBuilder: () => ServiceViewModel(context, widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,

@@ -14,7 +14,7 @@ import 'package:velocity_x/velocity_x.dart';
 class NewTaxiOrderScheduleView extends StatelessWidget {
   const NewTaxiOrderScheduleView(
     this.newTaxiOrderLocationEntryViewModel, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final NewTaxiOrderLocationEntryViewModel newTaxiOrderLocationEntryViewModel;
@@ -24,7 +24,7 @@ class NewTaxiOrderScheduleView extends StatelessWidget {
     final TaxiViewModel vm = newTaxiOrderLocationEntryViewModel.taxiViewModel;
     //
     return CustomVisibilty(
-      visible: AppStrings.canScheduleTaxiOrder ?? false,
+      visible: AppStrings.canScheduleTaxiOrder,
       child: VStack(
         [
           //show schedule checkbox
@@ -34,7 +34,7 @@ class NewTaxiOrderScheduleView extends StatelessWidget {
               UiSpacer.hSpace(),
               //clear
               Visibility(
-                visible: vm.checkout.pickupDate != null,
+                visible: vm.checkout!.pickupDate != null,
                 child: HStack(
                   [
                     Icon(
@@ -56,12 +56,12 @@ class NewTaxiOrderScheduleView extends StatelessWidget {
                     size: 18,
                   ),
                   UiSpacer.hSpace(5),
-                  (vm.checkout.pickupDate != null
+                  (vm.checkout!.pickupDate != null
                           ? (!Utils.isArabic
-                              ? Jiffy("${vm.checkout.pickupDate} ${vm.checkout.pickupTime}",
+                              ? Jiffy("${vm.checkout?.pickupDate} ${vm.checkout?.pickupTime}",
                                       "yyyy-MM-dd HH:mm")
-                                  .format("d MMM, y h:m a")
-                              : "${vm.checkout.pickupDate} ${vm.checkout.pickupTime}")
+                                  .format("d MMM, y hh:mm a")
+                              : "${vm.checkout?.pickupDate} ${vm.checkout?.pickupTime}")
                           : "Now".tr())
                       .text
                       .sm

@@ -7,6 +7,7 @@ import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/requests/auth.request.dart';
 import 'package:fuodz/services/auth.service.dart';
+import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/widgets/bottomsheets/account_verification_entry.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'base.view_model.dart';
@@ -26,18 +27,20 @@ class RegisterViewModel extends MyBaseViewModel {
   TextEditingController passwordTEC =
       new TextEditingController(text: !kReleaseMode ? "password" : "");
   TextEditingController referralCodeTEC = new TextEditingController();
-  Country selectedCountry;
-  String accountPhoneNumber;
+  Country? selectedCountry;
+  String? accountPhoneNumber;
   bool agreed = false;
   bool otpLogin = AppStrings.enableOTPLogin;
 
   RegisterViewModel(BuildContext context) {
     this.viewContext = context;
+    this.selectedCountry = Country.parse("us");
+  }
+
+  void initialise() async {
     try {
-      this.selectedCountry = Country.parse(AppStrings.countryCode
-          .toUpperCase()
-          .replaceAll("AUTO,", "")
-          .split(",")[0]);
+      String countryCode = await Utils.getCurrentCountryCode();
+      this.selectedCountry = Country.parse(countryCode);
     } catch (error) {
       this.selectedCountry = Country.parse("us");
     }
@@ -59,10 +62,10 @@ class RegisterViewModel extends MyBaseViewModel {
 
   void processRegister() async {
     //
-    accountPhoneNumber = "+${selectedCountry.phoneCode}${phoneTEC.text}";
+    accountPhoneNumber = "+${selectedCountry?.phoneCode}${phoneTEC.text}";
     //
     // Validate returns true if the form is valid, otherwise false.
-    if (formKey.currentState.validate() && agreed) {
+    if (formKey.currentState!.validate() && agreed) {
       //
       if (AppStrings.isFirebaseOtp) {
         processFirebaseOTPVerification();
@@ -90,12 +93,13 @@ class RegisterViewModel extends MyBaseViewModel {
           viewContext.showToast(
               msg: "Invalid Phone Number".tr(), bgColor: Colors.red);
         } else {
-          viewContext.showToast(msg: e.message, bgColor: Colors.red);
+          viewContext.showToast(
+              msg: e.message ?? "Failed".tr(), bgColor: Colors.red);
         }
         //
         setBusy(false);
       },
-      codeSent: (String verificationId, int resendToken) async {
+      codeSent: (String verificationId, int? resendToken) async {
         firebaseVerificationId = verificationId;
         showVerificationEntry();
       },
@@ -108,7 +112,7 @@ class RegisterViewModel extends MyBaseViewModel {
   processCustomOTPVerification() async {
     setBusy(true);
     try {
-      await _authRequest.sendOTP(accountPhoneNumber);
+      await _authRequest.sendOTP(accountPhoneNumber!);
       setBusy(false);
       showVerificationEntry();
     } catch (error) {
@@ -125,7 +129,7 @@ class RegisterViewModel extends MyBaseViewModel {
     await viewContext.push(
       (context) => AccountVerificationEntry(
         vm: this,
-        phone: accountPhoneNumber,
+        phone: accountPhoneNumber!,
         onSubmit: (smsCode) {
           //
           if (AppStrings.isFirebaseOtp) {
@@ -140,17 +144,16 @@ class RegisterViewModel extends MyBaseViewModel {
             ? () async {
                 try {
                   final response = await _authRequest.sendOTP(
-                    accountPhoneNumber,
+                    accountPhoneNumber!,
                   );
-                  toastSuccessful(response.message);
+                  toastSuccessful("${response.message}");
                 } catch (error) {
                   viewContext.showToast(msg: "$error", bgColor: Colors.red);
                 }
               }
-            : null,
+            : () {},
       ),
     );
-    
   }
 
   //
@@ -162,7 +165,7 @@ class RegisterViewModel extends MyBaseViewModel {
     try {
       // Create a PhoneAuthCredential with the code
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-        verificationId: firebaseVerificationId,
+        verificationId: firebaseVerificationId!,
         smsCode: smsCode,
       );
 
@@ -180,7 +183,7 @@ class RegisterViewModel extends MyBaseViewModel {
     setBusyForObject(firebaseVerificationId, true);
     // Sign the user in (or link) with the credential
     try {
-      await _authRequest.verifyOTP(accountPhoneNumber, smsCode);
+      await _authRequest.verifyOTP(accountPhoneNumber!, smsCode);
       await finishAccountRegistration();
     } catch (error) {
       viewContext.showToast(msg: "$error", bgColor: Colors.red);
@@ -191,16 +194,16 @@ class RegisterViewModel extends MyBaseViewModel {
 
 ///////
   ///
-  void finishAccountRegistration() async {
+  Future<void> finishAccountRegistration() async {
     setBusy(true);
 
     final apiResponse = await _authRequest.registerRequest(
       name: nameTEC.text,
       email: emailTEC.text,
-      phone: accountPhoneNumber,
-      countryCode: selectedCountry.countryCode,
+      phone: accountPhoneNumber!,
+      countryCode: selectedCountry!.countryCode,
       password: passwordTEC.text,
-      code: referralCodeTEC.text ?? "",
+      code: referralCodeTEC.text,
     );
 
     setBusy(false);
@@ -222,7 +225,7 @@ class RegisterViewModel extends MyBaseViewModel {
         await AuthServices.saveUser(apiResponse.body["user"]);
         await AuthServices.setAuthBearerToken(apiResponse.body["token"]);
         await AuthServices.isAuthenticated();
-        viewContext.navigator.pushNamedAndRemoveUntil(
+        Navigator.of(viewContext).pushNamedAndRemoveUntil(
           AppRoutes.homeRoute,
           (_) => false,
         );
@@ -239,7 +242,7 @@ class RegisterViewModel extends MyBaseViewModel {
         context: viewContext,
         type: CoolAlertType.error,
         title: "Login Failed".tr(),
-        text: "${error['message'] ?? error}",
+        text: error is Map ? "${error['message'] ?? error}" : "$error",
       );
     }
   }

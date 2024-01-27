@@ -16,15 +16,15 @@ class CustomImageSlider extends StatefulWidget {
     this.autoplay = false,
     this.canZoom = true,
     this.boxFit,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final List<dynamic> images;
   final double viewportFraction;
   final bool showIndicators;
-  final double height;
+  final double? height;
   final bool autoplay;
-  final BoxFit boxFit;
+  final BoxFit? boxFit;
   final bool canZoom;
 
   @override
@@ -43,9 +43,9 @@ class _CustomImageSliderState extends State<CustomImageSlider> {
           CarouselSlider(
             options: CarouselOptions(
               viewportFraction: widget.viewportFraction,
-              autoPlay: widget.autoplay ?? false,
+              autoPlay: widget.autoplay,
               initialPage: 1,
-              height: (widget.height ?? AppStrings.bannerHeight ?? 150.0),
+              height: (widget.height ?? AppStrings.bannerHeight),
               disableCenter: true,
               onPageChanged: (index, reason) {
                 setState(() {
@@ -62,7 +62,7 @@ class _CustomImageSliderState extends State<CustomImageSlider> {
                     imageUrl: image,
                     width: double.infinity,
                     boxFit: widget.boxFit ?? BoxFit.scaleDown,
-                    height: (widget.height ?? AppStrings.bannerHeight ?? 150.0),
+                    height: (widget.height ?? AppStrings.bannerHeight),
                     canZoom: widget.canZoom,
                   );
                 }
@@ -74,7 +74,7 @@ class _CustomImageSliderState extends State<CustomImageSlider> {
             visible: widget.images.length <= 10 || widget.showIndicators,
             child: AnimatedSmoothIndicator(
               activeIndex: currentIndex,
-              count: widget.images.length ?? 0,
+              count: widget.images.length,
               textDirection:
                   Utils.isArabic ? TextDirection.rtl : TextDirection.ltr,
               effect: ExpandingDotsEffect(

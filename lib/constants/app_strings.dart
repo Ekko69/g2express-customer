@@ -13,6 +13,11 @@ class AppStrings {
   static String get countryCode => env('country_code');
   static bool get enableOtp => env('enble_otp') == "1";
   static bool get enableOTPLogin => env('enableOTPLogin') == "1";
+
+  //
+  static bool get enableEmailLogin => env('enableEmailLogin');
+  static bool get enableProfileUpdate => env('enableProfileUpdate');
+
   static bool get enableGoogleDistance => env('enableGoogleDistance') == "1";
   static bool get enableSingleVendor => env('enableSingleVendor') == "1";
   static bool get enableMultipleVendorOrder =>
@@ -40,13 +45,16 @@ class AppStrings {
   //
   static bool get isSingleVendorMode => env('isSingleVendorMode') == "1";
   static bool get canScheduleTaxiOrder =>
-      (env('taxi')['canScheduleTaxiOrder'] == "1") ?? false;
+      env('taxi')['canScheduleTaxiOrder'] != null
+          ? (env('taxi')['canScheduleTaxiOrder'] == "1")
+          : false;
   static int get taxiMaxScheduleDays =>
       (env('taxi')['taxiMaxScheduleDays'].toString().toInt()) ?? 2;
 
-  static Map get enabledVendorType => env('enabledVendorType') ?? null;
+  static Map<String, dynamic> get enabledVendorType =>
+      env('enabledVendorType') ?? {};
   static double get bannerHeight =>
-      double.parse(env('bannerHeight').toString()) ?? 150.00;
+      double.parse("${env('bannerHeight') ?? 150.00}");
 
   //
   static String get otpGateway => env('otpGateway') ?? "none";
@@ -57,10 +65,10 @@ class AppStrings {
   static String get emergencyContact => env('emergencyContact') ?? "911";
 
   //Social media logins
-  static bool get googleLogin => env('auth')['googleLogin'];
-  static bool get appleLogin => env('auth')['appleLogin'];
-  static bool get facebbokLogin => env('auth')['facebbokLogin'];
-  static bool get qrcodeLogin => env('auth')['qrcodeLogin'];
+  static bool get googleLogin => env('auth')['googleLogin'] ?? false;
+  static bool get appleLogin => env('auth')['appleLogin'] ?? false;
+  static bool get facebbokLogin => env('auth')['facebbokLogin'] ?? false;
+  static bool get qrcodeLogin => env('auth')['qrcodeLogin'] ?? false;
 
   //UI Configures
   static dynamic get uiConfig {
@@ -90,10 +98,14 @@ class AppStrings {
   }
 
   static int get categoryPerRow {
-    if (env('ui') == null || env('ui')["categorySize"] == null) {
-      return 4;
+    try {
+      if (env('ui') == null || env('ui')["categorySize"] == null) {
+        return 4;
+      }
+      return int.parse((env('ui')['categorySize']["row"] ?? 4).toString());
+    } catch (e) {
+      return 3;
     }
-    return int.parse((env('ui')['categorySize']["row"] ?? 4).toString());
   }
 
   static bool get searchGoogleMapByCountry {
@@ -133,14 +145,14 @@ class AppStrings {
   //
   //saving
   static Future<bool> saveAppSettingsToLocalStorage(String stringMap) async {
-    return await LocalStorageService.prefs
+    return await LocalStorageService.prefs!
         .setString(AppStrings.appRemoteSettings, stringMap);
   }
 
   static dynamic appSettingsObject;
   static Future<void> getAppSettingsFromLocalStorage() async {
     appSettingsObject =
-        LocalStorageService.prefs.getString(AppStrings.appRemoteSettings);
+        LocalStorageService.prefs?.getString(AppStrings.appRemoteSettings);
     if (appSettingsObject != null) {
       appSettingsObject = jsonDecode(appSettingsObject);
     }

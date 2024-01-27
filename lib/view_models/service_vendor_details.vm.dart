@@ -13,7 +13,7 @@ class ServiceVendorDetailsViewModel extends MyBaseViewModel {
 
   //
   ServiceRequest _serviceRequest = ServiceRequest();
-  Vendor vendor;
+  Vendor? vendor;
 
   List<Service> services = [];
 
@@ -25,12 +25,11 @@ class ServiceVendorDetailsViewModel extends MyBaseViewModel {
     try {
       services = await _serviceRequest.getServices(
         queryParams: {
-          "vendor_id": vendor.id,
+          "vendor_id": vendor?.id,
         },
         page: 0,
       );
       //
-
     } catch (error) {
       print("Services error ==> $error");
     }

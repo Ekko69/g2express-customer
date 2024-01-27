@@ -7,8 +7,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 class NotificationDetailsPage extends StatelessWidget {
   const NotificationDetailsPage({
-    this.notification,
-    Key key,
+    required this.notification,
+    Key? key,
   }) : super(key: key);
 
   final NotificationModel notification;
@@ -23,28 +23,31 @@ class NotificationDetailsPage extends StatelessWidget {
         child: VStack(
           [
             //title
-            notification.title.text.bold.xl2
-                .fontFamily(GoogleFonts.nunito().fontFamily)
+            "${notification.title}"
+                .text
+                .bold
+                .xl2
+                .fontFamily(GoogleFonts.nunito().fontFamily!)
                 .make(),
             //time
             notification.formattedTimeStamp.text.medium
                 .color(Colors.grey)
-                .fontFamily(GoogleFonts.nunito().fontFamily)
+                .fontFamily(GoogleFonts.nunito().fontFamily!)
                 .make()
                 .pOnly(bottom: 10),
             //image
-            Visibility(
-              visible:
-                  notification.image != null && notification.image.isNotBlank,
-              child: CustomImage(
-                imageUrl: notification.image,
+            if (notification.image != null && notification.image!.isNotEmpty)
+              CustomImage(
+                imageUrl: notification.image!,
                 width: double.infinity,
                 height: context.percentHeight * 30,
               ).py12(),
-            ),
+
             //body
-            notification.body.text.lg
-                .fontFamily(GoogleFonts.nunito().fontFamily)
+            "${notification.body}"
+                .text
+                .lg
+                .fontFamily(GoogleFonts.nunito().fontFamily!)
                 .make(),
           ],
         ).p20().scrollVertical(),

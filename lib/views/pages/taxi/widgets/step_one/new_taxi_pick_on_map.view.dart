@@ -8,8 +8,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 class NewTaxiPickOnMapButton extends StatelessWidget {
   const NewTaxiPickOnMapButton({
-    Key key,
-    @required this.taxiNewOrderViewModel,
+    Key? key,
+    required this.taxiNewOrderViewModel,
   }) : super(key: key);
 
   final NewTaxiOrderLocationEntryViewModel taxiNewOrderViewModel;

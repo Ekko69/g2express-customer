@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderPaymentInfoView extends StatelessWidget {
-  const OrderPaymentInfoView(this.vm, {Key key}) : super(key: key);
+  const OrderPaymentInfoView(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class OrderPaymentInfoView extends StatelessWidget {
           visible: vm.order.isPaymentPending,
           child: CustomButton(
             title: "PAY FOR ORDER".tr(),
-            titleStyle: context.textTheme.bodyLarge.copyWith(
+            titleStyle: context.textTheme.bodyLarge!.copyWith(
               color: Colors.white,
             ),
             icon: FlutterIcons.credit_card_fea,
@@ -41,7 +41,7 @@ class OrderPaymentInfoView extends StatelessWidget {
               ["pending"].contains(vm.order.status)),
           child: CustomButton(
             title: "PAY FOR ORDER".tr(),
-            titleStyle: context.textTheme.bodyLarge.copyWith(
+            titleStyle: context.textTheme.bodyLarge!.copyWith(
               color: Colors.white,
             ),
             icon: FlutterIcons.credit_card_fea,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/constants/app_images.dart';
@@ -14,17 +15,17 @@ import 'package:url_launcher/url_launcher_string.dart';
 class OrderTrackingViewModel extends MyBaseViewModel {
   //
   Order order;
-  GoogleMapController controller;
-  Set<Marker> mapMarkers;
-  LatLng pickupLatLng;
-  LatLng destinationLatLng;
-  LatLng driverLatLng;
+  GoogleMapController? controller;
+  Set<Marker>? mapMarkers;
+  LatLng? pickupLatLng;
+  LatLng? destinationLatLng;
+  LatLng? driverLatLng;
   PolylinePoints polylinePoints = PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};
 
   //
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  StreamSubscription driverLocationStream;
+  StreamSubscription? driverLocationStream;
 
   //
   OrderTrackingViewModel(BuildContext context, this.order) {
@@ -49,20 +50,20 @@ class OrderTrackingViewModel extends MyBaseViewModel {
     final vendorIcon = await markerIcon(
       order.isPackageDelivery ? AppImages.addressPin : AppImages.vendor,
     );
-    mapMarkers.add(
+    mapMarkers!.add(
       Marker(
         markerId: MarkerId("pickup"),
         position: pickupLatLng = LatLng(
             order.isPackageDelivery
-                ? order.pickupLocation.latitude
-                : double.parse(order.vendor.latitude),
+                ? order.pickupLocation!.latitude!
+                : double.parse(order.vendor!.latitude),
             order.isPackageDelivery
-                ? order.pickupLocation.longitude
-                : double.parse(order.vendor.longitude)),
+                ? order.pickupLocation!.longitude!
+                : double.parse(order.vendor!.longitude)),
         infoWindow: InfoWindow(
           title: order.isPackageDelivery
-              ? order.pickupLocation.name
-              : order.vendor.name,
+              ? order.pickupLocation?.name
+              : order.vendor?.name,
         ),
         icon: vendorIcon,
       ),
@@ -70,21 +71,21 @@ class OrderTrackingViewModel extends MyBaseViewModel {
 
     //delivery address
     final deliveryAddressIcon = await markerIcon(AppImages.deliveryParcel);
-    mapMarkers.add(
+    mapMarkers!.add(
       Marker(
         markerId: MarkerId("destination"),
         position: destinationLatLng = LatLng(
           order.isPackageDelivery
-              ? order.dropoffLocation.latitude
-              : order.deliveryAddress.latitude,
+              ? order.dropoffLocation!.latitude!
+              : order.deliveryAddress!.latitude!,
           order.isPackageDelivery
-              ? order.dropoffLocation.longitude
-              : order.deliveryAddress.longitude,
+              ? order.dropoffLocation!.longitude!
+              : order.deliveryAddress!.longitude!,
         ),
         infoWindow: InfoWindow(
           title: order.isPackageDelivery
-              ? order.dropoffLocation.name
-              : order.deliveryAddress.name,
+              ? order.dropoffLocation?.name
+              : order.deliveryAddress?.name,
         ),
         icon: deliveryAddressIcon,
       ),
@@ -99,45 +100,43 @@ class OrderTrackingViewModel extends MyBaseViewModel {
 
   dispose() {
     super.dispose();
-    if (driverLocationStream != null) {
-      driverLocationStream.cancel();
-    }
+    driverLocationStream?.cancel();
   }
 
   //
   zoomToLatLngBound() {
-    if (controller != null &&
-        destinationLatLng != null &&
-        driverLatLng != null &&
-        mapMarkers != null) {
-      //
-      LatLngBounds bound = boundsFromLatLngList(
-        [driverLatLng, destinationLatLng],
-      );
-
-      //
-      controller.animateCamera(
-        CameraUpdate.newLatLngBounds(bound, 80),
-      );
+    if (driverLatLng == null || destinationLatLng == null) {
+      return;
     }
+    LatLngBounds bound = boundsFromLatLngList(
+      [driverLatLng!, destinationLatLng!],
+    );
+
+    //
+    controller?.animateCamera(
+      CameraUpdate.newLatLngBounds(bound, 80),
+    );
   }
 
   //
   LatLngBounds boundsFromLatLngList(List<LatLng> list) {
     assert(list.isNotEmpty);
-    double x0, x1, y0, y1;
+    double? x0;
+    double? x1, y0, y1;
     for (LatLng latLng in list) {
       if (x0 == null) {
         x0 = x1 = latLng.latitude;
         y0 = y1 = latLng.longitude;
       } else {
-        if (latLng.latitude > x1) x1 = latLng.latitude;
+        if (latLng.latitude > (x1 ?? 0.00)) x1 = latLng.latitude;
         if (latLng.latitude < x0) x0 = latLng.latitude;
-        if (latLng.longitude > y1) y1 = latLng.longitude;
-        if (latLng.longitude < y0) y0 = latLng.longitude;
+        if (latLng.longitude > (y1 ?? 0.00)) y1 = latLng.longitude;
+        if (latLng.longitude < (y0 ?? 0.00)) y0 = latLng.longitude;
       }
     }
-    return LatLngBounds(northeast: LatLng(x1, y1), southwest: LatLng(x0, y0));
+    return LatLngBounds(
+        northeast: LatLng(x1 ?? 0.00, y1 ?? 0.00),
+        southwest: LatLng(x0 ?? 0.00, y0 ?? 0.00));
   }
 
   //
@@ -146,8 +145,8 @@ class OrderTrackingViewModel extends MyBaseViewModel {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       AppStrings.googleMapApiKey,
-      PointLatLng(pickupLatLng.latitude, pickupLatLng.longitude),
-      PointLatLng(destinationLatLng.latitude, destinationLatLng.longitude),
+      PointLatLng(pickupLatLng!.latitude, pickupLatLng!.longitude),
+      PointLatLng(destinationLatLng!.latitude, destinationLatLng!.longitude),
       travelMode: TravelMode.driving,
     );
     if (result.points.isNotEmpty) {
@@ -167,7 +166,7 @@ class OrderTrackingViewModel extends MyBaseViewModel {
       color: AppColor.primaryColor,
       polylineId: id,
       points: polylineCoordinates,
-      width: 8,
+      width: 3,
     );
     polylines[id] = polyline;
     notifyListeners();
@@ -182,15 +181,15 @@ class OrderTrackingViewModel extends MyBaseViewModel {
         .snapshots()
         .listen((event) async {
       //
-      var driverMarker = mapMarkers.firstWhere(
-          (e) => e.markerId.value.contains("driverLocation"),
-          orElse: () => null);
+      var driverMarker = mapMarkers!.firstOrNullWhere(
+        (e) => e.markerId.value.contains("driverLocation"),
+      );
 
       //
       final driverInfo = event.data();
       driverLatLng = LatLng(
-        driverInfo["lat"] ?? 0.00,
-        driverInfo["long"] ?? 0.00,
+        driverInfo?["lat"] ?? 0.00,
+        driverInfo?["long"] ?? 0.00,
       );
 
       //
@@ -199,13 +198,13 @@ class OrderTrackingViewModel extends MyBaseViewModel {
         final driverLocationIcon = await markerIcon(AppImages.deliveryBoy);
         driverMarker = Marker(
           markerId: MarkerId("driverLocation"),
-          position: driverLatLng,
+          position: driverLatLng!,
           infoWindow: InfoWindow.noText,
           icon: driverLocationIcon,
         );
       } else {
         //remove the old one
-        mapMarkers.remove(driverMarker);
+        mapMarkers!.remove(driverMarker);
         //
         driverMarker = driverMarker.copyWith(
           positionParam: driverLatLng,
@@ -213,7 +212,7 @@ class OrderTrackingViewModel extends MyBaseViewModel {
       }
 
       //adding to list
-      mapMarkers.add(driverMarker);
+      mapMarkers!.add(driverMarker);
       //
       notifyListeners();
       zoomToLatLngBound();
@@ -229,6 +228,6 @@ class OrderTrackingViewModel extends MyBaseViewModel {
   }
 
   void callDriver() {
-    launchUrlString("tel:${order.driver.phone}");
+    launchUrlString("tel:${order.driver?.phone}");
   }
 }

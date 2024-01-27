@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:cool_alert/cool_alert.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/services/cart.service.dart';
+import 'package:fuodz/widgets/bottomsheets/age_restriction.bottomsheet.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class CartUIServices extends CartServices {
@@ -13,7 +14,7 @@ class CartUIServices extends CartServices {
     Cart cart,
     Product product,
   ) async {
-    bool canAddToCart = true;
+    bool? canAddToCart = true;
     if (product.isDigital) {
       canAddToCart = await CartServices.canAddDigitalProductToCart(cart);
     } else {
@@ -22,10 +23,10 @@ class CartUIServices extends CartServices {
       if (canAddToCart) {
         int freeQty = 0;
         bool thereIsFreeQty =
-            await CartServices.cartItemQtyAvailable(cart.product);
+            await CartServices.cartItemQtyAvailable(cart.product!);
         if (thereIsFreeQty) {
-          freeQty = await CartServices.productQtyAllowed(cart.product);
-          thereIsFreeQty = freeQty >= cart.selectedQty;
+          freeQty = await CartServices.productQtyAllowed(cart.product!);
+          thereIsFreeQty = freeQty >= cart.selectedQty!;
         }
         //if there is not enough avaiable qty to process the product to cart
         if (!thereIsFreeQty) {
@@ -44,6 +45,24 @@ class CartUIServices extends CartServices {
         }
       }
     }
+
+    //AGE RESTRICTION check
+    if (canAddToCart && product.ageRestricted) {
+      //
+      bool? ageVerified = await showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return AgeRestrictionBottomSheet();
+        },
+      );
+      //
+      if (ageVerified == null) {
+        throw new Exception("Not age verified");
+      }
+    }
     return canAddToCart;
   }
 
@@ -54,7 +73,7 @@ class CartUIServices extends CartServices {
     Cart cart,
   ) async {
     bool canAddToCart = true;
-    int freeQty = await CartServices.productQtyAllowed(cart.product) ?? 0;
+    int freeQty = await CartServices.productQtyAllowed(cart.product!);
     //if there is not enough avaiable qty to process the product to cart
     if (newQty > freeQty) {
       //

@@ -6,9 +6,11 @@ import 'package:fuodz/utils/utils.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiOrderHistoryListItem extends StatelessWidget {
-  const TaxiOrderHistoryListItem(this.taxiOrderLocationHistory,
-      {Key key, this.onPressed})
-      : super(key: key);
+  const TaxiOrderHistoryListItem(
+    this.taxiOrderLocationHistory, {
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
 
   final TaxiOrderLocationHistory taxiOrderLocationHistory;
   final Function(TaxiOrderLocationHistory) onPressed;

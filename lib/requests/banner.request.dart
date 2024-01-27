@@ -6,8 +6,8 @@ import 'package:fuodz/services/http.service.dart';
 class BannerRequest extends HttpService {
   //
   Future<List<Banner>> banners({
-    int vendorTypeId,
-    Map params,
+    int? vendorTypeId,
+    Map? params,
   }) async {
     final apiResult = await get(
       Api.banners,
@@ -24,7 +24,7 @@ class BannerRequest extends HttpService {
           .map((jsonObject) => Banner.fromJSON(jsonObject))
           .toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 }

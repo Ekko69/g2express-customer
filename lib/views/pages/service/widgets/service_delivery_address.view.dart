@@ -12,8 +12,8 @@ import 'package:velocity_x/velocity_x.dart';
 class ServiceDeliveryAddressPickerView extends StatelessWidget {
   const ServiceDeliveryAddressPickerView(
     this.vm, {
-    this.service,
-    Key key,
+    required this.service,
+    Key? key,
   }) : super(key: key);
   final CheckoutBaseViewModel vm;
   final Service service;
@@ -55,7 +55,7 @@ class ServiceDeliveryAddressPickerView extends StatelessWidget {
             dashPattern: [3, 6],
             child: vm.deliveryAddress != null
                 ? DeliveryAddressListItem(
-                    deliveryAddress: vm.deliveryAddress,
+                    deliveryAddress: vm.deliveryAddress!,
                     action: false,
                     border: false,
                     showDefault: false,

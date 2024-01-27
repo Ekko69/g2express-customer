@@ -19,7 +19,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorPage extends StatefulWidget {
-  const VendorPage(this.vendorType, {Key key}) : super(key: key);
+  const VendorPage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -34,7 +34,7 @@ class _VendorPageState extends State<VendorPage>
     super.build(context);
     return ViewModelBuilder<VendorViewModel>.reactive(
       viewModelBuilder: () => VendorViewModel(context, widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,

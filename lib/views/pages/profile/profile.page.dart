@@ -12,7 +12,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage>
     return SafeArea(
       child: ViewModelBuilder<ProfileViewModel>.reactive(
         viewModelBuilder: () => ProfileViewModel(context),
-        onModelReady: (model) => model.initialise(),
+        onViewModelReady: (model) => model.initialise(),
         disposeViewModel: false,
         builder: (context, model, child) {
           return BasePage(

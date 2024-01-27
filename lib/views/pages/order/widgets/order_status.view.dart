@@ -12,7 +12,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderStatusView extends StatelessWidget {
-  const OrderStatusView(this.vm, {Key key}) : super(key: key);
+  const OrderStatusView(this.vm, {Key? key}) : super(key: key);
 
   final OrderDetailsViewModel vm;
   @override
@@ -25,7 +25,8 @@ class OrderStatusView extends StatelessWidget {
             VStack(
               [
                 "Status".tr().text.gray500.medium.sm.make(),
-                "${vm.order.status.tr().allWordsCapitilize() ?? vm.order.status.tr()}"
+                "${vm.order.status.tr()}"
+                    .capitalized
                     .text
                     .color(AppColor.getStausColor(vm.order.status))
                     .medium
@@ -39,7 +40,7 @@ class OrderStatusView extends StatelessWidget {
               [
                 "Payment Status".tr().text.gray500.medium.sm.make(),
                 //
-                "${vm.order.paymentStatus.tr().allWordsCapitilize() ?? vm.order.paymentStatus.tr()}"
+                "${vm.order.paymentStatus.tr().capitalized}"
                     .text
                     .color(AppColor.getStausColor(vm.order.paymentStatus))
                     .medium
@@ -78,7 +79,7 @@ class OrderStatusView extends StatelessWidget {
                       //
                       "Scheduled Date".tr().text.gray500.medium.sm.make(),
                       // "${vm.order.pickupDate}"
-                      "${Jiffy(vm.order.pickupDate ?? "").format("dd MMM yyyy")}"
+                      "${Jiffy(vm.order.pickupDate).format("dd MMM yyyy")}"
                           .text
                           .color(AppColor.getStausColor(vm.order.status))
                           .medium
@@ -92,7 +93,7 @@ class OrderStatusView extends StatelessWidget {
                     [
                       //
                       "Scheduled Time".tr().text.gray500.medium.sm.make(),
-                      "${Jiffy(vm.order.pickupTime ?? "").format("hh:mm a")}"
+                      "${Jiffy(vm.order.pickupTime).format("hh:mm a")}"
                           .text
                           .color(AppColor.getStausColor(vm.order.status))
                           .medium
@@ -141,11 +142,8 @@ class OrderStatusView extends StatelessWidget {
             contentsBuilder: (context, index) => VStack(
               [
                 Text(
-                  ('${vm.order.totalStatuses[index].name}'
-                          .tr()
-                          .allWordsCapitilize() ??
-                      '${vm.order.totalStatuses[index].name}'.tr()),
-                  style: context.textTheme.bodyLarge.copyWith(
+                  ('${vm.order.totalStatuses[index].name}'.tr().capitalized),
+                  style: context.textTheme.bodyLarge!.copyWith(
                     fontSize: Vx.dp16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -153,7 +151,7 @@ class OrderStatusView extends StatelessWidget {
                 //if created at is not null
                 Text(
                   "${vm.order.totalStatuses[index].createdAt != null ? Jiffy(vm.order.totalStatuses[index].createdAt).format("dd MMM, yyy 'at' hh:mm a") : ''}",
-                  style: context.textTheme.bodyLarge.copyWith(
+                  style: context.textTheme.bodyLarge!.copyWith(
                     fontSize: Vx.dp16,
                     fontWeight: FontWeight.w300,
                   ),

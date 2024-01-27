@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:dartx/dartx.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/models/coupon.dart';
@@ -18,7 +19,7 @@ class CartServices {
   //
   static Future<void> getCartItems() async {
     //
-    final cartList = await LocalStorageService.prefs.getString(
+    final cartList = await LocalStorageService.prefs!.getString(
       cartItemsKey,
     );
 
@@ -44,7 +45,7 @@ class CartServices {
     if (productsInCart.length > 0) {
       //
       final firstOfferInCart = productsInCart[0];
-      if (firstOfferInCart.product.vendorId == cart.product.vendorId ||
+      if (firstOfferInCart.product?.vendorId == cart.product?.vendorId ||
           AppStrings.enableMultipleVendorOrder) {
         return true;
       } else {
@@ -74,7 +75,7 @@ class CartServices {
       //
       bool result = true;
       for (var productInCart in productsInCart) {
-        if (!productInCart.product.isDigital) {
+        if (!productInCart.product!.isDigital) {
           result = false;
           break;
         }
@@ -86,7 +87,7 @@ class CartServices {
   }
 
   static clearCart() async {
-    await LocalStorageService.prefs.setString(
+    await LocalStorageService.prefs?.setString(
       cartItemsKey,
       "",
     );
@@ -99,7 +100,7 @@ class CartServices {
     try {
       final mProductsInCart = productsInCart;
       mProductsInCart.add(cart);
-      await LocalStorageService.prefs.setString(
+      await LocalStorageService.prefs!.setString(
         cartItemsKey,
         jsonEncode(
           mProductsInCart,
@@ -116,7 +117,7 @@ class CartServices {
   }
 
   static saveCartItems(List<Cart> productsInCart) async {
-    await LocalStorageService.prefs.setString(
+    await LocalStorageService.prefs?.setString(
       cartItemsKey,
       jsonEncode(
         productsInCart,
@@ -131,24 +132,27 @@ class CartServices {
 
   static updateTotalCartItemCount(int total) async {
     //update total item in cart count
-    await LocalStorageService.rxPrefs.setInt(totalItemKey, total);
+    await LocalStorageService.rxPrefs!.setInt(totalItemKey, total);
   }
 
   static bool isMultipleOrder() {
     final vendorIds = CartServices.productsInCart
-            .map((e) => e.product.vendorId)
-            .toList()
-            .toSet()
-            .toList() ??
-        [];
+        .map((e) => e.product?.vendorId)
+        .toList()
+        .toSet()
+        .toList();
     return vendorIds.length > 1;
   }
 
   static double vendorSubTotal(int id) {
     double subTotalPrice = 0.0;
-    CartServices.productsInCart.where((e) => e.product.vendorId == id).forEach(
+    CartServices.productsInCart.where((e) => e.product?.vendorId == id).forEach(
       (cartItem) {
-        final totalProductPrice = cartItem.price * cartItem.selectedQty;
+        double totalProductPrice =
+            (cartItem.price ?? cartItem.product!.sellPrice);
+        totalProductPrice = totalProductPrice * cartItem.selectedQty!;
+        print("Vendor ==> ${cartItem.product?.vendor.name}");
+        print("Total Product Price => $totalProductPrice");
         subTotalPrice += totalProductPrice;
       },
     );
@@ -158,40 +162,39 @@ class CartServices {
   static double vendorOrderDiscount(int id, Coupon coupon) {
     double discountCartPrice = 0.0;
     final cartItems = CartServices.productsInCart
-        .where((e) => e.product.vendorId == id)
+        .where((e) => e.product?.vendorId == id)
         .toList();
 
     cartItems.forEach(
       (cartItem) {
         //
-        final totalProductPrice = cartItem.price * cartItem.selectedQty;
+        final totalProductPrice =
+            (cartItem.price ?? cartItem.product!.price) * cartItem.selectedQty!;
         //discount/coupon
-        if (coupon != null) {
-          final foundProduct = coupon.products.firstWhere(
-              (product) => cartItem.product.id == product.id,
-              orElse: () => null);
-          final foundVendor = coupon.vendors.firstWhere(
-              (vendor) => cartItem.product.vendorId == vendor.id,
-              orElse: () => null);
-          if (foundProduct != null ||
-              foundVendor != null ||
-              (coupon.products.isEmpty && coupon.vendors.isEmpty)) {
-            if (coupon.percentage == 1) {
-              discountCartPrice += (coupon.discount / 100) * totalProductPrice;
-            } else {
-              discountCartPrice += coupon.discount;
-            }
+        final foundProduct = coupon.products.firstOrNullWhere(
+          (product) => cartItem.product?.id == product.id,
+        );
+        final foundVendor = coupon.vendors.firstOrNullWhere(
+          (vendor) => cartItem.product?.vendorId == vendor.id,
+        );
+        if (foundProduct != null ||
+            foundVendor != null ||
+            (coupon.products.isEmpty && coupon.vendors.isEmpty)) {
+          if (coupon.percentage == 1) {
+            discountCartPrice += (coupon.discount / 100) * totalProductPrice;
+          } else {
+            discountCartPrice += coupon.discount;
           }
         }
       },
     );
-    return discountCartPrice ?? 0.00;
+    return discountCartPrice;
   }
 
   //
   static List<Map> multipleVendorOrderPayload(int id) {
     return CartServices.productsInCart
-        .where((e) => e.product.vendorId == id)
+        .where((e) => e.product?.vendorId == id)
         .map((e) => e.toJson())
         .toList();
   }
@@ -201,11 +204,10 @@ class CartServices {
     int addedQty = 0;
     //
     await getCartItems();
-    (productsInCart.where((e) => e.product.id == product.id).toList()).forEach(
+    (productsInCart.where((e) => e.product?.id == product.id).toList()).forEach(
       (productInCart) {
         //update product qty
-        int qty =
-            productInCart.selectedQty ?? productInCart.product.selectedQty;
+        int qty = productInCart.selectedQty!;
         addedQty += qty;
       },
     );
@@ -222,6 +224,6 @@ class CartServices {
 
   static Future<bool> cartItemQtyAvailable(Product product) async {
     int addedQty = await productQtyInCart(product);
-    return product.availableQty == null || (addedQty < product.availableQty);
+    return product.availableQty == null || (addedQty < product.availableQty!);
   }
 }

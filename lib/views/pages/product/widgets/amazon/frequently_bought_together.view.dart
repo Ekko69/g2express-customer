@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/constants/app_colors.dart';
@@ -17,7 +18,8 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class FrequentlyBoughtTogetherView extends StatelessWidget {
-  const FrequentlyBoughtTogetherView(this.product, {Key key}) : super(key: key);
+  const FrequentlyBoughtTogetherView(this.product, {Key? key})
+      : super(key: key);
 
   final Product product;
 
@@ -25,7 +27,7 @@ class FrequentlyBoughtTogetherView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProductBoughtTogetherViewModel>.reactive(
       viewModelBuilder: () => ProductBoughtTogetherViewModel(context, product),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return CustomVisibilty(
           visible: vm.products.isNotEmpty,
@@ -92,9 +94,9 @@ class FrequentlyBoughtTogetherView extends StatelessWidget {
                           itemBuilder: (ctx, index) {
                             return FrequentBoughtProductListItem(
                               product: vm.products[index],
-                              selected: vm.selectedProducts.firstWhere(
-                                      (e) => e.id == vm.products[index].id,
-                                      orElse: () => null) !=
+                              selected: vm.selectedProducts.firstOrNullWhere(
+                                    (e) => e.id == vm.products[index].id,
+                                  ) !=
                                   null,
                               oncheckChange: (value) {
                                 vm.updateSelectedProducts(index, value);

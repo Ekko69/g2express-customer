@@ -15,10 +15,10 @@ import 'package:velocity_x/velocity_x.dart';
 
 class DeliveryAddressPicker extends StatelessWidget {
   const DeliveryAddressPicker({
-    this.onSelectDeliveryAddress,
+    required this.onSelectDeliveryAddress,
     this.allowOnMap = false,
     this.vendorCheckRequired = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Function(DeliveryAddress) onSelectDeliveryAddress;
@@ -32,7 +32,7 @@ class DeliveryAddressPicker extends StatelessWidget {
         onSelectDeliveryAddress,
         vendorCheckRequired,
       ),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return VStack(
           [
@@ -70,9 +70,7 @@ class DeliveryAddressPicker extends StatelessWidget {
             ).p20(),
             //result list
             CustomVisibilty(
-              visible: vm.isBusy ||
-                  (vm.deliveryAddresses != null &&
-                      vm.deliveryAddresses.isNotEmpty),
+              visible: vm.isBusy || (vm.deliveryAddresses.isNotEmpty),
               child: SafeArea(
                 top: false,
                 child: CustomListView(
@@ -88,7 +86,7 @@ class DeliveryAddressPicker extends StatelessWidget {
                       borderColor: Colors.grey.shade300,
                     ).onInkTap(
                       (deliveryAddress.can_deliver == null ||
-                              deliveryAddress.can_deliver)
+                              deliveryAddress.can_deliver!)
                           ? () => this.onSelectDeliveryAddress(deliveryAddress)
                           : null,
                     );

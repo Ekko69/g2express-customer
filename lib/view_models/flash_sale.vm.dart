@@ -7,7 +7,11 @@ import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class FlashSaleViewModel extends MyBaseViewModel {
-  FlashSaleViewModel(BuildContext context, {this.vendorType, this.flashSale}) {
+  FlashSaleViewModel(
+    BuildContext context, {
+    this.vendorType,
+    this.flashSale,
+  }) {
     this.viewContext = context;
   }
 
@@ -18,8 +22,8 @@ class FlashSaleViewModel extends MyBaseViewModel {
   //
   List<FlashSale> flashSales = [];
   List<Product> flashSaleItems = [];
-  final VendorType vendorType;
-  final FlashSale flashSale;
+  final VendorType? vendorType;
+  final FlashSale? flashSale;
   int queryPage = 1;
 
   //
@@ -28,7 +32,7 @@ class FlashSaleViewModel extends MyBaseViewModel {
     try {
       flashSales = await _flashSaleRequest.getFlashSales(
         queryParams: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
         },
       );
       setBusy(false);
@@ -71,12 +75,12 @@ class FlashSaleViewModel extends MyBaseViewModel {
     } else {
       queryPage += 1;
       refreshController.refreshCompleted();
-      setBusyForObject(flashSale.id, true);
+      setBusyForObject(flashSale?.id, true);
     }
     try {
       final mFlashSaleItems = await _flashSaleRequest.getProdcuts(
         queryParams: {
-          "flash_sale_id": flashSale.id,
+          "flash_sale_id": flashSale?.id,
         },
         page: queryPage,
       );

@@ -10,8 +10,8 @@ import 'package:velocity_x/velocity_x.dart';
 
 class LocationFetchPage extends StatelessWidget {
   const LocationFetchPage({
-    this.child,
-    Key key,
+    required this.child,
+    Key? key,
   }) : super(key: key);
 
   final Widget child;
@@ -20,7 +20,8 @@ class LocationFetchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<LocationFetchViewModel>.reactive(
         viewModelBuilder: () => LocationFetchViewModel(context, child),
-        onModelReady: (vm) => vm.initialise(),
+        disposeViewModel: true,
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (ctx, vm, child) {
           return Scaffold(
             body: VStack(

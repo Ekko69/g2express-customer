@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fuodz/view_models/login.view_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'dart:convert';
@@ -26,16 +27,20 @@ class SocialMediaLoginService {
         if (await googleSignIn.isSignedIn()) {
           await googleSignIn.disconnect();
         }
-        final GoogleSignInAccount googleUser = await googleSignIn.signIn();
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+        //
+        if (googleUser == null) {
+          throw "Google login failed".tr();
+        }
 
         // Obtain the auth details from the request
         final GoogleSignInAuthentication googleAuth =
-            await googleUser?.authentication;
+            await googleUser.authentication;
 
         // Create a new credential
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken,
-          idToken: googleAuth?.idToken,
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
         );
 
         // Once signed in, return the UserCredential
@@ -45,8 +50,11 @@ class SocialMediaLoginService {
         //
         // Sign the user in (or link) with the credential
         try {
-          final apiResponse = await model.authRequest
-              .socialLogin(googleUser.email, googleAuth?.idToken, "google");
+          final apiResponse = await model.authRequest.socialLogin(
+            googleUser.email,
+            googleAuth.idToken,
+            "google",
+          );
           //
           if (apiResponse != null) {
             await model.handleDeviceLogin(apiResponse);
@@ -85,7 +93,10 @@ class SocialMediaLoginService {
       );
       if (result.status == LoginStatus.success) {
         // you are logged
-        final AccessToken accessToken = result.accessToken;
+        final AccessToken? accessToken = result.accessToken;
+        if (accessToken == null) {
+          throw "Facebook login failed".tr();
+        }
         try {
           // Create a credential from the access token
           final OAuthCredential facebookAuthCredential =
@@ -101,7 +112,7 @@ class SocialMediaLoginService {
 
           //
           final apiResponse = await model.authRequest.socialLogin(
-            userAccount.user.email,
+            userAccount.user!.email!,
             accessToken.token,
             "facebook",
           );
@@ -110,8 +121,8 @@ class SocialMediaLoginService {
             await model.handleDeviceLogin(apiResponse);
           } else {
             model.openRegister(
-              email: userAccount.user.email,
-              name: userAccount.user.displayName,
+              email: userAccount.user!.email!,
+              name: userAccount.user!.displayName ?? "",
             );
           }
         } on FirebaseAuthException catch (error) {
@@ -168,26 +179,25 @@ class SocialMediaLoginService {
       try {
         //
         final apiResponse = await model.authRequest.socialLogin(
-          userAccount.user.email,
+          userAccount.user!.email ?? "",
           credential.identityToken,
           "apple",
           nonce: rawNonce,
-          uid: userAccount.user.uid,
+          uid: userAccount.user?.uid,
         );
         //
         if (apiResponse != null) {
           await model.handleDeviceLogin(apiResponse);
         } else {
           model.openRegister(
-            email: userAccount.user.email,
-            name: userAccount.user.displayName,
+            email: userAccount.user!.email,
+            name: userAccount.user!.displayName,
           );
         }
       } catch (error) {
         model.toastError("$error");
       }
       //
-
     } on FirebaseAuthException catch (error) {
       model.toastError(
         "${error.message}",

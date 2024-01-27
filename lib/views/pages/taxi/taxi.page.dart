@@ -17,7 +17,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiPage extends StatefulWidget {
-  const TaxiPage(this.vendorType, {Key key}) : super(key: key);
+  const TaxiPage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
 
@@ -27,7 +27,7 @@ class TaxiPage extends StatefulWidget {
 
 class _TaxiPageState extends State<TaxiPage> with WidgetsBindingObserver {
   //
-  TaxiViewModel taxiViewModel;
+  late TaxiViewModel taxiViewModel;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _TaxiPageState extends State<TaxiPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return ViewModelBuilder<TaxiViewModel>.reactive(
       viewModelBuilder: () => taxiViewModel,
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: false,

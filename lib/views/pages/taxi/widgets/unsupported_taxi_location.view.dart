@@ -8,7 +8,7 @@ import 'package:measure_size/measure_size.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class UnSupportedTaxiLocationView extends StatelessWidget {
-  const UnSupportedTaxiLocationView(this.vm, {Key key}) : super(key: key);
+  const UnSupportedTaxiLocationView(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
 
   @override

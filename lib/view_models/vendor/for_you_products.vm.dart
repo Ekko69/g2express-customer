@@ -4,14 +4,13 @@ import 'package:fuodz/models/product.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/requests/product.request.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ForYouProductsViewModel extends MyBaseViewModel {
   //
   ProductRequest _productRequest = ProductRequest();
   //
   List<Product> products = [];
-  VendorType vendorType;
+  VendorType? vendorType;
 
   ForYouProductsViewModel(BuildContext context, this.vendorType) {
     this.viewContext = context;
@@ -23,7 +22,7 @@ class ForYouProductsViewModel extends MyBaseViewModel {
     try {
       products = await _productRequest.forYouProductsRequest(
         queryParams: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
         },
       );
       clearErrors();
@@ -35,7 +34,7 @@ class ForYouProductsViewModel extends MyBaseViewModel {
 
   //
   productSelected(Product product) async {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.product,
       arguments: product,
     );

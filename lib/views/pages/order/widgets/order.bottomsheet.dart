@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderBottomSheet extends StatelessWidget {
-  const OrderBottomSheet(this.vm, {Key key}) : super(key: key);
+  const OrderBottomSheet(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
   @override
   Widget build(BuildContext context) {

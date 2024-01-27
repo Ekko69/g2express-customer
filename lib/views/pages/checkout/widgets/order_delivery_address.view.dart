@@ -11,7 +11,7 @@ import 'package:velocity_x/velocity_x.dart';
 class OrderDeliveryAddressPickerView extends StatelessWidget {
   const OrderDeliveryAddressPickerView(
     this.vm, {
-    Key key,
+    Key? key,
     this.showPickView = true,
     this.isBooking = false,
   }) : super(key: key);
@@ -24,7 +24,7 @@ class OrderDeliveryAddressPickerView extends StatelessWidget {
     return VStack(
       [
         Visibility(
-          visible: showPickView && !vm.vendor.allowOnlyDelivery,
+          visible: showPickView && !vm.vendor!.allowOnlyDelivery,
           child: HStack(
             [
               //
@@ -53,12 +53,12 @@ class OrderDeliveryAddressPickerView extends StatelessWidget {
 
         //delivery address pick preview
         Visibility(
-          visible: !vm.isPickup && !vm.vendor.allowOnlyPickup,
+          visible: !vm.isPickup && !vm.vendor!.allowOnlyPickup,
           child: VStack(
             [
               //divider
               Visibility(
-                visible: showPickView && vm.vendor.pickup == 1,
+                visible: showPickView && vm.vendor!.pickup == 1,
                 child: Divider(thickness: 1).py4(),
               ),
               //
@@ -80,11 +80,12 @@ class OrderDeliveryAddressPickerView extends StatelessWidget {
                           .make(),
                     ],
                   ).expand(),
+                  20.widthBox,
                   //
                   CustomButton(
                     title: "Select".tr(),
                     onPressed: vm.showDeliveryAddressPicker,
-                  ),
+                  ).h(40),
                 ],
               ),
               //Selected delivery address box
@@ -97,7 +98,7 @@ class OrderDeliveryAddressPickerView extends StatelessWidget {
                 dashPattern: [3, 6],
                 child: vm.deliveryAddress != null
                     ? DeliveryAddressListItem(
-                        deliveryAddress: vm.deliveryAddress,
+                        deliveryAddress: vm.deliveryAddress!,
                         action: false,
                         border: false,
                         showDefault: false,

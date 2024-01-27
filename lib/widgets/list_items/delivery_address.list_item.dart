@@ -8,23 +8,23 @@ import 'package:velocity_x/velocity_x.dart';
 
 class DeliveryAddressListItem extends StatelessWidget {
   const DeliveryAddressListItem({
-    this.deliveryAddress,
+    required this.deliveryAddress,
     this.onEditPressed,
     this.onDeletePressed,
     this.action = true,
     this.border = true,
     this.borderColor,
     this.showDefault = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final DeliveryAddress deliveryAddress;
-  final Function onEditPressed;
-  final Function onDeletePressed;
+  final Function? onEditPressed;
+  final Function? onDeletePressed;
   final bool action;
   final bool border;
   final bool showDefault;
-  final Color borderColor;
+  final Color? borderColor;
   @override
   Widget build(BuildContext context) {
     return VStack(
@@ -35,8 +35,10 @@ class DeliveryAddressListItem extends StatelessWidget {
             //
             VStack(
               [
-                deliveryAddress.name.text.semiBold.lg.make(),
-                deliveryAddress.address.text.sm
+                "${deliveryAddress.name}".text.semiBold.lg.make(),
+                "${deliveryAddress.address}"
+                    .text
+                    .sm
                     .maxLines(3)
                     .overflow(TextOverflow.ellipsis)
                     .make(),
@@ -64,7 +66,11 @@ class DeliveryAddressListItem extends StatelessWidget {
                         color: Colors.white,
                       )
                           .wFull(context)
-                          .onInkTap(this.onDeletePressed)
+                          .onInkTap(
+                            this.onDeletePressed != null
+                                ? () => this.onDeletePressed!()
+                                : () {},
+                          )
                           .py12()
                           .box
                           .red500
@@ -76,7 +82,11 @@ class DeliveryAddressListItem extends StatelessWidget {
                         color: Colors.white,
                       )
                           .wFull(context)
-                          .onInkTap(this.onEditPressed)
+                          .onInkTap(
+                            this.onEditPressed != null
+                                ? () => this.onEditPressed!()
+                                : () {},
+                          )
                           .py12()
                           .box
                           .blue500
@@ -93,7 +103,7 @@ class DeliveryAddressListItem extends StatelessWidget {
             .clip(Clip.antiAlias)
             .border(
               color: borderColor != null
-                  ? borderColor
+                  ? borderColor!
                   : (border ? context.accentColor : Colors.transparent),
               width: border ? 1 : 0,
             )
@@ -103,7 +113,7 @@ class DeliveryAddressListItem extends StatelessWidget {
         //can deliver
         CustomVisibilty(
           visible: deliveryAddress.can_deliver != null &&
-              !deliveryAddress.can_deliver,
+              !(deliveryAddress.can_deliver ?? true),
           child: "Vendor does not service this location"
               .tr()
               .text

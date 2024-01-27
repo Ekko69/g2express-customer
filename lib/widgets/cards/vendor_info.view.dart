@@ -6,7 +6,7 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorInfoView extends StatelessWidget {
-  const VendorInfoView(this.vendor, {Key key}) : super(key: key);
+  const VendorInfoView(this.vendor, {Key? key}) : super(key: key);
 
   final Vendor vendor;
 
@@ -28,7 +28,7 @@ class VendorInfoView extends StatelessWidget {
               value: vendor.rating.toDouble(),
               size: 10,
               isSelectable: false,
-              onRatingUpdate: null,
+              onRatingUpdate: (value) {},
               selectionColor: AppColor.ratingColor,
             ),
           ],

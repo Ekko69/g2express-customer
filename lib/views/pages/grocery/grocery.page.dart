@@ -20,7 +20,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class GroceryPage extends StatefulWidget {
-  const GroceryPage(this.vendorType, {Key key}) : super(key: key);
+  const GroceryPage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -35,7 +35,7 @@ class _GroceryPageState extends State<GroceryPage>
     super.build(context);
     return ViewModelBuilder<GroceryViewModel>.reactive(
       viewModelBuilder: () => GroceryViewModel(context, widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,
@@ -85,7 +85,7 @@ class _GroceryPageState extends State<GroceryPage>
                     //today picks
                     GroceryProductsSectionView(
                       "Today Picks".tr() + " 🔥",
-                      model.vendorType,
+                      model.vendorType!,
                       showGrid: false,
                       type: ProductFetchDataType.RANDOM,
                     ),

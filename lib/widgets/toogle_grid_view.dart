@@ -6,8 +6,8 @@ import 'package:velocity_x/velocity_x.dart';
 class ToogleGridViewIcon extends StatefulWidget {
   ToogleGridViewIcon({
     this.showGrid = false,
-    this.onchange,
-    Key key,
+    required this.onchange,
+    Key? key,
   }) : super(key: key);
 
   final bool showGrid;
@@ -57,9 +57,7 @@ class _ToogleGridViewIconState extends State<ToogleGridViewIcon> {
               showGrid = !showGrid;
             });
             //
-            if (widget.onchange != null) {
-              widget.onchange(showGrid);
-            }
+            widget.onchange(showGrid);
           },
         )
         .material(color: context.theme.colorScheme.background)

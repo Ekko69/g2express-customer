@@ -16,7 +16,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard(this.model, {Key key}) : super(key: key);
+  const ProfileCard(this.model, {Key? key}) : super(key: key);
 
   final ProfileViewModel model;
   @override
@@ -29,7 +29,7 @@ class ProfileCard extends StatelessWidget {
                 [
                   //
                   CachedNetworkImage(
-                    imageUrl: model.currentUser.photo,
+                    imageUrl: model.currentUser?.photo ?? "",
                     progressIndicatorBuilder: (context, imageUrl, progress) {
                       return BusyIndicator();
                     },
@@ -49,16 +49,16 @@ class ProfileCard extends StatelessWidget {
                   VStack(
                     [
                       //name
-                      model.currentUser.name.text.xl.semiBold.make(),
+                      model.currentUser!.name.text.xl.semiBold.make(),
                       //email
-                      model.currentUser.email.text.light.make(),
+                      model.currentUser!.email.text.light.make(),
                       //share invation code
                       AppStrings.enableReferSystem
                           ? "Share referral code"
                               .tr()
                               .text
                               .sm
-                              .color(context.textTheme.bodyLarge.color)
+                              .color(context.textTheme.bodyLarge!.color)
                               .make()
                               .box
                               .px4
@@ -100,7 +100,7 @@ class ProfileCard extends StatelessWidget {
                   ),
                   //loyalty point
                   CustomVisibilty(
-                    visible: AppFinanceSettings.enableLoyalty ?? false,
+                    visible: AppFinanceSettings.enableLoyalty,
                     child: MenuItem(
                       title: "Loyalty Points".tr(),
                       onPressed: model.openLoyaltyPoint,
@@ -109,7 +109,7 @@ class ProfileCard extends StatelessWidget {
                   ),
                   //Wallet
                   CustomVisibilty(
-                    visible: AppUISettings.allowWallet ?? true,
+                    visible: AppUISettings.allowWallet,
                     child: MenuItem(
                       title: "Wallet".tr(),
                       onPressed: model.openWallet,
@@ -137,27 +137,16 @@ class ProfileCard extends StatelessWidget {
                       size: 16,
                     ),
                   ),
+                  MenuItem(
+                    child: "Delete Account".tr().text.red500.make(),
+                    onPressed: model.deleteAccount,
+                    suffix: Icon(
+                      FlutterIcons.delete_ant,
+                      size: 16,
+                      color: Vx.red400,
+                    ),
+                  ),
                   //
-                  UiSpacer.vSpace(15),
-                  HStack(
-                    [
-                      UiSpacer.expandedSpace(),
-                      HStack(
-                        [
-                          Icon(
-                            FlutterIcons.delete_ant,
-                            size: 12,
-                            color: Vx.red400,
-                          ),
-                          UiSpacer.hSpace(10),
-                          "Delete Account".tr().text.xs.make(),
-                        ],
-                      ).onInkTap(model.deleteAccount),
-                      UiSpacer.expandedSpace(),
-                    ],
-                    crossAlignment: CrossAxisAlignment.center,
-                    alignment: MainAxisAlignment.center,
-                  ).wFull(context),
                   UiSpacer.vSpace(15),
                 ],
               ).p12(),

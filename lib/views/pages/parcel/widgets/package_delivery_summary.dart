@@ -11,7 +11,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PackageDeliverySummary extends StatelessWidget {
-  const PackageDeliverySummary({this.vm, Key key}) : super(key: key);
+  const PackageDeliverySummary({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final NewParcelViewModel vm;
   @override
@@ -24,11 +27,11 @@ class PackageDeliverySummary extends StatelessWidget {
             "Summary".tr().text.xl2.semiBold.make().py20(),
             //package type
             "Package Type".tr().text.xl.medium.make().py8(),
-            PackageTypeListItem(packageType: vm.selectedPackgeType),
+            PackageTypeListItem(packageType: vm.selectedPackgeType!),
             UiSpacer.formVerticalSpace(),
             //
             "Courier Vendor".tr().text.xl.medium.make().py8(),
-            ParcelVendorListItem(vm.selectedVendor, vm: vm),
+            ParcelVendorListItem(vm.selectedVendor!, vm: vm),
             UiSpacer.formVerticalSpace(),
 
             //
@@ -36,7 +39,10 @@ class PackageDeliverySummary extends StatelessWidget {
             VStack(
               [
                 "FROM".tr().text.semiBold.make(),
-                vm.pickupLocation.address.text.make().pOnly(bottom: Vx.dp4),
+                "${vm.pickupLocation?.address}"
+                    .text
+                    .make()
+                    .pOnly(bottom: Vx.dp4),
                 UiSpacer.verticalSpace(space: 10),
                 //dropoff location
                 Visibility(
@@ -44,7 +50,7 @@ class PackageDeliverySummary extends StatelessWidget {
                   child: VStack(
                     [
                       "TO".tr().text.semiBold.make(),
-                      vm.dropoffLocation.address.text.make(),
+                      "${vm.dropoffLocation?.address}".text.make(),
                       UiSpacer.verticalSpace(space: 10),
                     ],
                   ),
@@ -56,21 +62,22 @@ class PackageDeliverySummary extends StatelessWidget {
                   child: (vm.packageCheckout.stopsLocation != null)
                       ? VStack(
                           [
-                            ...(vm.packageCheckout.stopsLocation
-                                .mapIndexed((stop, index) {
-                              return VStack(
-                                [
-                                  ("Stop".tr() + " ${index + 1}")
-                                      .text
-                                      .semiBold
-                                      .make(),
-                                  "${stop?.deliveryAddress?.address}"
-                                      .text
-                                      .make(),
-                                  UiSpacer.verticalSpace(space: 10),
-                                ],
-                              );
-                            }).toList()),
+                            ...(vm.packageCheckout.stopsLocation!.mapIndexed(
+                              (stop, index) {
+                                return VStack(
+                                  [
+                                    ("Stop".tr() + " ${index + 1}")
+                                        .text
+                                        .semiBold
+                                        .make(),
+                                    "${stop.deliveryAddress?.address}"
+                                        .text
+                                        .make(),
+                                    UiSpacer.verticalSpace(space: 10),
+                                  ],
+                                );
+                              },
+                            ).toList()),
                           ],
                         )
                       : UiSpacer.emptySpace(),
@@ -84,7 +91,7 @@ class PackageDeliverySummary extends StatelessWidget {
                     VStack(
                       [
                         "DATE".tr().text.semiBold.make(),
-                        (vm.pickupDate != null ? vm.pickupDate : "ASAP".tr())
+                        "${(vm.pickupDate != null ? vm.pickupDate : "ASAP".tr())}"
                             .text
                             .make(),
                       ],
@@ -94,7 +101,7 @@ class PackageDeliverySummary extends StatelessWidget {
                     VStack(
                       [
                         "TIME".tr().text.semiBold.make(),
-                        (vm.pickupTime != null ? vm.pickupTime : "ASAP".tr())
+                        "${(vm.pickupTime != null ? vm.pickupTime : "ASAP".tr())}"
                             .text
                             .make(),
                       ],
@@ -106,7 +113,7 @@ class PackageDeliverySummary extends StatelessWidget {
                 .p12()
                 .box
                 .roundedSM
-                .border(color: Colors.grey[300], width: 2)
+                .border(color: Colors.grey.shade300, width: 2)
                 .make(),
             UiSpacer.formVerticalSpace(),
 
@@ -161,7 +168,7 @@ class PackageDeliverySummary extends StatelessWidget {
                     .p12()
                     .box
                     .roundedSM
-                    .border(color: Colors.grey[300], width: 2)
+                    .border(color: Colors.grey.shade300, width: 2)
                     .make()
                     .wFull(context);
               },
@@ -220,7 +227,7 @@ class PackageDeliverySummary extends StatelessWidget {
                       .p12()
                       .box
                       .roundedSM
-                      .border(color: Colors.grey[300], width: 2)
+                      .border(color: Colors.grey.shade300, width: 2)
                       .make()
                       .wFull(context),
                 ],

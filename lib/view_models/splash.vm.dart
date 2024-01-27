@@ -67,7 +67,7 @@ class SplashViewModel extends MyBaseViewModel {
   }
 
   //
-  void updateAppVariables(dynamic json) async {
+  updateAppVariables(dynamic json) async {
     //
     await AppStrings.saveAppSettingsToLocalStorage(jsonEncode(json));
   }
@@ -78,7 +78,7 @@ class SplashViewModel extends MyBaseViewModel {
     await AppColor.saveColorsToLocalStorage(jsonEncode(colorJson));
     //change theme
     // await AdaptiveTheme.of(viewContext).reset();
-    await AdaptiveTheme.of(viewContext).setTheme(
+    AdaptiveTheme.of(viewContext).setTheme(
       light: AppTheme().lightTheme(),
       dark: AppTheme().darkTheme(),
       notify: true,
@@ -102,15 +102,19 @@ class SplashViewModel extends MyBaseViewModel {
     }
     //
     if (AuthServices.firstTimeOnApp()) {
-      viewContext.navigator
-          .pushNamedAndRemoveUntil(AppRoutes.welcomeRoute, (route) => false);
+      Navigator.of(viewContext).pushNamedAndRemoveUntil(
+        AppRoutes.welcomeRoute,
+        (Route<dynamic> route) => false,
+      );
     } else {
-      viewContext.navigator
-          .pushNamedAndRemoveUntil(AppRoutes.homeRoute, (route) => false);
+      Navigator.of(viewContext).pushNamedAndRemoveUntil(
+        AppRoutes.homeRoute,
+        (Route<dynamic> route) => false,
+      );
     }
 
     //
-    RemoteMessage initialMessage =
+    RemoteMessage? initialMessage =
         await FirebaseService().firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
       //

@@ -3,10 +3,14 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/utils/utils.dart';
 
 class DirectionalChevron extends StatelessWidget {
-  const DirectionalChevron({this.size, this.color, Key key}) : super(key: key);
+  const DirectionalChevron({
+    this.size,
+    this.color,
+    Key? key,
+  }) : super(key: key);
 
-  final double size;
-  final Color color;
+  final double? size;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return Icon(

@@ -13,7 +13,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  ForgotPasswordPage({Key key}) : super(key: key);
+  ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
   _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
@@ -24,7 +24,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ForgotPasswordViewModel>.reactive(
       viewModelBuilder: () => ForgotPasswordViewModel(context),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showLeadingAction: true,
@@ -54,13 +54,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               [
                                 //icon/flag
                                 Flag.fromString(
-                                  model.selectedCountry.countryCode,
+                                  model.selectedCountry?.countryCode ?? "us",
                                   width: 20,
                                   height: 20,
                                 ),
                                 UiSpacer.horizontalSpace(space: 5),
                                 //text
-                                ("+" + model.selectedCountry.phoneCode)
+                                ("+" +
+                                        (model.selectedCountry?.phoneCode ??
+                                            "1"))
                                     .text
                                     .make(),
                               ],

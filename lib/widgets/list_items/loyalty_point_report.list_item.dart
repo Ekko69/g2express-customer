@@ -7,7 +7,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:intl/intl.dart';
 
 class LoyaltyPointReportListItem extends StatelessWidget {
-  const LoyaltyPointReportListItem(this.loyaltyPointReport, {Key key})
+  const LoyaltyPointReportListItem(this.loyaltyPointReport, {Key? key})
       : super(key: key);
 
   final LoyaltyPointReport loyaltyPointReport;
@@ -34,8 +34,20 @@ class LoyaltyPointReportListItem extends StatelessWidget {
             [
               HStack(
                 [
-                  "${loyaltyPointReport.points}".text.color(textColor).semiBold.xl.make(),
-                  "points".tr().text.color(textColor).semiBold.sm.make().expand(),
+                  "${loyaltyPointReport.points}"
+                      .text
+                      .color(textColor)
+                      .semiBold
+                      .xl
+                      .make(),
+                  "points"
+                      .tr()
+                      .text
+                      .color(textColor)
+                      .semiBold
+                      .sm
+                      .make()
+                      .expand(),
                 ],
               ),
               ("Rewarded points".tr()).text.color(textColor).sm.make(),
@@ -49,8 +61,20 @@ class LoyaltyPointReportListItem extends StatelessWidget {
             [
               HStack(
                 [
-                  "${loyaltyPointReport.points}".text.color(textColor).semiBold.xl.make(),
-                  "points".tr().text.color(textColor).semiBold.sm.make().expand(),
+                  "${loyaltyPointReport.points}"
+                      .text
+                      .color(textColor)
+                      .semiBold
+                      .xl
+                      .make(),
+                  "points"
+                      .tr()
+                      .text
+                      .color(textColor)
+                      .semiBold
+                      .sm
+                      .make()
+                      .expand(),
                 ],
               ),
               ("Withdrawn to wallet".tr()).text.color(textColor).sm.make(),

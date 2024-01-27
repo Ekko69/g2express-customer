@@ -6,9 +6,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class TopRatedVendorListItem extends StatelessWidget {
   const TopRatedVendorListItem({
-    this.vendor,
-    this.onPressed,
-    Key key,
+    required this.vendor,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
 
   final Vendor vendor;
@@ -19,7 +19,7 @@ class TopRatedVendorListItem extends StatelessWidget {
       [
         //
         Hero(
-          tag: vendor.heroTag,
+          tag: vendor.heroTag ?? vendor.id,
           child: CustomImage(
             imageUrl: vendor.logo,
             height: 60,
@@ -40,7 +40,7 @@ class TopRatedVendorListItem extends StatelessWidget {
               maxRating: 5.0,
               value: double.parse(vendor.rating.toString()),
               isSelectable: false,
-              onRatingUpdate: null,
+              onRatingUpdate: (value) {},
               selectionColor: AppColor.ratingColor,
               size: 14,
             ).centered(),

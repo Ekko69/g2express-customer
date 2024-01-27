@@ -19,14 +19,14 @@ class WalletTransferViewModel extends PaymentViewModel with QrcodeScannerTrait {
 
   //
   WalletRequest walletRequest = WalletRequest();
-  Wallet wallet;
-  User selectedUser;
+  Wallet? wallet;
+  User? selectedUser;
   TextEditingController amountTEC = TextEditingController();
   TextEditingController passwordTEC = TextEditingController();
 
   //
   Future<List<User>> searchUsers(String keyword) async {
-    if (keyword != null && keyword.isEmpty) {
+    if (keyword.isEmpty) {
       return [];
     }
     //
@@ -59,21 +59,21 @@ class WalletTransferViewModel extends PaymentViewModel with QrcodeScannerTrait {
   //
   initiateWalletTransfer() async {
     //
-    if (formKey.currentState.validate() && selectedUser != null) {
+    if (formKey.currentState!.validate()) {
       setBusy(true);
       try {
         //
         ApiResponse apiResponse = await walletRequest.transferWallet(
           amountTEC.text,
-          selectedUser.walletAddress,
+          selectedUser!.walletAddress,
           passwordTEC.text,
         );
         //
         if (apiResponse.allGood) {
-          toastSuccessful(apiResponse.message);
+          toastSuccessful(apiResponse.message ?? "Operation successful".tr());
           viewContext.pop(true);
         } else {
-          toastError(apiResponse.message);
+          toastError(apiResponse.message ?? "Operation failed".tr());
         }
       } catch (error) {
         toastError("$error");

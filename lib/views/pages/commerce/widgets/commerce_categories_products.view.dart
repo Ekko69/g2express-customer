@@ -9,7 +9,7 @@ class CommerceCategoryProducts extends StatelessWidget {
   const CommerceCategoryProducts(
     this.vendorType, {
     this.length = 2,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
@@ -19,7 +19,7 @@ class CommerceCategoryProducts extends StatelessWidget {
     return ViewModelBuilder<CategoriesViewModel>.reactive(
       viewModelBuilder: () =>
           CategoriesViewModel(context, vendorType: vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [

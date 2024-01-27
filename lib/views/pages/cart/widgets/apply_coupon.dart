@@ -9,7 +9,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ApplyCoupon extends StatelessWidget {
-  const ApplyCoupon(this.vm, {Key key}) : super(key: key);
+  const ApplyCoupon(this.vm, {Key? key}) : super(key: key);
 
   final CartViewModel vm;
   @override
@@ -24,16 +24,16 @@ class ApplyCoupon extends StatelessWidget {
             ? CustomTextFormField(
                 hintText: "Coupon Code".tr(),
                 textEditingController: vm.couponTEC,
-                errorText: vm.hasErrorForKey(vm.coupon)
-                    ? vm.error(vm.coupon).toString()
-                    : null,
+                errorText: vm.hasErrorForKey("coupon")
+                    ? vm.error("coupon").toString()
+                    : "",
                 onChanged: vm.couponCodeChange,
                 suffixIcon: CustomButton(
                   child: Icon(
                     FlutterIcons.check_ant,
                   ),
                   isFixedHeight: true,
-                  loading: vm.busy(vm.coupon),
+                  loading: vm.busy(vm.coupon) || vm.busy("coupon"),
                   onPressed: vm.canApplyCoupon ? vm.applyCoupon : null,
                 ).w(62).p8(),
               )

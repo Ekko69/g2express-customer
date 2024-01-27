@@ -13,9 +13,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class DriverRatingBottomSheet extends StatelessWidget {
   const DriverRatingBottomSheet({
-    Key key,
-    this.onSubmitted,
-    this.order,
+    Key? key,
+    required this.onSubmitted,
+    required this.order,
   }) : super(key: key);
 
   //
@@ -38,12 +38,12 @@ class DriverRatingBottomSheet extends StatelessWidget {
               UiSpacer.vSpace(),
               //
               CustomImage(
-                imageUrl: order?.driver?.photo,
+                imageUrl: order.driver!.photo,
                 width: 80,
                 height: 80,
               ).centered(),
               //
-              "${order?.driver?.name ?? ''}"
+              "${order.driver?.name ?? ''}"
                   .text
                   .center
                   .xl

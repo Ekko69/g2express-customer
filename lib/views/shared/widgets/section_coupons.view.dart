@@ -23,20 +23,20 @@ class SectionCouponsView extends StatelessWidget {
     this.titlePadding,
     this.height,
     this.bPadding = 0,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final VendorType vendorType;
+  final VendorType? vendorType;
   final Axis scrollDirection;
   final SearchFilterType type;
   final String title;
-  final double height;
-  final double itemWidth;
+  final double? height;
+  final double? itemWidth;
   final dynamic viewType;
-  final Widget separator;
+  final Widget? separator;
   final bool byLocation;
-  final EdgeInsets itemsPadding;
-  final EdgeInsets titlePadding;
+  final EdgeInsets? itemsPadding;
+  final EdgeInsets? titlePadding;
   final double bPadding;
 
   @override
@@ -46,7 +46,7 @@ class SectionCouponsView extends StatelessWidget {
         context,
         vendorType,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         //
         Widget listView = CustomListView(
@@ -65,7 +65,7 @@ class SectionCouponsView extends StatelessWidget {
             ).w(itemWidth ?? (context.percentWidth * 50));
           },
           separatorBuilder:
-              separator != null ? (ctx, index) => separator : null,
+              separator != null ? (ctx, index) => separator! : null,
         );
 
         //
@@ -75,7 +75,7 @@ class SectionCouponsView extends StatelessWidget {
                 [
                   //
                   Visibility(
-                    visible: title != null && title.isNotBlank,
+                    visible: title.isNotBlank,
                     child: Padding(
                       padding: titlePadding ?? EdgeInsets.all(12),
                       child: SectionTitle("$title"),

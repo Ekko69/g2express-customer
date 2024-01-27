@@ -18,7 +18,7 @@ import 'package:fuodz/services/auth.service.dart';
 import 'package:fuodz/widgets/bottomsheets/referral.bottomsheet.dart';
 import 'package:fuodz/widgets/cards/language_selector.view.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:share/share.dart';
@@ -27,11 +27,11 @@ class ProfileViewModel extends PaymentViewModel {
   //
   String appVersionInfo = "";
   bool authenticated = false;
-  User currentUser;
+  User? currentUser;
 
   //
   AuthRequest _authRequest = AuthRequest();
-  StreamSubscription authStateListenerStream;
+  StreamSubscription? authStateListenerStream;
 
   ProfileViewModel(BuildContext context) {
     this.viewContext = context;
@@ -75,11 +75,11 @@ class ProfileViewModel extends PaymentViewModel {
    */
 
   openEditProfile() async {
-    final result = await viewContext.navigator.pushNamed(
+    final result = await Navigator.of(viewContext).pushNamed(
       AppRoutes.editProfileRoute,
     );
 
-    if (result != null && result) {
+    if (result != null && result is bool && result) {
       initialise();
     }
   }
@@ -89,7 +89,7 @@ class ProfileViewModel extends PaymentViewModel {
    */
 
   openChangePassword() async {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.changePasswordRoute,
     );
   }
@@ -110,7 +110,7 @@ class ProfileViewModel extends PaymentViewModel {
   }
 
   openWallet() {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.walletRoute,
     );
   }
@@ -119,14 +119,14 @@ class ProfileViewModel extends PaymentViewModel {
    * Delivery addresses
    */
   openDeliveryAddresses() {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.deliveryAddressesRoute,
     );
   }
 
   //
   openFavourites() {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.favouritesRoute,
     );
   }
@@ -163,7 +163,7 @@ class ProfileViewModel extends PaymentViewModel {
     //
     viewContext.pop();
 
-    if (!apiResponse.allGood) {
+    if (!apiResponse.allGood && apiResponse.code != 401) {
       //
       CoolAlert.show(
         context: viewContext,
@@ -174,7 +174,7 @@ class ProfileViewModel extends PaymentViewModel {
     } else {
       //
       await AuthServices.logout();
-      viewContext.navigator.pushAndRemoveUntil(
+      Navigator.of(viewContext).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => SplashPage()),
         (route) => false,
       );
@@ -182,7 +182,7 @@ class ProfileViewModel extends PaymentViewModel {
   }
 
   openNotification() async {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.notificationsRoute,
     );
   }
@@ -244,7 +244,7 @@ class ProfileViewModel extends PaymentViewModel {
     //
     if (result != null) {
       //pop all screen and open splash screen
-      viewContext.navigator.pushAndRemoveUntil(
+      Navigator.of(viewContext).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => SplashPage()),
         (route) => false,
       );
@@ -252,7 +252,7 @@ class ProfileViewModel extends PaymentViewModel {
   }
 
   openLogin() async {
-    await viewContext.navigator.pushNamed(
+    await Navigator.of(viewContext).pushNamed(
       AppRoutes.loginRoute,
     );
     //
@@ -263,9 +263,9 @@ class ProfileViewModel extends PaymentViewModel {
     Share.share(
       "%s is inviting you to join %s via this referral code: %s".tr().fill(
             [
-              currentUser.name,
+              currentUser!.name,
               AppStrings.appName,
-              currentUser.code,
+              currentUser!.code,
             ],
           ) +
           "\n" +

@@ -6,7 +6,7 @@ import 'package:fuodz/constants/input.styles.dart';
 
 class CustomTextFormField extends StatefulWidget {
   CustomTextFormField({
-    Key key,
+    Key? key,
     this.filled,
     this.fillColor,
     this.textEditingController,
@@ -32,34 +32,34 @@ class CustomTextFormField extends StatefulWidget {
   }) : super(key: key);
 
   //
-  final bool filled;
-  final Color fillColor;
-  final TextEditingController textEditingController;
+  final bool? filled;
+  final Color? fillColor;
+  final TextEditingController? textEditingController;
   final bool obscureText;
-  final TextInputAction textInputAction;
-  final TextInputType keyboardType;
+  final TextInputAction? textInputAction;
+  final TextInputType? keyboardType;
 
   //
-  final String labelText;
-  final String hintText;
-  final String errorText;
+  final String? labelText;
+  final String? hintText;
+  final String? errorText;
 
-  final Function onChanged;
-  final Function onFieldSubmitted;
-  final Function(String) validator;
-  final FocusNode focusNode;
-  final FocusNode nextFocusNode;
+  final Function(String)? onChanged;
+  final Function? onFieldSubmitted;
+  final String? Function(String?)? validator;
+  final FocusNode? focusNode;
+  final FocusNode? nextFocusNode;
 
-  final bool isReadOnly;
-  final Function onTap;
-  final int minLines;
-  final int maxLines;
+  final bool? isReadOnly;
+  final Function()? onTap;
+  final int? minLines;
+  final int? maxLines;
 
-  final Widget prefixIcon;
-  final Widget suffixIcon;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   final bool underline;
-  final List<TextInputFormatter> inputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   _CustomTextFormFieldState createState() => _CustomTextFormFieldState();
@@ -96,13 +96,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       cursorColor: AppColor.cursorColor,
       obscureText: (widget.obscureText) ? !makePasswordVisible : false,
       onTap: widget.onTap,
-      readOnly: widget.isReadOnly,
+      readOnly: widget.isReadOnly ?? false,
       controller: widget.textEditingController,
       validator: widget.validator,
       focusNode: widget.focusNode,
       onFieldSubmitted: (data) {
         if (widget.onFieldSubmitted != null) {
-          widget.onFieldSubmitted(data);
+          widget.onFieldSubmitted!(data);
         } else {
           FocusScope.of(context).requestFocus(widget.nextFocusNode);
         }

@@ -7,7 +7,7 @@ import 'package:fuodz/widgets/custom_list_view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductImagesGalleryView extends StatefulWidget {
-  ProductImagesGalleryView(this.product, {Key key}) : super(key: key);
+  ProductImagesGalleryView(this.product, {Key? key}) : super(key: key);
 
   final Product product;
   @override
@@ -17,7 +17,7 @@ class ProductImagesGalleryView extends StatefulWidget {
 
 class _ProductImagesGalleryViewState extends State<ProductImagesGalleryView> {
   //
-  String selectedPhoto;
+  String? selectedPhoto;
 
   @override
   Widget build(BuildContext context) {

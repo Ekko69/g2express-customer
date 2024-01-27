@@ -4,7 +4,7 @@ import 'package:fuodz/widgets/states/empty.state.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class EmptyProduct extends StatelessWidget {
-  const EmptyProduct({Key key}) : super(key: key);
+  const EmptyProduct({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

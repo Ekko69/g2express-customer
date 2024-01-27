@@ -8,20 +8,23 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorFeesView extends StatelessWidget {
-  const VendorFeesView(
-      {this.fees, this.subTotal, this.mCurrencySymbol, Key key})
-      : super(key: key);
+  const VendorFeesView({
+    this.fees = const [],
+    this.subTotal = 0,
+    this.mCurrencySymbol,
+    Key? key,
+  }) : super(key: key);
 
   final List<Fee> fees;
   final double subTotal;
-  final String mCurrencySymbol;
+  final String? mCurrencySymbol;
   @override
   Widget build(BuildContext context) {
     final currencySymbol =
         mCurrencySymbol != null ? mCurrencySymbol : AppStrings.currencySymbol;
 
     return Visibility(
-      visible: fees != null && fees.isNotEmpty,
+      visible: fees.isNotEmpty,
       child: VStack(
         [
           ...(fees.map((fee) {
@@ -30,15 +33,15 @@ class VendorFeesView extends StatelessWidget {
               return AmountTile(
                 "${fee.name}".tr(),
                 "+ " +
-                    " $currencySymbol ${fee.value ?? 0}"
+                    " $currencySymbol ${fee.value}"
                         .currencyFormat(currencySymbol),
               ).py2();
             } else {
               //percentage
               return AmountTile(
-                "${fee.name} (%s)".tr().fill(["${fee.value ?? 0}%"]),
+                "${fee.name} (%s)".tr().fill(["${fee.value}%"]),
                 "+ " +
-                    " $currencySymbol ${fee.getRate(subTotal) ?? 0}"
+                    " $currencySymbol ${fee.getRate(subTotal)}"
                         .currencyFormat(currencySymbol),
               ).py2();
             }

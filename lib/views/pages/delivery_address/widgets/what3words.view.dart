@@ -7,7 +7,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class What3wordsView extends StatelessWidget {
-  const What3wordsView(this.vm, {Key key}) : super(key: key);
+  const What3wordsView(this.vm, {Key? key}) : super(key: key);
   final BaseDeliveryAddressesViewModel vm;
   @override
   Widget build(BuildContext context) {

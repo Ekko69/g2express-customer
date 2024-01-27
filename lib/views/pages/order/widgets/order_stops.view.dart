@@ -10,13 +10,13 @@ import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderStopsView extends StatelessWidget {
-  const OrderStopsView(this.vm, {Key key}) : super(key: key);
+  const OrderStopsView(this.vm, {Key? key}) : super(key: key);
 
   final OrderDetailsViewModel vm;
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: vm.order.orderStops != null && vm.order.orderStops.isNotEmpty,
+      visible: vm.order.orderStops != null && vm.order.orderStops!.isNotEmpty,
       child: VStack(
         [
           "Order Stops".tr().text.xl.semiBold.make(),
@@ -25,7 +25,7 @@ class OrderStopsView extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             builder: TimelineTileBuilder.connected(
-              itemCount: vm.order.orderStops.length,
+              itemCount: vm.order.orderStops?.length ?? 0,
               contentsAlign: ContentsAlign.basic,
               nodePositionBuilder: (context, index) => 0.00,
               indicatorPositionBuilder: (context, index) => 0.10,
@@ -44,36 +44,36 @@ class OrderStopsView extends StatelessWidget {
                 return SolidLineConnector(color: AppColor.primaryColor);
               },
               contentsBuilder: (context, index) {
-                final orderStop = vm.order.orderStops[index];
+                final orderStop = vm.order.orderStops![index];
                 return VStack(
                   [
                     //if created at is not null
                     Text(
-                      "${orderStop?.deliveryAddress?.name}",
-                      style: context.textTheme.bodyLarge.copyWith(
+                      "${orderStop.deliveryAddress?.name}",
+                      style: context.textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      "${orderStop?.deliveryAddress?.address}",
-                      style: context.textTheme.bodySmall.copyWith(
+                      "${orderStop.deliveryAddress?.address}",
+                      style: context.textTheme.bodySmall!.copyWith(
                         fontWeight: FontWeight.w400,
                       ),
                     ),
 
                     //conact info
                     Text(
-                      "${orderStop?.name} (${orderStop?.phone})",
-                      style: context.textTheme.bodyMedium.copyWith(
+                      "${orderStop.name} (${orderStop.phone})",
+                      style: context.textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Visibility(
                       visible:
-                          orderStop.note != null && orderStop.note.isNotEmpty,
+                          orderStop.note != null && orderStop.note!.isNotEmpty,
                       child: Text(
-                        "${orderStop?.note}",
-                        style: context.textTheme.bodySmall.copyWith(
+                        "${orderStop.note}",
+                        style: context.textTheme.bodySmall!.copyWith(
                           fontWeight: FontWeight.w300,
                         ),
                       ),
@@ -82,17 +82,17 @@ class OrderStopsView extends StatelessWidget {
                     //attachments
                     Visibility(
                       visible: orderStop.attachments != null &&
-                          orderStop.attachments.isNotEmpty,
+                          orderStop.attachments!.isNotEmpty,
                       child: CustomListView(
                         scrollDirection: Axis.horizontal,
-                        dataSet: vm.order.attachments,
+                        dataSet: vm.order.attachments ?? [],
                         itemBuilder: (ctx, index) {
-                          final attachment = orderStop.attachments[index];
+                          final attachment = orderStop.attachments![index];
                           return Column(
                             children: [
                               UiSpacer.vSpace(10),
                               CustomImage(
-                                imageUrl: attachment.link,
+                                imageUrl: attachment.link!,
                                 canZoom: true,
                                 width: 70,
                                 height: 70,

@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WelcomeIntroView extends StatelessWidget {
-  const WelcomeIntroView({Key key}) : super(key: key);
+  const WelcomeIntroView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +30,13 @@ class WelcomeIntroView extends StatelessWidget {
                   future: AuthServices.getCurrentUser(),
                   builder: (ctx, snapshot) {
                     if (snapshot.hasData) {
-                      fullIntroText = "$introText ${snapshot.data.name}";
+                      fullIntroText = "$introText ${snapshot.data?.name}";
 
                       final user = snapshot.data;
                       return HStack(
                         [
                           CustomImage(
-                            imageUrl: user?.photo,
+                            imageUrl: user!.photo,
                           ).box.roundedFull.shadowSm.make().wh(50, 50),
                           UiSpacer.hSpace(15),
                           //
@@ -49,11 +49,11 @@ class WelcomeIntroView extends StatelessWidget {
                                   .semiBold
                                   .make(),
                               //email
-                              "${user?.email}"
+                              "${user.email}"
                                   .hidePartial(
                                     begin: 3,
-                                    end: "${user?.email}".length - 8,
-                                  )
+                                    end: "${user.email}".length - 8,
+                                  )!
                                   .text
                                   .color(Utils.textColorByTheme())
                                   .sm

@@ -1,4 +1,5 @@
 import 'package:cool_alert/cool_alert.dart';
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/constants/app_strings.dart';
@@ -18,7 +19,6 @@ import 'package:fuodz/widgets/bottomsheets/delivery_address_picker.bottomsheet.d
 import 'package:jiffy/jiffy.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:supercharged/supercharged.dart';
 
 class CheckoutBaseViewModel extends PaymentViewModel {
   //
@@ -29,20 +29,19 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   VendorRequest vendorRequest = VendorRequest();
   TextEditingController driverTipTEC = TextEditingController();
   TextEditingController noteTEC = TextEditingController();
-  DeliveryAddress deliveryAddress;
+  DeliveryAddress? deliveryAddress;
   bool isPickup = false;
   bool isScheduled = false;
   List<String> availableTimeSlots = [];
   bool delievryAddressOutOfRange = false;
   bool canSelectPaymentOption = true;
-  Vendor vendor;
-  CheckOut checkout;
+  Vendor? vendor;
+  CheckOut? checkout;
   bool calculateTotal = true;
-  List<Map> calFees = [];
 
   //
   List<PaymentMethod> paymentMethods = [];
-  PaymentMethod selectedPaymentMethod;
+  PaymentMethod? selectedPaymentMethod;
 
   void initialise() async {
     fetchVendorDetails();
@@ -54,13 +53,13 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   //
   fetchVendorDetails() async {
     //
-    vendor = CartServices.productsInCart[0].product.vendor;
+    vendor = CartServices.productsInCart[0].product?.vendor;
 
     //
     setBusy(true);
     try {
       vendor = await vendorRequest.vendorDetails(
-        vendor.id,
+        vendor!.id,
         params: {
           "type": "brief",
         },
@@ -73,22 +72,22 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   }
 
   setVendorRequirement() {
-    if (vendor.allowOnlyDelivery) {
+    if (vendor!.allowOnlyDelivery) {
       isPickup = false;
-    } else if (vendor.allowOnlyPickup) {
+    } else if (vendor!.allowOnlyPickup) {
       isPickup = true;
     }
   }
 
   //start of schedule related
   changeSelectedDeliveryDate(String string, int index) {
-    checkout.deliverySlotDate = string;
-    availableTimeSlots = vendor.deliverySlots[index].times;
+    checkout?.deliverySlotDate = string;
+    availableTimeSlots = vendor!.deliverySlots[index].times;
     notifyListeners();
   }
 
   changeSelectedDeliveryTime(String time) {
-    checkout.deliverySlotTime = time;
+    checkout?.deliverySlotTime = time;
     notifyListeners();
   }
 
@@ -99,12 +98,12 @@ class CheckoutBaseViewModel extends PaymentViewModel {
     //
     try {
       //
-      checkout.deliveryAddress = deliveryAddress =
+      checkout!.deliveryAddress = deliveryAddress =
           await deliveryAddressRequest.preselectedDeliveryAddress(
-        vendorId: vendor.id,
+        vendorId: vendor?.id,
       );
 
-      if (checkout.deliveryAddress != null) {
+      if (checkout?.deliveryAddress != null) {
         //
         checkDeliveryRange();
         updateTotalOrderSummary();
@@ -116,7 +115,7 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   }
 
   //
-  fetchPaymentOptions({int vendorId}) async {
+  fetchPaymentOptions({int? vendorId}) async {
     setBusyForObject(paymentMethods, true);
     try {
       paymentMethods = await paymentOptionRequest.getPaymentOptions(
@@ -126,7 +125,7 @@ class CheckoutBaseViewModel extends PaymentViewModel {
       updatePaymentOptionSelection();
       clearErrors();
     } catch (error) {
-      print("Error getting payment methods ==> $error");
+      print("Regular Error getting payment methods ==> $error");
     }
     setBusyForObject(paymentMethods, false);
   }
@@ -140,26 +139,23 @@ class CheckoutBaseViewModel extends PaymentViewModel {
       updatePaymentOptionSelection();
       clearErrors();
     } catch (error) {
-      print("Error getting payment methods ==> $error");
+      print("Taxi Error getting payment methods ==> $error");
     }
     setBusyForObject(paymentMethods, false);
   }
 
   updatePaymentOptionSelection() {
-    if (checkout != null && checkout.total <= 0.00) {
+    if (checkout != null && checkout!.total <= 0.00) {
       canSelectPaymentOption = false;
     } else {
       canSelectPaymentOption = true;
     }
     //
     if (!canSelectPaymentOption) {
-      final selectedPaymentMethod = paymentMethods.firstWhere(
+      final selectedPaymentMethod = paymentMethods.firstOrNullWhere(
         (e) => e.isCash == 1,
-        orElse: () => null,
       );
-      if (selectedPaymentMethod != null) {
-        changeSelectedPaymentMethod(selectedPaymentMethod, callTotal: false);
-      }
+      changeSelectedPaymentMethod(selectedPaymentMethod, callTotal: false);
     }
   }
 
@@ -174,7 +170,7 @@ class CheckoutBaseViewModel extends PaymentViewModel {
         return DeliveryAddressPicker(
           onSelectDeliveryAddress: (deliveryAddress) {
             this.deliveryAddress = deliveryAddress;
-            checkout.deliveryAddress = deliveryAddress;
+            checkout?.deliveryAddress = deliveryAddress;
             //
             checkDeliveryRange();
             updateTotalOrderSummary();
@@ -189,19 +185,19 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   }
 
   //
-  togglePickupStatus(bool value) {
+  togglePickupStatus(bool? value) {
     //
-    if (vendor.allowOnlyPickup) {
+    if (vendor!.allowOnlyPickup) {
       value = true;
-    } else if (vendor.allowOnlyDelivery) {
+    } else if (vendor!.allowOnlyDelivery) {
       value = false;
     }
-    isPickup = value;
+    isPickup = value ?? false;
     //remove delivery address if pickup
     if (isPickup) {
-      checkout.deliveryAddress = null;
+      checkout?.deliveryAddress = null;
     } else {
-      checkout.deliveryAddress = deliveryAddress;
+      checkout?.deliveryAddress = deliveryAddress;
     }
 
     updateTotalOrderSummary();
@@ -209,14 +205,14 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   }
 
   //
-  toggleScheduledOrder(bool value) async {
-    isScheduled = value;
-    checkout.isScheduled = isScheduled;
+  toggleScheduledOrder(bool? value) async {
+    isScheduled = value ?? false;
+    checkout?.isScheduled = isScheduled;
     //remove delivery address if pickup
-    checkout.pickupDate = null;
-    checkout.deliverySlotDate = "";
-    checkout.pickupTime = null;
-    checkout.deliverySlotTime = "";
+    checkout?.pickupDate = null;
+    checkout?.deliverySlotDate = "";
+    checkout?.pickupTime = null;
+    checkout?.deliverySlotTime = "";
 
     await Jiffy.locale(translator.activeLocale.languageCode);
 
@@ -226,25 +222,25 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   //
   void checkDeliveryRange() {
     delievryAddressOutOfRange =
-        vendor.deliveryRange < (deliveryAddress.distance ?? 0);
-    if (deliveryAddress.can_deliver != null) {
-      delievryAddressOutOfRange = !deliveryAddress.can_deliver;
+        vendor!.deliveryRange < (deliveryAddress!.distance ?? 0);
+    if (deliveryAddress?.can_deliver != null) {
+      delievryAddressOutOfRange = (deliveryAddress?.can_deliver ?? false) ==
+          false; //if vendor has set delivery range
     }
     notifyListeners();
   }
 
   //
   isSelected(PaymentMethod paymentMethod) {
-    return selectedPaymentMethod != null &&
-        paymentMethod.id == selectedPaymentMethod.id;
+    return paymentMethod.id == selectedPaymentMethod?.id;
   }
 
   changeSelectedPaymentMethod(
-    PaymentMethod paymentMethod, {
+    PaymentMethod? paymentMethod, {
     bool callTotal = true,
   }) {
     selectedPaymentMethod = paymentMethod;
-    checkout.paymentMethod = paymentMethod;
+    checkout?.paymentMethod = paymentMethod;
     if (callTotal) {
       updateTotalOrderSummary();
     }
@@ -253,64 +249,37 @@ class CheckoutBaseViewModel extends PaymentViewModel {
 
   //update total/order amount summary
   updateTotalOrderSummary() async {
-    //delivery fee
-    if (!isPickup && deliveryAddress != null) {
-      //selected delivery address is within range
-      if (!delievryAddressOutOfRange) {
-        //vendor charges per km
-        setBusy(true);
-        try {
-          double orderDeliveryFee = await checkoutRequest.orderSummary(
-            deliveryAddressId: deliveryAddress.id,
-            vendorId: vendor.id,
-          );
+    //generate order summary
+    Map<String, dynamic> payload = {
+      "pickup": isPickup ? 1 : 0,
+      "delievryAddressOutOfRange": delievryAddressOutOfRange ? 1 : 0,
+      "tip": driverTipTEC.text,
+      "delivery_address_id": deliveryAddress?.id,
+      "coupon_code": checkout!.coupon?.code ?? "",
+      "vendor_id": vendor!.id,
+      "products":
+          CartServices.productsInCart.map((e) => e.toCheckout()).toList(),
+    };
 
-          //adding base fee
-          checkout.deliveryFee = orderDeliveryFee;
-        } catch (error) {
-          if (vendor.chargePerKm != null && vendor.chargePerKm == 1) {
-            checkout.deliveryFee =
-                vendor.deliveryFee * deliveryAddress.distance;
-          } else {
-            checkout.deliveryFee = vendor.deliveryFee;
-          }
-
-          //adding base fee
-          checkout.deliveryFee += vendor.baseDeliveryFee;
-        }
-
-        //
-        setBusy(false);
-      } else {
-        checkout.deliveryFee = 0.00;
-      }
-    } else {
-      checkout.deliveryFee = 0.00;
+    setBusy(true);
+    try {
+      final mCheckout = await checkoutRequest.orderSummary(payload);
+      checkout!.copyWith(
+        subTotal: mCheckout.subTotal,
+        discount: mCheckout.discount,
+        deliveryFee: mCheckout.deliveryFee,
+        tax: mCheckout.tax,
+        total: mCheckout.total,
+        totalWithTip: mCheckout.totalWithTip,
+        token: mCheckout.token,
+        fees: mCheckout.fees,
+      );
+    } catch (error) {
+      print("Error getting order summary ==> $error");
+      toastError("$error");
     }
-
-    //tax
-    checkout.tax = (double.parse(vendor.tax ?? "0") / 100) * checkout.subTotal;
-    checkout.total = (checkout.subTotal - checkout.discount) +
-        checkout.deliveryFee +
-        checkout.tax;
-    //vendor fees
-    calFees = [];
-    for (var fee in vendor.fees) {
-      double calFee = 0;
-      if (fee.isPercentage) {
-        checkout.total += calFee = fee.getRate(checkout.subTotal);
-      } else {
-        checkout.total += calFee = fee.value;
-      }
-
-      calFees.add({
-        "id": fee.id,
-        "name": fee.name,
-        "amount": calFee,
-      });
-    }
+    setBusy(false);
     //
-    updateCheckoutTotalAmount();
     updatePaymentOptionSelection();
     notifyListeners();
   }
@@ -318,24 +287,17 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   //
   bool pickupOnlyProduct() {
     //
-    final product = CartServices.productsInCart.firstWhere(
-      (e) => !e.product.canBeDelivered,
-      orElse: () => null,
+    final product = CartServices.productsInCart.firstOrNullWhere(
+      (e) => !e.product?.canBeDelivered,
     );
 
     return product != null;
   }
 
   //
-  updateCheckoutTotalAmount() {
-    checkout.totalWithTip =
-        checkout.total + (driverTipTEC.text.toDouble() ?? 0);
-  }
-
-  //
   placeOrder({bool ignore = false}) async {
     //
-    if (isScheduled && checkout.deliverySlotDate.isEmptyOrNull) {
+    if (isScheduled && checkout!.deliverySlotDate.isEmptyOrNull) {
       //
       CoolAlert.show(
         context: viewContext,
@@ -343,7 +305,7 @@ class CheckoutBaseViewModel extends PaymentViewModel {
         title: "Delivery Date".tr(),
         text: "Please select your desire order date".tr(),
       );
-    } else if (isScheduled && checkout.deliverySlotTime.isEmptyOrNull) {
+    } else if (isScheduled && checkout!.deliverySlotTime.isEmptyOrNull) {
       //
       CoolAlert.show(
         context: viewContext,
@@ -398,13 +360,12 @@ class CheckoutBaseViewModel extends PaymentViewModel {
     //process the order placement
     setBusy(true);
     //set the total with discount as the new total
-    checkout.total = checkout.totalWithTip;
+    checkout!.total = checkout!.totalWithTip;
     //
     final apiResponse = await checkoutRequest.newOrder(
-      checkout,
+      checkout!,
       tip: driverTipTEC.text,
       note: noteTEC.text,
-      fees: calFees ?? [],
     );
 
     //notify wallet view to update, just incase wallet was use for payment
@@ -420,7 +381,7 @@ class CheckoutBaseViewModel extends PaymentViewModel {
         showOrdersTab(context: viewContext);
         dynamic result;
         // if (["offline", "razorpay"]
-        if (["offline"].contains(checkout?.paymentMethod?.slug ?? "offline")) {
+        if (["offline"].contains(checkout!.paymentMethod?.slug ?? "offline")) {
           result = await openExternalWebpageLink(paymentLink);
         } else {
           result = await openWebpageLink(paymentLink);
@@ -434,15 +395,15 @@ class CheckoutBaseViewModel extends PaymentViewModel {
             type: CoolAlertType.success,
             title: "Checkout".tr(),
             text: apiResponse.message,
+            confirmBtnText: "Ok".tr(),
             barrierDismissible: false,
             onConfirmBtnTap: () {
               viewContext.pop(true);
               showOrdersTab(context: viewContext);
-              if (viewContext.navigator.canPop()) {
-                viewContext.navigator.popUntil(
-                  (route) {
-                    return route == AppRoutes.homeRoute || route.isFirst;
-                  },
+
+              if (Navigator.of(viewContext).canPop()) {
+                Navigator.of(viewContext).popUntil(
+                  (route) => route == AppRoutes.homeRoute || route.isFirst,
                 );
               }
             });
@@ -459,17 +420,17 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   }
 
   //
-  showOrdersTab({BuildContext context}) {
+  showOrdersTab({
+    required BuildContext context,
+  }) {
     //clear cart items
     CartServices.clearCart();
     //switch tab to orders
     AppService().changeHomePageIndex(index: 1);
     //pop until home page
-    if (context != null) {
-      context.navigator.popUntil(
-        (route) {
-          return route == AppRoutes.homeRoute || route.isFirst;
-        },
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).popUntil(
+        (route) => route.settings.name == AppRoutes.homeRoute || route.isFirst,
       );
     }
   }
@@ -477,13 +438,13 @@ class CheckoutBaseViewModel extends PaymentViewModel {
   //
   bool verifyVendorOrderAmountCheck() {
     //if vendor set min/max order
-    final orderVendor = checkout?.cartItems?.first?.product?.vendor ?? vendor;
+    final orderVendor = checkout?.cartItems?.first.product?.vendor ?? vendor;
     //if order is less than the min allowed order by this vendor
     //if vendor is currently open for accepting orders
 
-    if (!vendor.isOpen &&
-        !(checkout.isScheduled ?? false) &&
-        !(checkout.isPickup ?? false)) {
+    if (!vendor!.isOpen &&
+        !(checkout!.isScheduled ?? false) &&
+        !(checkout!.isPickup ?? false)) {
       //vendor is closed
       CoolAlert.show(
         context: viewContext,
@@ -493,8 +454,8 @@ class CheckoutBaseViewModel extends PaymentViewModel {
             .tr(),
       );
       return false;
-    } else if (orderVendor.minOrder != null &&
-        orderVendor.minOrder > checkout.subTotal) {
+    } else if (orderVendor?.minOrder != null &&
+        orderVendor!.minOrder! > checkout!.subTotal) {
       ///
       CoolAlert.show(
         context: viewContext,
@@ -508,8 +469,8 @@ class CheckoutBaseViewModel extends PaymentViewModel {
       return false;
     }
     //if order is more than the max allowed order by this vendor
-    else if (orderVendor.maxOrder != null &&
-        orderVendor.maxOrder < checkout.subTotal) {
+    else if (orderVendor?.maxOrder != null &&
+        orderVendor!.maxOrder! < checkout!.subTotal) {
       //
       CoolAlert.show(
         context: viewContext,

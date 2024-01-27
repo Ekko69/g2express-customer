@@ -8,7 +8,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorPackageTypeSelector extends StatelessWidget {
-  const VendorPackageTypeSelector({this.vm, Key key}) : super(key: key);
+  const VendorPackageTypeSelector({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final NewParcelViewModel vm;
   @override
@@ -29,7 +32,7 @@ class VendorPackageTypeSelector extends StatelessWidget {
             return ParcelVendorListItem(
               vendor,
               selected: vm.selectedVendor == vendor,
-              onPressed: () => vm.changeSelectedVendor(vendor),
+              onPressed: vm.changeSelectedVendor,
               vm: vm,
             );
           },

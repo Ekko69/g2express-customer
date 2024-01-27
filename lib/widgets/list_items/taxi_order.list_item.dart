@@ -12,20 +12,20 @@ import 'package:velocity_x/velocity_x.dart';
 
 class TaxiOrderListItem extends StatelessWidget {
   const TaxiOrderListItem({
-    this.order,
+    required this.order,
     this.onPayPressed,
-    this.orderPressed,
-    Key key,
+    required this.orderPressed,
+    Key? key,
   }) : super(key: key);
 
   final Order order;
-  final Function onPayPressed;
+  final Function? onPayPressed;
   final Function orderPressed;
   @override
   Widget build(BuildContext context) {
     //
-    final currencySymbol = order.taxiOrder.currency != null
-        ? order.taxiOrder.currency.symbol
+    final currencySymbol = order.taxiOrder?.currency != null
+        ? order.taxiOrder?.currency?.symbol
         : AppStrings.currencySymbol;
     //
     return VStack(
@@ -38,7 +38,7 @@ class TaxiOrderListItem extends StatelessWidget {
               [
                 Image.asset(AppImages.pickupLocation).wh(12, 12),
                 UiSpacer.horizontalSpace(space: 10),
-                "${order.taxiOrder.pickupAddress}"
+                "${order.taxiOrder?.pickupAddress}"
                     .text
                     .medium
                     .overflow(TextOverflow.ellipsis)
@@ -56,7 +56,7 @@ class TaxiOrderListItem extends StatelessWidget {
               [
                 Image.asset(AppImages.dropoffLocation).wh(12, 12),
                 UiSpacer.horizontalSpace(space: 10),
-                "${order.taxiOrder.dropoffAddress}"
+                "${order.taxiOrder?.dropoffAddress}"
                     .text
                     .medium
                     .overflow(TextOverflow.ellipsis)
@@ -78,7 +78,7 @@ class TaxiOrderListItem extends StatelessWidget {
               ],
             ).expand(),
             //status
-            "${order.Taxistatus ?? ''}"
+            "${order.Taxistatus}"
                 .tr()
                 .text
                 .color(AppColor.getStausColor(order.status))
@@ -87,7 +87,9 @@ class TaxiOrderListItem extends StatelessWidget {
         ).py8().px20(),
       ],
     )
-        .onInkTap(orderPressed)
+        .onInkTap(
+          () => orderPressed(),
+        )
         .card
         .elevation(3)
         .clip(Clip.antiAlias)

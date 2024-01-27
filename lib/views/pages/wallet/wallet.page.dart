@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WalletPage extends StatefulWidget {
-  const WalletPage({Key key}) : super(key: key);
+  const WalletPage({Key? key}) : super(key: key);
 
   @override
   _WalletPageState createState() => _WalletPageState();
@@ -18,7 +18,7 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
   //
-  WalletViewModel vm;
+  WalletViewModel? vm;
   @override
   void initState() {
     super.initState();
@@ -33,17 +33,15 @@ class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && vm != null) {
-      vm.initialise();
+    if (state == AppLifecycleState.resumed) {
+      vm?.initialise();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     //
-    if (vm == null) {
-      vm = WalletViewModel(context);
-    }
+    vm ??= WalletViewModel(context);
 
     //
     return BasePage(
@@ -51,8 +49,8 @@ class _WalletPageState extends State<WalletPage> with WidgetsBindingObserver {
       showLeadingAction: true,
       showAppBar: true,
       body: ViewModelBuilder<WalletViewModel>.reactive(
-        viewModelBuilder: () => vm,
-        onModelReady: (vm) => vm.initialise(),
+        viewModelBuilder: () => vm!,
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return SmartRefresher(
             controller: vm.refreshController,

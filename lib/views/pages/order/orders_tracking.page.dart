@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/constants/app_colors.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/models/order.dart';
 import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/view_models/order_tracking.vm.dart';
@@ -13,7 +14,10 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderTrackingPage extends StatelessWidget {
-  const OrderTrackingPage({this.order, Key key}) : super(key: key);
+  const OrderTrackingPage({
+    required this.order,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Order order;
@@ -23,7 +27,7 @@ class OrderTrackingPage extends StatelessWidget {
     //
     return ViewModelBuilder<OrderTrackingViewModel>.reactive(
       viewModelBuilder: () => OrderTrackingViewModel(context, order),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           title: "Order Tracking".tr(),
@@ -36,16 +40,16 @@ class OrderTrackingPage extends StatelessWidget {
               GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: LatLng(
-                    LocationService?.currenctAddress?.coordinates?.latitude ??
+                    LocationService.currenctAddress?.coordinates?.latitude ??
                         0.00,
-                    LocationService?.currenctAddress?.coordinates?.longitude ??
+                    LocationService.currenctAddress?.coordinates?.longitude ??
                         0.00,
                   ),
                   zoom: 15,
                 ),
                 padding: EdgeInsets.only(bottom: Vx.dp64 * 2),
                 myLocationEnabled: true,
-                markers: vm.mapMarkers,
+                markers: vm.mapMarkers ?? Set<Marker>(),
                 polylines: Set<Polyline>.of(vm.polylines.values),
                 onMapCreated: vm.setMapController,
               ),
@@ -60,7 +64,7 @@ class OrderTrackingPage extends StatelessWidget {
                     [
                       //driver profile
                       CustomImage(
-                        imageUrl: order.driver.photo,
+                        imageUrl: order.driver!.photo,
                       )
                           .wh(Vx.dp56, Vx.dp56)
                           .box
@@ -72,20 +76,23 @@ class OrderTrackingPage extends StatelessWidget {
                       //
                       VStack(
                         [
-                          order.driver.name.text.xl.semiBold.make(),
-                          order.driver.phone.text.make(),
+                          order.driver!.name.text.xl.semiBold.make(),
+                          order.driver!.phone.text.make(),
                         ],
                       ).px12().expand(),
 
                       //call
-                      CustomButton(
-                        icon: FlutterIcons.phone_call_fea,
-                        iconColor: Colors.white,
-                        title: "",
-                        color: AppColor.primaryColor,
-                        shapeRadius: Vx.dp24,
-                        onPressed: vm.callDriver,
-                      ).wh(Vx.dp64, Vx.dp40).p12(),
+                      Visibility(
+                        visible: AppUISettings.canCallDriver,
+                        child: CustomButton(
+                          icon: FlutterIcons.phone_call_fea,
+                          iconColor: Colors.white,
+                          title: "",
+                          color: AppColor.primaryColor,
+                          shapeRadius: Vx.dp24,
+                          onPressed: vm.callDriver,
+                        ).wh(Vx.dp64, Vx.dp40).p12(),
+                      ),
                     ],
                   )
                       .p12()

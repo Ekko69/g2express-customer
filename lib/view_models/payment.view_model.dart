@@ -13,7 +13,7 @@ class MyChromeSafariBrowser extends ChromeSafariBrowser {
   }
 
   @override
-  void onCompletedInitialLoad() {
+  void onCompletedInitialLoad(bool? value) {
     print("ChromeSafari browser initial load completed");
   }
 
@@ -26,28 +26,24 @@ class MyChromeSafariBrowser extends ChromeSafariBrowser {
 class PaymentViewModel extends MyBaseViewModel {
   refreshDataSet() {}
   //
-  // openWebpageLink(String url) async {
-  //   //
-  //   try {
-  //     ChromeSafariBrowser browser = new MyChromeSafariBrowser();
-  //     await browser.open(
-  //       url: Uri.parse(url),
-  //       options: ChromeSafariBrowserClassOptions(
-  //         android: AndroidChromeCustomTabsOptions(
-  //           addDefaultShareMenuItem: false,
-  //           enableUrlBarHiding: true,
-  //         ),
-  //         ios: IOSSafariOptions(
-  //           barCollapsingEnabled: true,
-  //         ),
-  //       ),
-  //     );
-  //   } catch (error) {
-  //     await launchUrlString(url);
-  //   }
-  //   //
-  //   refreshDataSet();
-  // }
+  openEmbededWebpageLink(String url) async {
+    //
+    try {
+      ChromeSafariBrowser browser = new MyChromeSafariBrowser();
+      await browser.open(
+        url: WebUri.uri(Uri.parse(url)),
+        settings: ChromeSafariBrowserSettings(
+          enableUrlBarHiding: false,
+          barCollapsingEnabled: true,
+          shareState: CustomTabsShareState.SHARE_STATE_OFF,
+        ),
+      );
+    } catch (error) {
+      await launchUrlString(url);
+    }
+    //
+    refreshDataSet();
+  }
 
   Future<dynamic> openWebpageLink(
     String url, {
@@ -55,8 +51,15 @@ class PaymentViewModel extends MyBaseViewModel {
     bool embeded = false,
   }) async {
     //
+    if (embeded) {
+      return openEmbededWebpageLink(url);
+    }
+    //
     if (!embeded && (Platform.isIOS || external)) {
-      await launchUrlString(url);
+      await launchUrlString(
+        url,
+        webViewConfiguration: WebViewConfiguration(),
+      );
       return;
     }
     final result = await viewContext.push(

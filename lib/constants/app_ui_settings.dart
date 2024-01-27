@@ -24,6 +24,21 @@ class AppUISettings extends AppStrings {
     return AppStrings.env('ui')['chat']["canCustomerChat"] == "1";
   }
 
+  static bool get canCustomerChatSupportMedia {
+    if (AppStrings.env('ui') == null || AppStrings.env('ui')["chat"] == null) {
+      return true;
+    }
+    try {
+      dynamic isSupportMedia =
+          AppStrings.env('ui')['chat']["canCustomerChatSupportMedia"] ?? false;
+      return (isSupportMedia is bool
+          ? isSupportMedia
+          : int.parse("$isSupportMedia") == 1);
+    } catch (e) {
+      return false;
+    }
+  }
+
   static bool get canDriverChat {
     if (AppStrings.env('ui') == null || AppStrings.env('ui')["chat"] == null) {
       return true;
@@ -47,7 +62,6 @@ class AppUISettings extends AppStrings {
     return (AppStrings.env('finance')['allowWallet'] ?? "0") == "1";
   }
 
-
   //show cart
   static bool get showCart {
     if (AppStrings.env('show_cart') == null) {
@@ -56,4 +70,20 @@ class AppUISettings extends AppStrings {
     return AppStrings.env('show_cart');
   }
 
+  //call settings
+  static bool get canCallVendor {
+    if (AppStrings.env('ui') == null || AppStrings.env('ui')["call"] == null) {
+      return true;
+    }
+    return [1, "1"]
+        .contains(AppStrings.env('ui')['call']["canCustomerVendorCall"]);
+  }
+
+  static bool get canCallDriver {
+    if (AppStrings.env('ui') == null || AppStrings.env('ui')["call"] == null) {
+      return true;
+    }
+    return [1, "1"]
+        .contains(AppStrings.env('ui')['call']["canCustomerDriverCall"]);
+  }
 }

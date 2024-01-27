@@ -7,19 +7,19 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomOutlineButton extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final double iconSize;
-  final Widget child;
-  final TextStyle titleStyle;
-  final Function onPressed;
-  final ShapeBorder shape;
+  final String? title;
+  final IconData? icon;
+  final double? iconSize;
+  final Widget? child;
+  final TextStyle? titleStyle;
+  final Function? onPressed;
+  final RoundedRectangleBorder? shape;
   final bool isFixedHeight;
-  final double height;
+  final double? height;
   final bool loading;
-  final double shapeRadius;
-  final Color color;
-  final Color iconColor;
+  final double? shapeRadius;
+  final Color? color;
+  final Color? iconColor;
 
   const CustomOutlineButton({
     this.title,
@@ -35,7 +35,7 @@ class CustomOutlineButton extends StatelessWidget {
     this.shapeRadius = Vx.dp4,
     this.color,
     this.titleStyle,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -46,15 +46,19 @@ class CustomOutlineButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             backgroundColor: this.color ?? AppColor.primaryColor,
-            disabledBackgroundColor: this.loading ? AppColor.primaryColor : null,
+            disabledBackgroundColor:
+                this.loading ? AppColor.primaryColor : null,
             shape: this.shape ??
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(this.shapeRadius),
+                  borderRadius:
+                      BorderRadius.circular(this.shapeRadius ?? Vx.dp4),
                 ),
             side: BorderSide(
               color: this.color ?? AppColor.primaryColor,
             )),
-        onPressed: this.loading ? null : this.onPressed,
+        onPressed: (this.loading || this.onPressed == null)
+            ? null
+            : () => this.onPressed!(),
         child: this.loading
             ? BusyIndicator(color: Colors.white)
             : Container(
@@ -85,9 +89,9 @@ class CustomOutlineButton extends StatelessWidget {
                                         : Vx.dp5,
                               )
                             : UiSpacer.emptySpace(),
-                        this.title != null && this.title.isNotBlank
+                        this.title != null
                             ? Text(
-                                this.title,
+                                this.title!,
                                 textAlign: TextAlign.center,
                                 style: this.titleStyle ??
                                     AppTextStyle.h3TitleTextStyle(

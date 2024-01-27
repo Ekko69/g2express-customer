@@ -1,5 +1,5 @@
 class Currency {
-  int id;
+  int? id;
   String code = "USD";
   String symbol = "\$";
 

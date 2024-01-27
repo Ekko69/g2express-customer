@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fuodz/extensions/string.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/constants/app_strings.dart';
-import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/widgets/cards/custom.visibility.dart';
 import 'package:fuodz/widgets/currency_hstack.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
+import 'package:fuodz/widgets/tags/product_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class FoodHorizontalProductListItem extends StatelessWidget {
@@ -13,16 +13,16 @@ class FoodHorizontalProductListItem extends StatelessWidget {
   const FoodHorizontalProductListItem(
     this.product, {
     this.onPressed,
-    @required this.qtyUpdated,
+    required this.qtyUpdated,
     this.height,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
   final Product product;
-  final Function(Product) onPressed;
-  final Function(Product, int) qtyUpdated;
-  final double height;
+  final Function(Product)? onPressed;
+  final Function(Product, int)? qtyUpdated;
+  final double? height;
   @override
   Widget build(BuildContext context) {
     //
@@ -32,36 +32,30 @@ class FoodHorizontalProductListItem extends StatelessWidget {
     Widget widget = HStack(
       [
         //
-        Hero(
-          tag: product.heroTag,
-          child: CustomImage(
-            imageUrl: product.photo,
-            width: height != null ? height / 1.6 : height,
-            height: height,
-          )
-              // .wh(Vx.dp40, Vx.dp40)
-              .box
-              .clip(Clip.antiAlias)
-              .roundedSM
-              .make(),
-        ),
+        CustomImage(
+          imageUrl: product.photo,
+          width: height != null ? (height! / 1.6) : height,
+          height: height,
+        ).box.clip(Clip.antiAlias).roundedSM.make(),
 
         //Details
         VStack(
           [
             //name
             product.name.text.lg.medium
-                .maxLines(2)
+                .maxLines(1)
                 .overflow(TextOverflow.ellipsis)
                 .make(),
             //description
+            //hide this if there is an overflow
+
             "${product.vendor.name}"
                 .text
                 .xs
                 .light
                 .gray600
                 .maxLines(1)
-                .overflow(TextOverflow.ellipsis)
+                .ellipsis
                 .make(),
             //price
             Wrap(
@@ -80,7 +74,7 @@ class FoodHorizontalProductListItem extends StatelessWidget {
                   ],
                   crossAlignment: CrossAxisAlignment.end,
                 ),
-                UiSpacer.horizontalSpace(),
+                5.widthBox,
                 //discount price
                 CustomVisibilty(
                   visible: product.showDiscount,
@@ -99,14 +93,19 @@ class FoodHorizontalProductListItem extends StatelessWidget {
                 ),
               ],
             ),
+
+            //
+            ProductTags(product),
           ],
         ).px12().expand(),
       ],
-    ).onInkTap(() => onPressed(product));
+    ).onInkTap(
+      onPressed == null ? null : () => onPressed!(product),
+    );
 
     //height set
     if (height != null) {
-      widget = widget.h(height);
+      widget = widget.h(height!);
     }
 
     //

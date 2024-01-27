@@ -22,7 +22,7 @@ class GroceryProductsSectionView extends StatelessWidget {
     this.category,
     this.showGrid = true,
     this.crossAxisCount = 2,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final String title;
@@ -30,7 +30,7 @@ class GroceryProductsSectionView extends StatelessWidget {
   final int crossAxisCount;
   final VendorType vendorType;
   final ProductFetchDataType type;
-  final Category category;
+  final Category? category;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class GroceryProductsSectionView extends StatelessWidget {
         type,
         categoryId: category?.id,
       ),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return CustomVisibilty(
           visible: vm.products.isNotEmpty && !vm.isBusy,
@@ -99,7 +99,7 @@ class GroceryProductsSectionView extends StatelessWidget {
                   isLoading: vm.isBusy,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  crossAxisCount: crossAxisCount ?? 2,
+                  crossAxisCount: crossAxisCount,
                   items: vm.products
                       .map(
                         (product) => GroceryProductListItem(

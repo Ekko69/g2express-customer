@@ -7,13 +7,12 @@ import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:fuodz/views/pages/service/service_details.page.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-
 class PopularServicesViewModel extends MyBaseViewModel {
   //
   ServiceRequest _serviceRequest = ServiceRequest();
   //
   List<Service> services = [];
-  VendorType vendorType;
+  VendorType? vendorType;
 
   PopularServicesViewModel(BuildContext context, this.vendorType) {
     this.viewContext = context;
@@ -26,7 +25,7 @@ class PopularServicesViewModel extends MyBaseViewModel {
       services = await _serviceRequest.getServices(
         byLocation: AppStrings.enableFatchByLocation,
         queryParams: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
         },
       );
       clearErrors();

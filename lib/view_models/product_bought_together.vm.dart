@@ -62,9 +62,7 @@ class ProductBoughtTogetherViewModel extends MyBaseViewModel {
   }
 
   bool isProductSelected(product) {
-    return selectedProducts.firstWhere((e) => e.id == product.id,
-            orElse: () => null) !=
-        null;
+    return selectedProducts.firstOrNullWhere((e) => e.id == product.id) != null;
   }
 
   void updateSelectedProducts(int index, bool add) {

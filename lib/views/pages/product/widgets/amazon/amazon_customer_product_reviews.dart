@@ -13,7 +13,10 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AmazonCustomerProductReview extends StatelessWidget {
-  const AmazonCustomerProductReview({this.product, Key key}) : super(key: key);
+  const AmazonCustomerProductReview({
+    required this.product,
+    Key? key,
+  }) : super(key: key);
 
   final Product product;
 
@@ -21,7 +24,7 @@ class AmazonCustomerProductReview extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProductReviewViewModel>.reactive(
       viewModelBuilder: () => ProductReviewViewModel(context, product, true),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return VStack(
           [

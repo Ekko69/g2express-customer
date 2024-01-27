@@ -15,7 +15,7 @@ import 'package:velocity_x/velocity_x.dart';
 class NearByVendors extends StatelessWidget {
   const NearByVendors(
     this.vendorType, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
@@ -25,7 +25,7 @@ class NearByVendors extends StatelessWidget {
       visible: !AppStrings.enableSingleVendor,
       child: ViewModelBuilder<NearbyVendorsViewModel>.reactive(
         viewModelBuilder: () => NearbyVendorsViewModel(context, vendorType),
-        onModelReady: (model) => model.initialise(),
+        onViewModelReady: (model) => model.initialise(),
         builder: (context, model, child) {
           return VStack(
             [
@@ -36,7 +36,7 @@ class NearByVendors extends StatelessWidget {
                   //
                   CustomButton(
                     title: "Delivery".tr(),
-                    titleStyle: context.textTheme.bodyLarge.copyWith(
+                    titleStyle: context.textTheme.bodyLarge!.copyWith(
                       fontSize: 12,
                       color: Colors.white,
                     ),
@@ -48,7 +48,7 @@ class NearByVendors extends StatelessWidget {
                   //
                   CustomButton(
                     title: "Pickup".tr(),
-                    titleStyle: context.textTheme.bodyLarge.copyWith(
+                    titleStyle: context.textTheme.bodyLarge!.copyWith(
                       fontSize: 12,
                       color: Colors.white,
                     ),

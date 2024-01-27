@@ -13,10 +13,10 @@ import 'package:velocity_x/velocity_x.dart';
 
 class OptionListItem extends StatelessWidget {
   const OptionListItem({
-    this.option,
-    this.optionGroup,
-    this.model,
-    Key key,
+    required this.option,
+    required this.optionGroup,
+    required this.model,
+    Key? key,
   }) : super(key: key);
 
   final Option option;
@@ -32,7 +32,6 @@ class OptionListItem extends StatelessWidget {
         //image/photo
         Stack(
           children: [
-
             //
             CustomImage(
               imageUrl: option.photo,
@@ -42,12 +41,17 @@ class OptionListItem extends StatelessWidget {
             ).card.clip(Clip.antiAlias).roundedSM.make(),
 
             //
-            model.isOptionSelected(option) ? Positioned(
-              top: 5, bottom: 5, left: 5, right: 5,
-              child: Icon(
-                FlutterIcons.check_ant,
-              ).box.color(AppColor.accentColor).roundedSM.make(),
-            ): UiSpacer.emptySpace(),
+            model.isOptionSelected(option)
+                ? Positioned(
+                    top: 5,
+                    bottom: 5,
+                    left: 5,
+                    right: 5,
+                    child: Icon(
+                      FlutterIcons.check_ant,
+                    ).box.color(AppColor.accentColor).roundedSM.make(),
+                  )
+                : UiSpacer.emptySpace(),
           ],
         ),
 
@@ -56,12 +60,13 @@ class OptionListItem extends StatelessWidget {
           [
             //
             option.name.text.medium.lg.make(),
-            option.description != null && option.description.isEmptyOrNull
-                ? "${option.description}".text.sm
-                    .maxLines(3)
-                    .overflow(TextOverflow.ellipsis)
-                    .make()
-                : UiSpacer.emptySpace(),
+            if (option.description.isNotEmptyAndNotNull)
+              "${option.description}"
+                  .text
+                  .sm
+                  .maxLines(3)
+                  .overflow(TextOverflow.ellipsis)
+                  .make(),
           ],
         ).px12().expand(),
 
@@ -73,7 +78,6 @@ class OptionListItem extends StatelessWidget {
           ],
           crossAlignment: CrossAxisAlignment.end,
         ),
-      
       ],
       crossAlignment: CrossAxisAlignment.center,
     ).onInkTap(() => model.toggleOptionSelection(optionGroup, option));

@@ -9,10 +9,10 @@ class SearchCustomTabbar extends StatelessWidget {
     this.title,
     this.active = false,
     this.show = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final String title;
+  final String? title;
   final bool active;
   final bool show;
   @override

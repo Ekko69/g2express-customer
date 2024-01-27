@@ -3,13 +3,17 @@ import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/flash_sale.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/services/http.service.dart';
+import 'package:fuodz/services/location.service.dart';
 
 class FlashSaleRequest extends HttpService {
   Future<List<FlashSale>> getFlashSales({
-    Map<String, dynamic> queryParams,
+    Map<String, dynamic>? queryParams,
   }) async {
     Map<String, dynamic> params = {
       ...(queryParams != null ? queryParams : {}),
+      //add lat and lng
+      "latitude": LocationService.getFetchByLocationLat(),
+      "longitude": LocationService.getFetchByLocationLng(),
     };
 
     final apiResult = await get(
@@ -24,12 +28,12 @@ class FlashSaleRequest extends HttpService {
           .toList();
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   //
   Future<List<Product>> getProdcuts({
-    Map<String, dynamic> queryParams,
+    Map<String, dynamic>? queryParams,
     int page = 1,
   }) async {
     Map<String, dynamic> params = {
@@ -53,6 +57,6 @@ class FlashSaleRequest extends HttpService {
       );
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 }

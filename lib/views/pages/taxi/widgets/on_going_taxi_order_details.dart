@@ -7,7 +7,7 @@ import 'package:measure_size/measure_size.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OnGoingTaxiOrderDetails extends StatelessWidget {
-  const OnGoingTaxiOrderDetails(this.vm, {Key key}) : super(key: key);
+  const OnGoingTaxiOrderDetails(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class OnGoingTaxiOrderDetails extends StatelessWidget {
             //cancel order button
             //only show if driver is yet to be assigned
             Visibility(
-              visible: vm.onGoingOrderTrip.canCancelTaxi,
+              visible: vm.onGoingOrderTrip?.canCancelTaxi ?? false,
               child: CustomTextButton(
                 title: "Cancel Booking".tr(),
                 titleColor: AppColor.getStausColor("failed"),

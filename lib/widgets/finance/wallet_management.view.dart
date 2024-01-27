@@ -14,9 +14,12 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WalletManagementView extends StatefulWidget {
-  const WalletManagementView({this.viewmodel, Key key}) : super(key: key);
+  const WalletManagementView({
+    this.viewmodel,
+    Key? key,
+  }) : super(key: key);
 
-  final WalletViewModel viewmodel;
+  final WalletViewModel? viewmodel;
 
   @override
   State<WalletManagementView> createState() => _WalletManagementViewState();
@@ -24,7 +27,7 @@ class WalletManagementView extends StatefulWidget {
 
 class _WalletManagementViewState extends State<WalletManagementView>
     with WidgetsBindingObserver {
-  WalletViewModel mViewmodel;
+  WalletViewModel? mViewmodel;
   @override
   void initState() {
     super.initState();
@@ -34,7 +37,7 @@ class _WalletManagementViewState extends State<WalletManagementView>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //
-      mViewmodel.initialise();
+      mViewmodel?.initialise();
     });
     WidgetsBinding.instance.addObserver(this);
   }
@@ -42,13 +45,13 @@ class _WalletManagementViewState extends State<WalletManagementView>
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding?.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && mViewmodel != null) {
-      mViewmodel.initialise();
+    if (state == AppLifecycleState.resumed) {
+      mViewmodel?.initialise();
     }
   }
 
@@ -58,7 +61,7 @@ class _WalletManagementViewState extends State<WalletManagementView>
     final textColor = Utils.textColorByColor(bgColor);
     //
     return ViewModelBuilder<WalletViewModel>.reactive(
-      viewModelBuilder: () => mViewmodel,
+      viewModelBuilder: () => mViewmodel!,
       disposeViewModel: widget.viewmodel == null,
       builder: (context, vm, child) {
         return StreamBuilder(
@@ -80,7 +83,7 @@ class _WalletManagementViewState extends State<WalletManagementView>
                 VStack(
                   [
                     //
-                    "${AppStrings.currencySymbol} ${vm.wallet != null ? vm.wallet.balance : 0.00}"
+                    "${AppStrings.currencySymbol} ${vm.wallet != null ? vm.wallet?.balance : 0.00}"
                         .currencyFormat()
                         .text
                         .color(textColor)
@@ -112,7 +115,11 @@ class _WalletManagementViewState extends State<WalletManagementView>
                               ).wh(24, 24),
                               UiSpacer.hSpace(5),
                               //
-                              "Top-Up".tr().text.make(),
+                              "Top-Up"
+                                  .tr()
+                                  .text
+                                  .color(Utils.textColorByTheme())
+                                  .make(),
                             ],
                             crossAlignment: CrossAxisAlignment.center,
                             alignment: MainAxisAlignment.center,
@@ -138,7 +145,11 @@ class _WalletManagementViewState extends State<WalletManagementView>
                                 ).wh(24, 24),
                                 UiSpacer.hSpace(5),
                                 //
-                                "SEND".tr().text.make(),
+                                "SEND"
+                                    .tr()
+                                    .text
+                                    .color(Utils.textColorByTheme())
+                                    .make(),
                               ],
                               crossAlignment: CrossAxisAlignment.center,
                               alignment: MainAxisAlignment.center,
@@ -166,7 +177,11 @@ class _WalletManagementViewState extends State<WalletManagementView>
                                 ).wh(24, 24),
                                 UiSpacer.hSpace(5),
                                 //
-                                "RECEIVE".tr().text.make(),
+                                "RECEIVE"
+                                    .tr()
+                                    .text
+                                    .color(Utils.textColorByTheme())
+                                    .make(),
                               ],
                               crossAlignment: CrossAxisAlignment.center,
                               alignment: MainAxisAlignment.center,

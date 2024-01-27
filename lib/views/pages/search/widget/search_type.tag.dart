@@ -5,24 +5,24 @@ import 'package:velocity_x/velocity_x.dart';
 
 class SearchTypeTag extends StatelessWidget {
   const SearchTypeTag({
-    @required this.title,
+    required this.title,
     this.selected = false,
     this.borderColor,
     this.color,
     this.onPressed,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final bool selected;
   final String title;
-  final Color borderColor;
-  final Color color;
-  final Function onPressed;
+  final Color? borderColor;
+  final Color? color;
+  final Function()? onPressed;
   @override
   Widget build(BuildContext context) {
     return "$title"
         .text
-        .color(selected ? Colors.white : context.textTheme.bodyLarge.color)
+        .color(selected ? Colors.white : context.textTheme.bodyLarge!.color)
         .make()
         .py4()
         .px12()

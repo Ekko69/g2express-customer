@@ -21,14 +21,14 @@ class OrderStatus {
     this.passed = true,
   });
 
-  int id;
-  String name;
+  int? id;
+  String? name;
   dynamic reason;
-  String modelType;
-  int modelId;
-  DateTime createdAt;
-  DateTime updatedAt;
-  bool passed;
+  String? modelType;
+  int? modelId;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  bool? passed;
 
   factory OrderStatus.fromJson(Map<String, dynamic> json) {
     return OrderStatus(
@@ -53,7 +53,7 @@ class OrderStatus {
         "passed": passed,
         "model_type": modelType == null ? null : modelType,
         "model_id": modelId == null ? null : modelId,
-        "created_at": createdAt == null ? null : createdAt.toIso8601String(),
-        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
+        "created_at": createdAt == null ? null : createdAt?.toIso8601String(),
+        "updated_at": updatedAt == null ? null : updatedAt?.toIso8601String(),
       };
 }

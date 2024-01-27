@@ -13,15 +13,14 @@ class VehicleTypeListItem extends StatelessWidget {
   const VehicleTypeListItem(
     this.vm,
     this.vehicleType, {
-    Key key,
+    Key? key,
   }) : super(key: key);
   final VehicleType vehicleType;
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {
     //
-    final selected = vm.selectedVehicleType != null &&
-        vm.selectedVehicleType.id == vehicleType.id;
+    final selected = vm.selectedVehicleType?.id == vehicleType.id;
 
     //
     return HStack(
@@ -43,7 +42,7 @@ class VehicleTypeListItem extends StatelessWidget {
                 .overflow(TextOverflow.ellipsis)
                 .make(),
             CurrencyHStack([
-              "${vehicleType.currency != null ? vehicleType.currency.symbol : AppStrings.currencySymbol}"
+              "${vehicleType.currency != null ? vehicleType.currency?.symbol : AppStrings.currencySymbol}"
                   .text
                   .fontWeight(selected ? FontWeight.w600 : FontWeight.w400)
                   .make(),

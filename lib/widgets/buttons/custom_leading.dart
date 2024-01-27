@@ -9,13 +9,13 @@ class CustomLeading extends StatelessWidget {
     this.color,
     this.padding,
     this.bgColor,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final double size;
-  final Color color;
-  final Color bgColor;
-  final double padding;
+  final double? size;
+  final Color? color;
+  final Color? bgColor;
+  final double? padding;
 
   @override
   Widget build(BuildContext context) {

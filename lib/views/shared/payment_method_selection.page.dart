@@ -9,13 +9,13 @@ import 'package:velocity_x/velocity_x.dart';
 
 class PaymentMethodSelectionPage extends StatelessWidget {
   const PaymentMethodSelectionPage({
-    this.list,
+    required this.list,
     this.selected,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final List<PaymentMethod> list;
-  final PaymentMethod selected;
+  final PaymentMethod? selected;
 
   @override
   Widget build(BuildContext context) {

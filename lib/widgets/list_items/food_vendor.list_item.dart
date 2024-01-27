@@ -15,9 +15,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class FoodVendorListItem extends StatelessWidget {
   const FoodVendorListItem({
-    this.vendor,
-    this.onPressed,
-    Key key,
+    required this.vendor,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
 
   final Vendor vendor;
@@ -31,7 +31,7 @@ class FoodVendorListItem extends StatelessWidget {
           children: [
             //
             Hero(
-              tag: vendor.heroTag,
+              tag: vendor.heroTag ?? vendor.id,
               child: CustomImage(
                 imageUrl: vendor.featureImage,
                 height: 80,
@@ -138,7 +138,7 @@ class FoodVendorListItem extends StatelessWidget {
                     color: AppColor.primaryColor,
                     size: 10,
                   ),
-                  " ${vendor?.distance?.numCurrency}km"
+                  " ${vendor.distance?.numCurrency}km"
                       .text
                       .minFontSize(6)
                       .size(10)

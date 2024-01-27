@@ -12,6 +12,7 @@ import 'package:fuodz/widgets/buttons/share.btn.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:fuodz/widgets/custom_masonry_grid_view.dart';
 import 'package:fuodz/widgets/html_text_view.dart';
+import 'package:fuodz/widgets/list_items/service_option.list_item.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -19,7 +20,7 @@ import 'package:velocity_x/velocity_x.dart';
 class ServiceDetailsPage extends StatelessWidget {
   const ServiceDetailsPage(
     this.service, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
@@ -29,7 +30,7 @@ class ServiceDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ServiceDetailsViewModel>.reactive(
       viewModelBuilder: () => ServiceDetailsViewModel(context, service),
-      onModelReady: (model) => model.getServiceDetails(),
+      onViewModelReady: (model) => model.getServiceDetails(),
       builder: (context, vm, child) {
         return BasePage(
           extendBodyBehindAppBar: true,
@@ -39,24 +40,29 @@ class ServiceDetailsPage extends StatelessWidget {
           elevation: 0,
           appBarColor: Colors.transparent,
           appBarItemColor: AppColor.primaryColor,
-          leading: SizedBox(
-            width: 60,
-            height: 60,
-            child: Icon(
-              !Utils.isArabic
-                  ? FlutterIcons.arrow_left_fea
-                  : FlutterIcons.arrow_right_fea,
-              color: AppColor.primaryColor,
-            )
-                .p4()
-                .box
-                .roundedSM
-                .color(context.theme.colorScheme.background)
-                .make()
-                .onTap(
-                  () => context.pop(),
-                )
-                .px8(),
+          // leading: CustomLeading(),
+          leading: FittedBox(
+            child: SizedBox(
+              width: 50,
+              height: 40,
+              child: Icon(
+                !Utils.isArabic
+                    ? FlutterIcons.arrow_left_fea
+                    : FlutterIcons.arrow_right_fea,
+                color: AppColor.primaryColor,
+                size: 20,
+              )
+                  .centered()
+                  .p4()
+                  .box
+                  .roundedSM
+                  .color(context.theme.colorScheme.background)
+                  .make()
+                  .onTap(
+                    () => context.pop(),
+                  )
+                  .px8(),
+            ),
           ),
 
           actions: [
@@ -74,7 +80,9 @@ class ServiceDetailsPage extends StatelessWidget {
             [
               CustomImage(
                 imageUrl:
-                    vm.service.photos.isNotEmpty ? vm.service.photos.first : '',
+                    (vm.service.photos != null && vm.service.photos!.isNotEmpty)
+                        ? vm.service.photos!.first
+                        : '',
                 width: double.infinity,
                 height: context.percentHeight * 50,
                 canZoom: true,
@@ -97,7 +105,7 @@ class ServiceDetailsPage extends StatelessWidget {
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                         crossAxisCount: 3,
-                        items: vm.service.photos
+                        items: (vm.service.photos ?? [])
                             .map(
                               (photo) => CustomImage(
                                 imageUrl: photo,
@@ -118,6 +126,45 @@ class ServiceDetailsPage extends StatelessWidget {
                       .color(context.theme.colorScheme.background)
                       .roundedSM
                       .make(),
+                  //options if any
+                  if (vm.service.optionGroups != null &&
+                      vm.service.optionGroups!.isNotEmpty)
+                    VStack(
+                      [
+                        UiSpacer.divider().py12(),
+                        //title
+                        "Additional Options".tr().text.xl.bold.make().py12(),
+                        //
+                        ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: vm.service.optionGroups!.length,
+                          itemBuilder: (context, index) {
+                            //
+                            final optionGroup = vm.service.optionGroups![index];
+                            //sublist
+                            return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: optionGroup.options.length,
+                              itemBuilder: (context, index) {
+                                //
+                                final option = optionGroup.options[index];
+                                //
+                                return ServiceOptionListItem(
+                                  option: option,
+                                  optionGroup: optionGroup,
+                                  model: vm,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+
                   UiSpacer.divider().py12(),
                   //vendor profile
                   "Provider".tr().text.medium.xl.make().py12(),
@@ -134,7 +181,7 @@ class ServiceDetailsPage extends StatelessWidget {
                         [
                           vm.service.vendor.name.text.semiBold.lg.make(),
                           "${vm.service.vendor.phone}".text.medium.sm.make(),
-                          "${vm.service.vendor.address ?? ''}"
+                          "${vm.service.vendor.address}"
                               .text
                               .light
                               .sm

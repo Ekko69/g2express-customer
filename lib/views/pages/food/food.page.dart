@@ -26,7 +26,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class FoodPage extends StatefulWidget {
-  const FoodPage(this.vendorType, {Key key}) : super(key: key);
+  const FoodPage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -41,7 +41,7 @@ class _FoodPageState extends State<FoodPage>
     super.build(context);
     return ViewModelBuilder<VendorViewModel>.reactive(
       viewModelBuilder: () => VendorViewModel(context, widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,
@@ -152,6 +152,7 @@ class _FoodPageState extends State<FoodPage>
                         type: SearchFilterType.best,
                         viewType: HorizontalVendorListItem,
                         separator: UiSpacer.verticalSpace(space: 0),
+                        byLocation: AppStrings.enableFatchByLocation,
                       ),
                     ),
                     //all products
@@ -165,6 +166,7 @@ class _FoodPageState extends State<FoodPage>
                         viewType: HorizontalProductListItem,
                         separator: UiSpacer.verticalSpace(space: 0),
                         listHeight: null,
+                        byLocation: AppStrings.enableFatchByLocation,
                       ),
                     ),
                     //view all vendors

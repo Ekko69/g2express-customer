@@ -1,5 +1,4 @@
 import 'package:fuodz/constants/app_strings.dart';
-import 'package:supercharged/supercharged.dart';
 
 class AppFileLimit extends AppStrings {
   //prescription file limit
@@ -7,9 +6,13 @@ class AppFileLimit extends AppStrings {
     if (AppStrings.env('file_limit') != null &&
         AppStrings.env('file_limit')['prescription'] != null &&
         AppStrings.env('file_limit')['prescription']["file_limit"] != null) {
-      return AppStrings.env('file_limit')['prescription']["file_limit"]
-          .toString()
-          .toInt();
+      try {
+        return int.parse(AppStrings.env('file_limit')['prescription']
+                ["file_limit"]
+            .toString());
+      } catch (error) {
+        return 2;
+      }
     }
     return 2;
   }
@@ -20,9 +23,13 @@ class AppFileLimit extends AppStrings {
         AppStrings.env('file_limit')['prescription'] != null &&
         AppStrings.env('file_limit')['prescription']["file_size_limit"] !=
             null) {
-      return AppStrings.env('file_limit')['prescription']["file_size_limit"]
-          .toString()
-          .toInt();
+      try {
+        return int.parse(AppStrings.env('file_limit')['prescription']
+                ["file_size_limit"]
+            .toString());
+      } catch (error) {
+        return 1024;
+      }
     }
     //return 1mb in kb
     return 1024;

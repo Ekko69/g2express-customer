@@ -7,9 +7,9 @@ import 'package:fuodz/widgets/list_items/horizontal_vehicle_type.list_item.dart'
 
 class TaxiVehicleTypeListView extends StatelessWidget {
   const TaxiVehicleTypeListView({
-    Key key,
+    Key? key,
     this.min = true,
-    @required this.vm,
+    required this.vm,
   }) : super(key: key);
 
   final TaxiViewModel vm;

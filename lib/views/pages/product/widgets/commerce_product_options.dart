@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CommerceProductOptions extends StatelessWidget {
-  const CommerceProductOptions(this.model, {Key key}) : super(key: key);
+  const CommerceProductOptions(this.model, {Key? key}) : super(key: key);
   final ProductDetailsViewModel model;
 
   @override
@@ -21,9 +21,17 @@ class CommerceProductOptions extends StatelessWidget {
           : VStack(
               [
                 UiSpacer.vSpace(10),
-                "Note: Long press option to see option full details".tr().text.sm.light.italic.make().px20(),
+                "Note: Long press option to see option full details"
+                    .tr()
+                    .text
+                    .sm
+                    .light
+                    .italic
+                    .make()
+                    .px20(),
                 UiSpacer.vSpace(5),
                 ...buildProductOptions(model),
+                UiSpacer.vSpace(10),
               ],
             ),
     );

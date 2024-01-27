@@ -11,31 +11,33 @@ import 'package:velocity_x/velocity_x.dart';
 
 class MultipleVendorOrderSummary extends StatelessWidget {
   const MultipleVendorOrderSummary({
-    this.subTotal,
-    this.discount,
-    this.deliveryFee,
-    this.tax,
-    this.vendorTax,
-    this.total,
+    required this.subTotal,
+    required this.discount,
+    required this.deliveryFee,
+    this.totalTax,
+    this.totalFee,
+    required this.total,
     this.driverTip = 0.00,
     this.mCurrencySymbol,
-    this.taxes,
-    this.vendors,
-    this.subtotals,
-    Key key,
+    this.taxes = const [],
+    required this.vendors,
+    this.subtotals = const [],
+    this.deliveryDiscount,
+    Key? key,
   }) : super(key: key);
 
-  final double subTotal;
-  final double discount;
-  final double deliveryFee;
-  final double tax;
-  final String vendorTax;
+  final double? subTotal;
+  final double? discount;
+  final double? deliveryFee;
+  final double? totalTax;
+  final double? totalFee;
   final double total;
   final double driverTip;
-  final String mCurrencySymbol;
-  final List<dynamic> taxes;
+  final String? mCurrencySymbol;
+  final List<double> taxes;
   final List<dynamic> vendors;
   final List<double> subtotals;
+  final double? deliveryDiscount;
   @override
   Widget build(BuildContext context) {
     final currencySymbol =
@@ -43,16 +45,53 @@ class MultipleVendorOrderSummary extends StatelessWidget {
     return VStack(
       [
         "Order Summary".tr().text.semiBold.xl.make().pOnly(bottom: Vx.dp12),
-        AmountTile("Subtotal".tr(), (subTotal ?? 0).currencyValueFormat())
-            .py2(),
+        //vendor fees like tax summary
+        ...vendorAmounts(context, taxes, vendors, subtotals),
+        DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
+        //
         AmountTile(
-          "Discount".tr(),
-          "- " + "$currencySymbol ${discount ?? 0}".currencyFormat(),
+          "Subtotal".tr(),
+          (subTotal ?? 0).currencyValueFormat(),
         ).py2(),
         AmountTile(
-          "Delivery Fee".tr(),
-          "+ " + "$currencySymbol ${deliveryFee ?? 0}".currencyFormat(),
+          "Tax".tr(),
+          "+ " + (totalTax).currencyValueFormat(),
         ).py2(),
+        AmountTile(
+          "Service Fee(s)".tr(),
+          "+ " + (totalFee).currencyValueFormat(),
+        ).py2(),
+        Visibility(
+          visible: discount != null,
+          child: AmountTile(
+            "Discount".tr(),
+            "- " +
+                "$currencySymbol ${discount ?? 0}"
+                    .currencyFormat(currencySymbol),
+          ).py2(),
+        ),
+
+        Visibility(
+          visible: deliveryFee != null,
+          child: VStack([
+            DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
+            AmountTile(
+              "Delivery Fee".tr(),
+              "+ " +
+                  "$currencySymbol ${deliveryFee ?? 0}"
+                      .currencyFormat(currencySymbol),
+            ),
+            Visibility(
+              visible: deliveryDiscount != null,
+              child: AmountTile(
+                "Delivery Discount".tr(),
+                "- " +
+                    "$currencySymbol ${deliveryDiscount ?? 0}"
+                        .currencyFormat(currencySymbol),
+              ),
+            ),
+          ]).py2(),
+        ),
         //
         "Note: Delivery fee for each vendor is sum up to get the total delivery fee"
             .tr()
@@ -61,30 +100,27 @@ class MultipleVendorOrderSummary extends StatelessWidget {
             .gray600
             .italic
             .make(),
-        DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
         // AmountTile(
         //   "Tax".tr(),
         //   "+ " + " $currencySymbol ${tax ?? 0}".currencyFormat(),
         // ).py2(),
-        //vendor fees like tax summary
-        ...vendorAmounts(context, taxes, vendors, subtotals),
 
-        DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+        DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
         Visibility(
-          visible: driverTip != null && driverTip > 0,
+          visible: driverTip > 0,
           child: VStack(
             [
               AmountTile(
                 "Driver Tip".tr(),
-                "+ " + "$currencySymbol ${driverTip ?? 0}".currencyFormat(),
+                "+ " + "$currencySymbol ${driverTip}".currencyFormat(),
               ).py2(),
-              DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+              DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
             ],
           ),
         ),
         AmountTile(
           "Total Amount".tr(),
-          "$currencySymbol ${total ?? 0}".currencyFormat(),
+          "$currencySymbol ${total}".currencyFormat(),
         ),
       ],
     );
@@ -99,26 +135,34 @@ class MultipleVendorOrderSummary extends StatelessWidget {
     final currencySymbol =
         mCurrencySymbol != null ? mCurrencySymbol : AppStrings.currencySymbol;
     List<Widget> items = [];
+    TextStyle amountStyle = TextStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w600,
+    );
+    //
     for (var i = 0; i < taxes.length; i++) {
       final vendor = vendors[i] as Vendor;
       double vendorSumTotalFees = 0;
       double vendorSubtotal = subtotals[i];
-      double vendorCalTax = taxes[i];
-      vendorSumTotalFees += subtotals[i] ?? 0;
-      vendorSumTotalFees += vendorCalTax;
+      double? vendorCalTax = taxes[i];
+      vendorSumTotalFees += subtotals[i];
+      vendorSumTotalFees += vendorCalTax ?? 0;
 
       Widget widget = VStack(
         [
-          "${vendor.name}".text.semiBold.xl.make(),
+          "${vendor.name}".text.bold.lg.make(),
           AmountTile(
             "Subtotal".tr(),
-            " $currencySymbol ${vendorSubtotal ?? 0}".currencyFormat(),
+            " $currencySymbol ${vendorSubtotal}".currencyFormat(),
+            amountStyle: amountStyle,
           ).py1(),
           AmountTile(
             "Tax (%s)".tr().fill(["${vendor.tax}%"]),
             " $currencySymbol ${vendorCalTax ?? 0}"
                 .currencyFormat(currencySymbol),
+            amountStyle: amountStyle,
           ).py1(),
+
           ...(vendor.fees.map((fee) {
             //fixed
             if ((fee.percentage != 1)) {
@@ -127,30 +171,34 @@ class MultipleVendorOrderSummary extends StatelessWidget {
               //
               return AmountTile(
                 "${fee.name}".tr(),
-                "$currencySymbol ${fee.value ?? 0}"
-                    .currencyFormat(currencySymbol),
+                "$currencySymbol ${fee.value}".currencyFormat(currencySymbol),
+                amountStyle: amountStyle,
               ).py1();
             } else {
               //
               vendorSumTotalFees += fee.getRate(vendorSubtotal);
               //percentage
               return AmountTile(
-                "${fee.name} (%s)".tr().fill(["${fee.value ?? 0}%"]),
-                "$currencySymbol ${fee.getRate(vendorSubtotal) ?? 0}"
+                "${fee.name} (%s)".tr().fill(["${fee.value}%"]),
+                "$currencySymbol ${fee.getRate(vendorSubtotal)}"
                     .currencyFormat(currencySymbol),
+                amountStyle: amountStyle,
               ).py1();
             }
           }).toList()),
+
           //
           DottedLine(
-              dashColor: context.textTheme.bodyLarge.color.withOpacity(0.3)),
+              dashColor: context.textTheme.bodyLarge!.color!.withOpacity(0.3)),
           AmountTile(
             "",
-            " $currencySymbol ${vendorSumTotalFees ?? 0}"
+            " $currencySymbol ${vendorSumTotalFees}"
                 .currencyFormat(currencySymbol),
-          ).py1(),
+            amountStyle: amountStyle,
+          ).py(2),
           DottedLine(
-              dashColor: context.textTheme.bodyLarge.color.withOpacity(0.3)),
+            dashColor: context.textTheme.bodyLarge!.color!.withOpacity(0.3),
+          ),
         ],
       ).box.p8.border(color: Utils.textColorByTheme()).roundedSM.make().py2();
       items.add(widget);

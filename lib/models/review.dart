@@ -13,30 +13,30 @@ String reviewToJson(Review data) => json.encode(data.toJson());
 
 class Review {
   Review({
-    this.id,
-    this.rating,
-    this.review,
-    this.userId,
-    this.vendorId,
-    this.driverId,
-    this.orderId,
-    this.createdAt,
-    this.updatedAt,
+    required this.id,
+    required this.rating,
+    required this.review,
+    required this.userId,
+    required this.vendorId,
+    required this.driverId,
+    required this.orderId,
+    required this.createdAt,
+    required this.updatedAt,
     this.deletedAt,
-    this.formattedDate,
-    this.formattedUpdatedDate,
-    this.photo,
-    this.vendor,
-    this.user,
+    required this.formattedDate,
+    required this.formattedUpdatedDate,
+    required this.photo,
+    required this.vendor,
+    required this.user,
   });
 
   int id;
   int rating;
   String review;
-  int userId;
-  int vendorId;
-  int driverId;
-  int orderId;
+  int? userId;
+  int? vendorId;
+  int? driverId;
+  int? orderId;
   DateTime createdAt;
   DateTime updatedAt;
   dynamic deletedAt;

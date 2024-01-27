@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/constants/app_strings.dart';
@@ -25,7 +26,7 @@ class CartViewModel extends MyBaseViewModel {
 
   //
   bool canApplyCoupon = false;
-  Coupon coupon;
+  Coupon? coupon;
   TextEditingController couponTEC = TextEditingController();
 
   //
@@ -50,52 +51,52 @@ class CartViewModel extends MyBaseViewModel {
     //
     cartItems.forEach(
       (cartItem) {
-        totalCartItems += cartItem.selectedQty;
-        final totalProductPrice = cartItem.price * cartItem.selectedQty;
+        totalCartItems += cartItem.selectedQty!;
+        final totalProductPrice = cartItem.price! * cartItem.selectedQty!;
         subTotalPrice += totalProductPrice;
 
         //discount/coupon
-        if (coupon != null) {
-          final foundProduct = coupon.products.firstWhere(
-              (product) => cartItem.product.id == product.id,
-              orElse: () => null);
-          final foundVendor = coupon.vendors.firstWhere(
-              (vendor) => cartItem.product.vendorId == vendor.id,
-              orElse: () => null);
+        final foundProduct = coupon?.products.firstOrNullWhere(
+          (product) => cartItem.product?.id == product.id,
+        );
+        final foundVendor = coupon?.vendors.firstOrNullWhere(
+          (vendor) => cartItem.product?.vendorId == vendor.id,
+        );
 
-          //
-          bool skipCalculation = false;
-          //
-          if (coupon.vendorTypeId != null) {
-            //if vendor type match product vendor type
-            if (foundProduct != null &&
-                foundProduct?.vendor?.vendorType?.id == coupon.vendorTypeId) {
-              skipCalculation = false;
-            }
-            //if vendor type match vendor type
-            else if (foundVendor != null &&
-                foundVendor?.vendorType?.id == coupon.vendorTypeId) {
-              skipCalculation = false;
-            } else if (cartItem.product?.vendor?.vendorTypeId ==
-                coupon.vendorTypeId) {
-              skipCalculation = false;
+        //
+        bool skipCalculation = false;
+
+        //
+        if (foundProduct?.vendor.vendorType.id == coupon?.vendorTypeId) {
+          skipCalculation = false;
+        }
+        //if vendor type match vendor type
+        else if (foundVendor?.vendorType.id == coupon?.vendorTypeId) {
+          skipCalculation = false;
+        } else if (cartItem.product?.vendor.vendorTypeId ==
+            coupon?.vendorTypeId) {
+          skipCalculation = false;
+        } else {
+          skipCalculation = true;
+          setErrorForObject(
+            "coupon",
+            "Coupon can't be used with vendor type".tr(),
+          );
+        }
+        //free delivery coupon
+        if (coupon?.for_delivery ?? false) {
+          skipCalculation = true;
+        }
+
+        //
+        if (!skipCalculation && coupon != null) {
+          if (foundProduct != null ||
+              foundVendor != null ||
+              (coupon!.products.isEmpty && coupon!.vendors.isEmpty)) {
+            if (coupon?.percentage == 1) {
+              discountCartPrice += (coupon!.discount / 100) * totalProductPrice;
             } else {
-              skipCalculation = true;
-              setErrorForObject(
-                  coupon, "Coupon can't be used with vendor type".tr());
-            }
-          }
-          //
-          if (!skipCalculation) {
-            if (foundProduct != null ||
-                foundVendor != null ||
-                (coupon.products.isEmpty && coupon.vendors.isEmpty)) {
-              if (coupon.percentage == 1) {
-                discountCartPrice +=
-                    (coupon.discount / 100) * totalProductPrice;
-              } else {
-                discountCartPrice += coupon.discount;
-              }
+              discountCartPrice += coupon!.discount;
             }
           }
         }
@@ -107,13 +108,14 @@ class CartViewModel extends MyBaseViewModel {
     //check if coupon is allow with the discount price
     if (coupon != null) {
       try {
-        discountCartPrice = coupon.validateDiscount(
+        discountCartPrice = coupon!.validateDiscount(
           subTotalPrice,
           discountCartPrice,
         );
+        clearErrors();
       } catch (error) {
         discountCartPrice = 0;
-        setErrorForObject(coupon, error);
+        setErrorForObject("coupon", error);
       }
     }
     //
@@ -132,7 +134,7 @@ class CartViewModel extends MyBaseViewModel {
       onConfirm: () async {
         //
         //remove item/product from cart
-        cartItems?.removeAt(index);
+        cartItems.removeAt(index);
         await CartServices.saveCartItems(cartItems);
         initialise();
 
@@ -145,10 +147,10 @@ class CartViewModel extends MyBaseViewModel {
   //
   updateCartItemQuantity(int qty, int index) async {
     final cart = cartItems[index];
-    bool addedQty = qty > cart.selectedQty;
+    bool addedQty = qty > cart.selectedQty!;
     //
     if (addedQty) {
-      int qtyDiff = qty - cart.selectedQty;
+      int qtyDiff = qty - cart.selectedQty!;
       final canAdd = await CartUIServices.cartItemQtyUpdated(
         viewContext,
         qtyDiff,
@@ -156,7 +158,7 @@ class CartViewModel extends MyBaseViewModel {
       );
       //
       if (!canAdd) {
-        qty = cart.selectedQty;
+        qty = cart.selectedQty ?? 1;
         pageKey = GlobalKey<State>();
         notifyListeners();
         return;
@@ -170,20 +172,20 @@ class CartViewModel extends MyBaseViewModel {
 
   //
   couponCodeChange(String code) {
-    canApplyCoupon = code.isNotBlank;
+    canApplyCoupon = code.isNotEmpty;
     notifyListeners();
   }
 
   //
   applyCoupon() async {
     //
-    setBusyForObject(coupon, true);
+    setBusyForObject("coupon", true);
     try {
       coupon = await cartRequest.fetchCoupon(couponTEC.text);
       //
-      if (coupon.useLeft <= 0) {
+      if (coupon!.useLeft <= 0) {
         throw "Coupon use limit exceeded".tr();
-      } else if (coupon.expired) {
+      } else if (coupon!.expired) {
         throw "Coupon has expired".tr();
       }
       clearErrors();
@@ -191,11 +193,11 @@ class CartViewModel extends MyBaseViewModel {
       calculateSubTotal();
     } catch (error) {
       print("error ==> $error");
-      setErrorForObject(coupon, error);
+      setErrorForObject("coupon", error);
       coupon = null;
       calculateSubTotal();
     }
-    setBusyForObject(coupon, false);
+    setBusyForObject("coupon", false);
   }
 
   //
@@ -204,10 +206,9 @@ class CartViewModel extends MyBaseViewModel {
     bool canOpenCheckout = true;
     if (!AuthServices.authenticated()) {
       //
-      final result = await viewContext.navigator.pushNamed(
-        AppRoutes.loginRoute,
-      );
-      if (result == null || !result) {
+      final result =
+          await Navigator.of(viewContext).pushNamed(AppRoutes.loginRoute);
+      if (result == null || result == false) {
         canOpenCheckout = false;
       }
     }
@@ -231,7 +232,7 @@ class CartViewModel extends MyBaseViewModel {
           (ctx) => MultipleOrderCheckoutPage(checkout: checkOut),
         );
       } else {
-        result = await viewContext.navigator.pushNamed(
+        result = await Navigator.of(viewContext).pushNamed(
           AppRoutes.checkoutRoute,
           arguments: checkOut,
         );

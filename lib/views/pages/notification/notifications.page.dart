@@ -10,13 +10,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NotificationsPage extends StatelessWidget {
-  const NotificationsPage({Key key}) : super(key: key);
+  const NotificationsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NotificationsViewModel>.reactive(
       viewModelBuilder: () => NotificationsViewModel(context),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,
@@ -37,27 +37,32 @@ class NotificationsPage extends StatelessWidget {
                 return VStack(
                   [
                     //title
-                    notification.title.text.bold
-                        .fontFamily(GoogleFonts.nunito().fontFamily)
+                    "${notification.title}"
+                        .text
+                        .bold
+                        .fontFamily(GoogleFonts.nunito().fontFamily!)
                         .make(),
                     //time
                     notification.formattedTimeStamp.text.medium
                         .color(Colors.grey)
-                        .fontFamily(GoogleFonts.nunito().fontFamily)
+                        .fontFamily(GoogleFonts.nunito().fontFamily!)
                         .make()
                         .pOnly(bottom: 5),
                     //body
-                    notification.body.text
+                    "${notification.body}"
+                        .text
                         .maxLines(1)
                         .overflow(TextOverflow.ellipsis)
-                        .fontFamily(GoogleFonts.nunito().fontFamily)
+                        .fontFamily(GoogleFonts.nunito().fontFamily!)
                         .make(),
                   ],
                 )
                     .px20()
                     .py12()
                     .box
-                    .color(notification.read ? context.cardColor : null)
+                    .color((notification.read ?? false)
+                        ? context.cardColor
+                        : context.canvasColor)
                     .make()
                     .onInkTap(() {
                   model.showNotificationDetails(notification);

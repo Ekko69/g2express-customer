@@ -12,6 +12,8 @@ import 'package:fuodz/requests/auth.request.dart';
 import 'package:fuodz/services/auth.service.dart';
 import 'package:fuodz/services/social_media_login.service.dart';
 import 'package:fuodz/traits/qrcode_scanner.trait.dart';
+import 'package:fuodz/utils/utils.dart';
+import 'package:fuodz/views/pages/auth/forgot_password.page.dart';
 import 'package:fuodz/views/pages/auth/register.page.dart';
 import 'package:fuodz/widgets/bottomsheets/account_verification_entry.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -28,24 +30,22 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
   AuthRequest authRequest = AuthRequest();
   SocialMediaLoginService socialMediaLoginService = SocialMediaLoginService();
   bool otpLogin = AppStrings.enableOTPLogin;
-  Country selectedCountry;
-  String accountPhoneNumber;
+  Country? selectedCountry;
+  String? accountPhoneNumber;
 
   LoginViewModel(BuildContext context) {
     this.viewContext = context;
   }
 
-  void initialise() {
+  void initialise() async {
     //
     emailTEC.text = kReleaseMode ? "" : "client@demo.com";
     passwordTEC.text = kReleaseMode ? "" : "password";
 
     //phone login
     try {
-      this.selectedCountry = Country.parse(AppStrings.countryCode
-          .toUpperCase()
-          .replaceAll("AUTO,", "")
-          .split(",")[0]);
+      String countryCode = await Utils.getCurrentCountryCode();
+      this.selectedCountry = Country.parse(countryCode);
     } catch (error) {
       this.selectedCountry = Country.parse("us");
     }
@@ -71,9 +71,29 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
 
   void processOTPLogin() async {
     //
-    accountPhoneNumber = "+${selectedCountry.phoneCode}${phoneTEC.text}";
+    accountPhoneNumber = "+${selectedCountry?.phoneCode}${phoneTEC.text}";
     // Validate returns true if the form is valid, otherwise false.
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
+      //
+
+      setBusyForObject(otpLogin, true);
+      //phone number verification
+      final apiResponse = await authRequest.verifyPhoneAccount(
+        accountPhoneNumber!,
+      );
+
+      if (!apiResponse.allGood) {
+        CoolAlert.show(
+          context: viewContext,
+          type: CoolAlertType.error,
+          title: "Login".tr(),
+          text: apiResponse.message,
+        );
+        setBusyForObject(otpLogin, false);
+        return;
+      }
+
+      setBusyForObject(otpLogin, false);
       //
       if (AppStrings.isFirebaseOtp) {
         processFirebaseOTPVerification();
@@ -101,12 +121,13 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
           viewContext.showToast(
               msg: "Invalid Phone Number".tr(), bgColor: Colors.red);
         } else {
-          viewContext.showToast(msg: e.message, bgColor: Colors.red);
+          viewContext.showToast(
+              msg: e.message ?? "Failed".tr(), bgColor: Colors.red);
         }
         //
         setBusyForObject(otpLogin, false);
       },
-      codeSent: (String verificationId, int resendToken) async {
+      codeSent: (String verificationId, int? resendToken) async {
         firebaseVerificationId = verificationId;
         print("codeSent ==>  $firebaseVerificationId");
         showVerificationEntry();
@@ -121,7 +142,7 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
   processCustomOTPVerification() async {
     setBusyForObject(otpLogin, true);
     try {
-      await authRequest.sendOTP(accountPhoneNumber);
+      await authRequest.sendOTP(accountPhoneNumber!);
       setBusyForObject(otpLogin, false);
       showVerificationEntry();
     } catch (error) {
@@ -138,7 +159,7 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
     await viewContext.push(
       (context) => AccountVerificationEntry(
         vm: this,
-        phone: accountPhoneNumber,
+        phone: accountPhoneNumber!,
         onSubmit: (smsCode) {
           //
           if (AppStrings.isFirebaseOtp) {
@@ -149,18 +170,19 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
 
           viewContext.pop();
         },
-        onResendCode: AppStrings.isCustomOtp
-            ? () async {
-                try {
-                  final response = await authRequest.sendOTP(
-                    accountPhoneNumber,
-                  );
-                  toastSuccessful(response.message);
-                } catch (error) {
-                  viewContext.showToast(msg: "$error", bgColor: Colors.red);
-                }
-              }
-            : null,
+        onResendCode: () async {
+          if (!AppStrings.isCustomOtp) {
+            return;
+          }
+          try {
+            final response = await authRequest.sendOTP(
+              accountPhoneNumber!,
+            );
+            toastSuccessful(response.message ?? "Code sent successfully".tr());
+          } catch (error) {
+            viewContext.showToast(msg: "$error", bgColor: Colors.red);
+          }
+        },
       ),
     );
   }
@@ -174,7 +196,7 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
     try {
       // Create a PhoneAuthCredential with the code
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-        verificationId: firebaseVerificationId,
+        verificationId: firebaseVerificationId!,
         smsCode: smsCode,
       );
 
@@ -193,7 +215,7 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
     // Sign the user in (or link) with the credential
     try {
       final apiResponse = await authRequest.verifyOTP(
-        accountPhoneNumber,
+        accountPhoneNumber!,
         smsCode,
         isLogin: true,
       );
@@ -218,10 +240,10 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
         authCredential,
       );
       //
-      String firebaseToken = await userCredential.user.getIdToken();
+      String? firebaseToken = await userCredential.user!.getIdToken();
       final apiResponse = await authRequest.verifyFirebaseToken(
-        accountPhoneNumber,
-        firebaseToken,
+        accountPhoneNumber!,
+        firebaseToken!,
       );
       //
       await handleDeviceLogin(apiResponse);
@@ -235,7 +257,7 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
   //REGULAR LOGIN
   void processLogin() async {
     // Validate returns true if the form is valid, otherwise false.
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       //
 
       setBusy(true);
@@ -298,7 +320,11 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
         await AuthServices.setAuthBearerToken(apiResponse.body["token"]);
         await AuthServices.isAuthenticated();
         setBusy(false);
-        viewContext.pop(true);
+        //go to home
+        Navigator.of(viewContext).pushNamedAndRemoveUntil(
+          AppRoutes.homeRoute,
+          (_) => false,
+        );
       }
     } on FirebaseAuthException catch (error) {
       CoolAlert.show(
@@ -320,22 +346,26 @@ class LoginViewModel extends MyBaseViewModel with QrcodeScannerTrait {
   ///
 
   void openRegister({
-    String email,
-    String name,
-    String phone,
+    String? email,
+    String? name,
+    String? phone,
   }) async {
-    viewContext.push(
-      (context) => RegisterPage(
-        email: email,
-        name: name,
-        phone: phone,
+    Navigator.of(viewContext).push(
+      MaterialPageRoute(
+        builder: (context) => RegisterPage(
+          email: email,
+          name: name,
+          phone: phone,
+        ),
       ),
     );
   }
 
   void openForgotPassword() {
-    viewContext.navigator.pushNamed(
-      AppRoutes.forgotPasswordRoute,
+    Navigator.of(viewContext).push(
+      MaterialPageRoute(
+        builder: (context) => ForgotPasswordPage(),
+      ),
     );
   }
 }

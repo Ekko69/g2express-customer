@@ -9,7 +9,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 
 class SubcategoriesPage extends StatelessWidget {
-  const SubcategoriesPage({this.category, Key key}) : super(key: key);
+  const SubcategoriesPage({
+    required this.category,
+    Key? key,
+  }) : super(key: key);
 
   final Category category;
 
@@ -17,7 +20,7 @@ class SubcategoriesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SubcategoriesViewModel>.reactive(
       viewModelBuilder: () => SubcategoriesViewModel(context, category),
-      onModelReady: (vm) => vm.initialise(all: true),
+      onViewModelReady: (vm) => vm.initialise(all: true),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,
@@ -26,7 +29,7 @@ class SubcategoriesPage extends StatelessWidget {
           title: "Subcategories".tr(),
           body: CustomDynamicHeightGridView(
             noScrollPhysics: true,
-            crossAxisCount: AppStrings.categoryPerRow ?? 3,
+            crossAxisCount: AppStrings.categoryPerRow,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             isLoading: vm.isBusy,

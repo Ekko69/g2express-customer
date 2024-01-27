@@ -6,14 +6,14 @@ import 'package:velocity_x/velocity_x.dart';
 
 class ComplexVendorHeader extends StatelessWidget {
   const ComplexVendorHeader({
-    Key key,
-    this.model,
+    Key? key,
+    required this.model,
     this.searchShowType,
-    @required this.onrefresh,
+    required this.onrefresh,
   }) : super(key: key);
 
   final MyBaseViewModel model;
-  final int searchShowType;
+  final int? searchShowType;
   final Function onrefresh;
 
   @override
@@ -33,7 +33,11 @@ class ComplexVendorHeader extends StatelessWidget {
           [
             //
             "Delivery Location".tr().text.lg.semiBold.make(),
-            model.deliveryaddress.address.text.base.maxLines(1).make(),
+            "${model.deliveryaddress != null ? model.deliveryaddress?.address : '---'}"
+                .text
+                .base
+                .maxLines(1)
+                .make(),
           ],
         )
             .onInkTap(() {

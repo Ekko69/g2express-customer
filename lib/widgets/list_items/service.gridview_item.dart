@@ -14,9 +14,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class ServiceGridViewItem extends StatelessWidget {
   const ServiceGridViewItem({
-    this.service,
-    this.onPressed,
-    Key key,
+    required this.service,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
 
   final Function(Service) onPressed;
@@ -30,10 +30,10 @@ class ServiceGridViewItem extends StatelessWidget {
         Stack(
           children: [
             AlternativeView(
-              ismain: (service.photos != null && service.photos.isNotEmpty),
+              ismain: (service.photos != null && service.photos!.isNotEmpty),
               main: CustomImage(
-                imageUrl: (service.photos != null && service.photos.isNotEmpty)
-                    ? service?.photos?.first
+                imageUrl: (service.photos != null && service.photos!.isNotEmpty)
+                    ? service.photos!.first
                     : "",
                 width: double.infinity,
                 height: 160,
@@ -57,7 +57,9 @@ class ServiceGridViewItem extends StatelessWidget {
               bottom: 0,
               right: !Utils.isArabic ? 20 : null,
               left: Utils.isArabic ? 20 : null,
-              child: ("${AppStrings.currencySymbol} ${service.sellPrice}"
+              child: ((service.hasOptions ? "From".tr() : "") +
+                      " " +
+                      "${AppStrings.currencySymbol} ${service.sellPrice}"
                           .currencyFormat() +
                       " ${service.durationText}")
                   .text
@@ -101,7 +103,7 @@ class ServiceGridViewItem extends StatelessWidget {
         VStack(
           [
             "${service.name}".text.sm.semiBold.maxLines(2).ellipsis.make(),
-            UiSpacer.divider(thickness: 0.50, height: 0.3).py8().px4(), 
+            UiSpacer.divider(thickness: 0.50, height: 0.3).py8().px4(),
             //provider info
             VendorInfoView(service.vendor),
             UiSpacer.vSpace(10),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/constants/app_images.dart';
@@ -12,7 +13,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-import 'package:supercharged/supercharged.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 // import 'package:geocoder/geocoder.dart';
 
@@ -25,9 +25,9 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
 
 //MAp related variables
   CameraPosition mapCameraPosition = CameraPosition(target: LatLng(0.00, 0.00));
-  GoogleMapController googleMapController;
+  GoogleMapController? googleMapController;
   EdgeInsets googleMapPadding = EdgeInsets.all(10);
-  StreamSubscription currentLocationListener;
+  StreamSubscription? currentLocationListener;
   // this will hold the generated polylines
   Set<Polyline> gMapPolylines = {};
   // this will hold each polyline coordinate as Lat and Lng pairs
@@ -35,27 +35,24 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
   Set<Marker> gMapMarkers = {};
   PolylinePoints polylinePoints = PolylinePoints();
 // for my custom icons
-  BitmapDescriptor sourceIcon;
-  BitmapDescriptor destinationIcon;
-  BitmapDescriptor driverIcon;
+  BitmapDescriptor? sourceIcon;
+  BitmapDescriptor? destinationIcon;
+  BitmapDescriptor? driverIcon;
 //END MAP RELATED VARIABLES
 
 //step 1
   TextEditingController placeSearchTEC = TextEditingController();
   TextEditingController pickupLocationTEC = TextEditingController();
   FocusNode pickupLocationFocusNode = FocusNode();
-  DeliveryAddress pickupLocation;
+  DeliveryAddress? pickupLocation;
   TextEditingController dropoffLocationTEC = TextEditingController();
   FocusNode dropoffLocationFocusNode = FocusNode();
-  DeliveryAddress dropoffLocation;
+  DeliveryAddress? dropoffLocation;
 
   //
   dispose() {
     super.dispose();
-    if (currentLocationListener != null) {
-      currentLocationListener.cancel();
-    }
-
+    currentLocationListener?.cancel();
     pickupLocationFocusNode.dispose();
     dropoffLocationFocusNode.dispose();
   }
@@ -67,7 +64,7 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
   }
 
   //MAP RELATED FUNCTIONS
-  void updateGoogleMapPadding({double height}) {
+  void updateGoogleMapPadding({required double height}) {
     googleMapPadding = EdgeInsets.only(bottom: height - 20);
     notifyListeners();
   }
@@ -120,8 +117,8 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
       if (!onTrip) {
         zoomToLocation(
           LatLng(
-            currentAddress.coordinates.latitude,
-            currentAddress.coordinates.longitude,
+            currentAddress.coordinates?.latitude ?? 0.00,
+            currentAddress.coordinates?.longitude ?? 0.00,
           ),
         );
       }
@@ -130,17 +127,15 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
 
   //zoom to provided location
   void zoomToLocation(LatLng target, {double zoom = 16}) {
-    if (googleMapController != null) {
-      googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: target,
-            zoom: zoom,
-          ),
+    googleMapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: target,
+          zoom: zoom,
         ),
-      );
-      notifyListeners();
-    }
+      ),
+    );
+    notifyListeners();
   }
 
   openLocationSelector(int step, {bool showpicker = true}) async {
@@ -151,11 +146,11 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
     // currentAddressSelectionStep = step;
     //
     if (currentAddressSelectionStep == 1) {
-      pickupLocation = checkout.deliveryAddress;
-      pickupLocationTEC.text = checkout.deliveryAddress?.address;
+      pickupLocation = checkout?.deliveryAddress;
+      pickupLocationTEC.text = checkout?.deliveryAddress?.address ?? "";
     } else {
-      dropoffLocation = checkout.deliveryAddress;
-      dropoffLocationTEC.text = checkout.deliveryAddress?.address;
+      dropoffLocation = checkout?.deliveryAddress;
+      dropoffLocationTEC.text = checkout?.deliveryAddress?.address ?? "";
     }
 
     //
@@ -166,7 +161,7 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
   openLocationPicker() async {
     //
     deliveryAddress = DeliveryAddress();
-    checkout.deliveryAddress = null;
+    checkout?.deliveryAddress = null;
     //
     await showModalBottomSheet(
       context: viewContext,
@@ -177,23 +172,23 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
           this,
           addressSelected: (dynamic prediction) async {
             if (prediction is Prediction) {
-              deliveryAddress.address = prediction.description;
-              deliveryAddress.latitude = prediction.lat.toDouble();
-              deliveryAddress.longitude = prediction.lng.toDouble();
+              deliveryAddress?.address = prediction.description;
+              deliveryAddress?.latitude = prediction.lat?.toDoubleOrNull();
+              deliveryAddress?.longitude = prediction.lng?.toDoubleOrNull();
               //
-              checkout.deliveryAddress = deliveryAddress;
+              checkout!.deliveryAddress = deliveryAddress;
               //
               setBusy(true);
-              await getLocationCityName(deliveryAddress);
+              await getLocationCityName(deliveryAddress!);
               setBusy(false);
             } else if (prediction is Address) {
-              deliveryAddress.address = prediction.addressLine;
-              deliveryAddress.latitude = prediction.coordinates.latitude;
-              deliveryAddress.longitude = prediction.coordinates.longitude;
-              deliveryAddress.city = prediction.locality;
-              deliveryAddress.state = prediction.adminArea;
-              deliveryAddress.country = prediction.countryName;
-              checkout.deliveryAddress = deliveryAddress;
+              deliveryAddress?.address = prediction.addressLine;
+              deliveryAddress?.latitude = prediction.coordinates?.latitude;
+              deliveryAddress?.longitude = prediction.coordinates?.longitude;
+              deliveryAddress?.city = prediction.locality;
+              deliveryAddress?.state = prediction.adminArea;
+              deliveryAddress?.country = prediction.countryName;
+              checkout!.deliveryAddress = deliveryAddress;
             }
           },
           selectOnMap: this.showDeliveryAddressPicker,
@@ -210,96 +205,120 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
     if (result is PickResult) {
       PickResult locationResult = result;
       deliveryAddress = DeliveryAddress();
-      deliveryAddress.address = locationResult.formattedAddress;
-      deliveryAddress.latitude = locationResult.geometry.location.lat;
-      deliveryAddress.longitude = locationResult.geometry.location.lng;
-      checkout.deliveryAddress = deliveryAddress;
-      // From coordinates
-      setBusy(true);
-      deliveryAddress = await getLocationCityName(deliveryAddress);
-      setBusy(false);
+      deliveryAddress!.address = locationResult.formattedAddress;
+      deliveryAddress!.latitude = locationResult.geometry?.location.lat;
+      deliveryAddress!.longitude = locationResult.geometry?.location.lng;
+      checkout!.deliveryAddress = deliveryAddress;
+
+      if (locationResult.addressComponents != null &&
+          locationResult.addressComponents!.isNotEmpty) {
+        //fetch city, state and country from address components
+        locationResult.addressComponents!.forEach((addressComponent) {
+          if (addressComponent.types.contains("locality")) {
+            deliveryAddress!.city = addressComponent.longName;
+          }
+          if (addressComponent.types.contains("administrative_area_level_1")) {
+            deliveryAddress!.state = addressComponent.longName;
+          }
+          if (addressComponent.types.contains("country")) {
+            deliveryAddress!.country = addressComponent.longName;
+          }
+        });
+      } else {
+        // From coordinates
+        setBusy(true);
+        deliveryAddress = await getLocationCityName(deliveryAddress!);
+        setBusy(false);
+      }
       openLocationSelector(currentAddressSelectionStep, showpicker: false);
     } else if (result is Address) {
       Address locationResult = result;
       deliveryAddress = DeliveryAddress();
-      deliveryAddress.address = locationResult.addressLine;
-      deliveryAddress.latitude = locationResult.coordinates.latitude;
-      deliveryAddress.longitude = locationResult.coordinates.longitude;
-      deliveryAddress.city = locationResult.locality;
-      deliveryAddress.state = locationResult.adminArea;
-      deliveryAddress.country = locationResult.countryName;
-      checkout.deliveryAddress = deliveryAddress;
+      deliveryAddress?.address = locationResult.addressLine;
+      deliveryAddress?.latitude = locationResult.coordinates?.latitude;
+      deliveryAddress?.longitude = locationResult.coordinates?.longitude;
+      deliveryAddress?.city = locationResult.locality;
+      deliveryAddress?.state = locationResult.adminArea;
+      deliveryAddress?.country = locationResult.countryName;
+      checkout!.deliveryAddress = deliveryAddress;
       //
       openLocationSelector(currentAddressSelectionStep, showpicker: false);
     }
     //
 
-    return deliveryAddress;
+    return deliveryAddress ?? DeliveryAddress();
   }
 
   //setupCurrentLocationAsPickuplocation()
   setupCurrentLocationAsPickuplocation() async {
     //get current location
     Position currentLocation = await Geolocator.getCurrentPosition();
-    if (currentLocation == null) {
-      currentLocation = await Geolocator.getLastKnownPosition();
-    }
-
     //
-    if (currentLocation != null) {
-      //get name and addres of current location
-      final address = await GeocoderService().findAddressesFromCoordinates(
-        Coordinates(
-          currentLocation?.latitude,
-          currentLocation?.longitude,
-        ),
+    final address = await GeocoderService().findAddressesFromCoordinates(
+      Coordinates(
+        currentLocation.latitude,
+        currentLocation.longitude,
+      ),
+    );
+    //
+    if (address.isNotEmpty) {
+      pickupLocation = DeliveryAddress(
+        name: address.first.featureName,
+        address: address.first.addressLine,
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
       );
-      //
-      if (address != null && address.isNotEmpty) {
-        pickupLocation = DeliveryAddress(
-          name: address?.first?.featureName,
-          address: address?.first?.addressLine,
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
-        );
-        pickupLocationTEC.text = pickupLocation?.address;
-      }
+      pickupLocationTEC.text = pickupLocation?.address ?? "";
     }
   }
 
   //plylines
   drawTripPolyLines() async {
+    if (pickupLocation == null || dropoffLocation == null) {
+      return;
+    }
+
+    //
+    if (pickupLocation!.latitude == null || pickupLocation!.longitude == null) {
+      return;
+    }
     // source pin
     gMapMarkers = {};
     gMapMarkers.add(
       Marker(
         markerId: MarkerId('sourcePin'),
         position: LatLng(
-          pickupLocation.latitude,
-          pickupLocation.longitude,
+          pickupLocation!.latitude!,
+          pickupLocation!.longitude!,
         ),
-        icon: sourceIcon,
+        icon: sourceIcon!,
         anchor: Offset(0.5, 0.5),
       ),
     );
+
+    //
+    if (dropoffLocation!.latitude == null ||
+        dropoffLocation!.longitude == null) {
+      return;
+    }
     // destination pin
     gMapMarkers.add(
       Marker(
         markerId: MarkerId('destPin'),
         position: LatLng(
-          dropoffLocation.latitude,
-          dropoffLocation.longitude,
+          dropoffLocation!.latitude!,
+          dropoffLocation!.longitude!,
         ),
-        icon: destinationIcon,
+        icon: destinationIcon!,
         anchor: Offset(0.5, 0.5),
       ),
     );
     //load the ploylines
     PolylineResult polylineResult =
-        await polylinePoints?.getRouteBetweenCoordinates(
+        await polylinePoints.getRouteBetweenCoordinates(
       AppStrings.googleMapApiKey,
-      PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
-      PointLatLng(dropoffLocation.latitude, dropoffLocation.longitude),
+      PointLatLng(pickupLocation!.latitude!, pickupLocation!.longitude!),
+      PointLatLng(dropoffLocation!.latitude!, dropoffLocation!.longitude!),
     );
     //get the points from the result
     List<PointLatLng> result = polylineResult.points;
@@ -326,18 +345,18 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
     //
     //zoom to latbound
     final pickupLocationLatLng = LatLng(
-      pickupLocation.latitude,
-      pickupLocation.longitude,
+      pickupLocation!.latitude!,
+      pickupLocation!.longitude!,
     );
     final dropoffLocationLatLng = LatLng(
-      dropoffLocation.latitude,
-      dropoffLocation.longitude,
+      dropoffLocation!.latitude!,
+      dropoffLocation!.longitude!,
     );
 
     await updateCameraLocation(
       pickupLocationLatLng,
       dropoffLocationLatLng,
-      googleMapController,
+      googleMapController!,
     );
     //
     notifyListeners();
@@ -346,7 +365,7 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
   Future<void> updateCameraLocation(
     LatLng source,
     LatLng destination,
-    GoogleMapController mapController,
+    GoogleMapController? mapController,
   ) async {
     if (mapController == null) return;
 
@@ -374,8 +393,11 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
 
   Future<void> checkCameraLocation(
     CameraUpdate cameraUpdate,
-    GoogleMapController mapController,
+    GoogleMapController? mapController,
   ) async {
+    if (mapController == null) {
+      return;
+    }
     mapController.animateCamera(cameraUpdate);
     LatLngBounds l1 = await mapController.getVisibleRegion();
     LatLngBounds l2 = await mapController.getVisibleRegion();
@@ -386,17 +408,15 @@ class TaxiGoogleMapViewModel extends CheckoutBaseViewModel {
   }
 
   zoomToCurrentLocation() async {
-    Position currentLocation = await Geolocator.getCurrentPosition();
+    Position? currentLocation = await Geolocator.getLastKnownPosition();
     if (currentLocation == null) {
-      currentLocation = await Geolocator.getLastKnownPosition();
+      currentLocation = await Geolocator.getCurrentPosition();
     }
 
     //
-    if (currentLocation != null) {
-      double lat = currentLocation.latitude;
-      double lng = currentLocation.longitude;
-      zoomToLocation(LatLng(lat, lng));
-    }
+    double lat = currentLocation.latitude;
+    double lng = currentLocation.longitude;
+    zoomToLocation(LatLng(lat, lng));
   }
 
   //

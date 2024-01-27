@@ -14,7 +14,7 @@ import 'package:velocity_x/velocity_x.dart';
 class OrderProductActionBottomSheet extends StatelessWidget {
   const OrderProductActionBottomSheet(
     this.orderProduct, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
@@ -32,7 +32,7 @@ class OrderProductActionBottomSheet extends StatelessWidget {
           [
             //
             CustomImage(
-              imageUrl: orderProduct.product.photo,
+              imageUrl: orderProduct.product!.photo,
               width: context.percentWidth * 30,
               height: context.percentWidth * 30,
             ),
@@ -41,7 +41,7 @@ class OrderProductActionBottomSheet extends StatelessWidget {
             VStack(
               [
                 //
-                orderProduct.product.name.text
+                orderProduct.product!.name.text
                     .maxLines(3)
                     .ellipsis
                     .semiBold
@@ -52,7 +52,7 @@ class OrderProductActionBottomSheet extends StatelessWidget {
                 ShareButton(
                   model: ProductDetailsViewModel(
                     context,
-                    orderProduct.product,
+                    orderProduct.product!,
                   ),
                 ),
               ],
@@ -70,7 +70,7 @@ class OrderProductActionBottomSheet extends StatelessWidget {
           () {
             context.push(
               (context) => NavigationService().productDetailsPageWidget(
-                orderProduct.product,
+                orderProduct.product!,
               ),
             );
           },

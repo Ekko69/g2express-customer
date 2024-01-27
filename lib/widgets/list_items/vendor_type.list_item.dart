@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/constants/app_ui_styles.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorTypeListItem extends StatelessWidget {
-  const VendorTypeListItem(this.vendorType, {this.onPressed, Key key})
-      : super(key: key);
+  const VendorTypeListItem(
+    this.vendorType, {
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   final VendorType vendorType;
   final Function onPressed;
@@ -24,7 +28,7 @@ class VendorTypeListItem extends StatelessWidget {
         verticalOffset: 50.0,
         child: FadeInAnimation(
           child: InkWell(
-            onTap: onPressed,
+            onTap: () => this.onPressed(),
             child: VStack(
               [
                 //image + details
@@ -35,8 +39,9 @@ class VendorTypeListItem extends StatelessWidget {
                       //
                       CustomImage(
                         imageUrl: vendorType.logo,
-                        width: Vx.dp40,
-                        height: Vx.dp40,
+                        boxFit: AppUIStyles.vendorTypeImageStyle,
+                        height: AppUIStyles.vendorTypeHeight,
+                        width: AppUIStyles.vendorTypeWidth,
                       ).p12(),
                       //
 
@@ -47,12 +52,13 @@ class VendorTypeListItem extends StatelessWidget {
                               .semiBold
                               .make(),
                           Visibility(
-                            visible: vendorType.description != null && vendorType.description.isNotEmpty,
+                            visible: vendorType.description.isNotEmpty,
                             child: "${vendorType.description}"
                                 .text
                                 .color(textColor)
                                 .sm
-                                 .make().pOnly(top: 5),
+                                .make()
+                                .pOnly(top: 5),
                           ),
                         ],
                       ).expand(),
@@ -65,9 +71,9 @@ class VendorTypeListItem extends StatelessWidget {
                   visible: AppStrings.showVendorTypeImageOnly,
                   child: CustomImage(
                     imageUrl: vendorType.logo,
-                    width: context.percentWidth * 100,
-                    height: 140,
-                    boxFit: BoxFit.contain,
+                    boxFit: AppUIStyles.vendorTypeImageStyle,
+                    height: AppUIStyles.vendorTypeHeight,
+                    width: AppUIStyles.vendorTypeWidth,
                   ),
                 ),
               ],

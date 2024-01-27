@@ -13,13 +13,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class DeliveryAddressesPage extends StatelessWidget {
-  const DeliveryAddressesPage({Key key}) : super(key: key);
+  const DeliveryAddressesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DeliveryAddressesViewModel>.reactive(
       viewModelBuilder: () => DeliveryAddressesViewModel(context),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,
@@ -35,7 +35,8 @@ class DeliveryAddressesPage extends StatelessWidget {
             onPressed: vm.newDeliveryAddressPressed,
           ),
           body: CustomListView(
-            padding: EdgeInsets.fromLTRB(20,20,20,context.percentHeight * 20),
+            padding:
+                EdgeInsets.fromLTRB(20, 20, 20, context.percentHeight * 20),
             dataSet: vm.deliveryAddresses,
             isLoading: vm.busy(vm.deliveryAddresses),
             emptyWidget: EmptyDeliveryAddress(),

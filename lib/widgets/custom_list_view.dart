@@ -7,11 +7,11 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CustomListView extends StatelessWidget {
   //
-  final ScrollController scrollController;
-  final Widget title;
-  final Widget loadingWidget;
-  final Widget errorWidget;
-  final Widget emptyWidget;
+  final ScrollController? scrollController;
+  final Widget? title;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
+  final Widget? emptyWidget;
   final List<dynamic> dataSet;
   final bool isLoading;
   final bool hasError;
@@ -19,19 +19,19 @@ class CustomListView extends StatelessWidget {
   final bool reversed;
   final bool noScrollPhysics;
   final Axis scrollDirection;
-  final EdgeInsets padding;
-  final Function(BuildContext, int) itemBuilder;
-  final Function(BuildContext, int) separatorBuilder;
+  final EdgeInsets? padding;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final Widget Function(BuildContext, int)? separatorBuilder;
 
   //
   final bool canRefresh;
-  final RefreshController refreshController;
-  final Function onRefresh;
-  final Function onLoading;
+  final RefreshController? refreshController;
+  final Function? onRefresh;
+  final Function? onLoading;
   final bool canPullUp;
 
   const CustomListView({
-    @required this.dataSet,
+    required this.dataSet,
     this.scrollController,
     this.title,
     this.loadingWidget,
@@ -43,7 +43,7 @@ class CustomListView extends StatelessWidget {
     this.reversed = false,
     this.noScrollPhysics = false,
     this.scrollDirection = Axis.vertical,
-    @required this.itemBuilder,
+    required this.itemBuilder,
     this.separatorBuilder,
     this.padding,
 
@@ -53,7 +53,7 @@ class CustomListView extends StatelessWidget {
     this.onRefresh,
     this.onLoading,
     this.canPullUp = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -74,7 +74,7 @@ class CustomListView extends StatelessWidget {
         ? this.loadingWidget ?? LoadingShimmer()
         : this.hasError
             ? this.errorWidget ?? EmptyState(description: "There is an error")
-            : (this.dataSet == null || this.dataSet.isEmpty)
+            : (this.dataSet.isEmpty)
                 ? this.emptyWidget ?? UiSpacer.emptySpace()
                 : this.justList
                     ? _getListView()
@@ -87,9 +87,9 @@ class CustomListView extends StatelessWidget {
             scrollDirection: this.scrollDirection,
             enablePullDown: true,
             enablePullUp: canPullUp,
-            controller: this.refreshController,
-            onRefresh: this.onRefresh,
-            onLoading: this.onLoading,
+            controller: this.refreshController!,
+            onRefresh: this.onRefresh != null ? () => this.onRefresh!() : null,
+            onLoading: this.onLoading != null ? () => this.onLoading!() : null,
             child: contentBody,
           )
         : contentBody;

@@ -18,7 +18,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 class FlashSaleView extends StatefulWidget {
-  const FlashSaleView(this.vendorType, {Key key}) : super(key: key);
+  const FlashSaleView(this.vendorType, {Key? key}) : super(key: key);
 
   //
   final VendorType vendorType;
@@ -33,7 +33,7 @@ class _FlashSaleViewState extends State<FlashSaleView> {
     return ViewModelBuilder<FlashSaleViewModel>.reactive(
       viewModelBuilder: () =>
           FlashSaleViewModel(context, vendorType: widget.vendorType),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         //
         if (vm.isBusy) {
@@ -44,8 +44,9 @@ class _FlashSaleViewState extends State<FlashSaleView> {
         //
         return VStack(
           [
+            UiSpacer.verticalSpace(),
             ...flashSalesListView(context, vm),
-            //UiSpacer.verticalSpace(),
+            UiSpacer.vSpace(10),
           ],
         );
       },
@@ -63,7 +64,7 @@ class _FlashSaleViewState extends State<FlashSaleView> {
     flashsales.forEach((flashsale) {
       //
       if (flashsale.items == null ||
-          flashsale.items.isEmpty ||
+          flashsale.items!.isEmpty ||
           flashsale.isExpired) {
         list.add(UiSpacer.emptySpace());
         return;
@@ -127,7 +128,7 @@ class _FlashSaleViewState extends State<FlashSaleView> {
       Widget items = CustomListedListView(
         noScrollPhysics: false,
         scrollDirection: Axis.horizontal,
-        items: flashsale.items.map(
+        items: (flashsale.items ?? []).map(
           (flashSaleItem) {
             return FittedBox(
               child: FlashSaleItemListItem(flashSaleItem),

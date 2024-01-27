@@ -4,21 +4,21 @@ import 'package:velocity_x/velocity_x.dart';
 
 class WelcomeListItem extends StatelessWidget {
   const WelcomeListItem({
-    this.title,
-    this.text,
-    this.imagePath,
-    this.onPressed,
-    Key key,
+    this.title = "",
+    this.text = "",
+    required this.imagePath,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
 
-  final String title;
-  final String text;
+  final String? title;
+  final String? text;
   final String imagePath;
   final Function onPressed;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: () => onPressed(),
       child: HStack(
         [
           //
@@ -34,8 +34,8 @@ class WelcomeListItem extends StatelessWidget {
           //
           VStack(
             [
-              title.text.xl.color(AppColor.primaryColor).semiBold.make(),
-              text.text.sm.make(),
+              "${title}".text.xl.color(AppColor.primaryColor).semiBold.make(),
+              "${text}".text.sm.make(),
             ],
           ).expand(),
         ],

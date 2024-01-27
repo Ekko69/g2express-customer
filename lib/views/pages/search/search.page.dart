@@ -20,7 +20,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({Key key, @required this.search, this.showCancel = true})
+  const SearchPage({Key? key, required this.search, this.showCancel = true})
       : super(key: key);
 
   //
@@ -62,16 +62,13 @@ class SearchPage extends StatelessWidget {
                       final searchResult = model.searchResults[index];
                       if (searchResult is Product) {
                         //grocery product list item
-                        if (searchResult?.vendor?.vendorType?.isGrocery ??
-                            false) {
+                        if (searchResult.vendor.vendorType.isGrocery) {
                           return GroceryProductListItem(
                             product: searchResult,
                             onPressed: model.productSelected,
                             qtyUpdated: model.addToCartDirectly,
                           );
-                        } else if (searchResult
-                                ?.vendor?.vendorType?.isCommerce ??
-                            false) {
+                        } else if (searchResult.vendor.vendorType.isCommerce) {
                           return CommerceProductListItem(
                             searchResult,
                             height: 80,
@@ -124,16 +121,14 @@ class SearchPage extends StatelessWidget {
                             final searchResult = model.searchResults[index];
                             if (searchResult is Product) {
                               //grocery product list item
-                              if (searchResult?.vendor?.vendorType?.isGrocery ??
-                                  false) {
+                              if (searchResult.vendor.vendorType.isGrocery) {
                                 return GroceryProductListItem(
                                   product: searchResult,
                                   onPressed: model.productSelected,
                                   qtyUpdated: model.addToCartDirectly,
                                 );
                               } else if (searchResult
-                                      ?.vendor?.vendorType?.isCommerce ??
-                                  false) {
+                                  .vendor.vendorType.isCommerce) {
                                 return CommerceProductListItem(
                                   searchResult,
                                   height: 80,

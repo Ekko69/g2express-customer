@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
+import 'package:fuodz/view_models/service_booking_summary.vm.dart';
 import 'package:fuodz/widgets/buttons/custom_button.dart';
 import 'package:fuodz/widgets/custom_text_form_field.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -11,10 +12,10 @@ class ServiceDiscountSection extends StatefulWidget {
   const ServiceDiscountSection(
     this.vm, {
     this.toggle = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final dynamic vm;
+  final ServiceBookingSummaryViewModel vm;
   final bool toggle;
 
   @override
@@ -63,8 +64,8 @@ class _ServiceDiscountSectionState extends State<ServiceDiscountSection> {
               CustomTextFormField(
                 hintText: "Coupon Code".tr(),
                 textEditingController: widget.vm.couponTEC,
-                errorText: widget.vm.hasErrorForKey(widget.vm.coupon)
-                    ? widget.vm.error(widget.vm.coupon).toString()
+                errorText: widget.vm.hasErrorForKey("coupon")
+                    ? widget.vm.error("coupon").toString()
                     : null,
                 onChanged: widget.vm.couponCodeChange,
               ).expand(flex: 2),
@@ -75,12 +76,12 @@ class _ServiceDiscountSectionState extends State<ServiceDiscountSection> {
                   CustomButton(
                     title: "Apply".tr(),
                     isFixedHeight: true,
-                    loading: widget.vm.busy(widget.vm.coupon),
+                    loading: widget.vm.busy("coupon"),
                     onPressed:
                         widget.vm.canApplyCoupon ? widget.vm.applyCoupon : null,
                   ).h(Vx.dp56),
                   //
-                  widget.vm.hasErrorForKey(widget.vm.coupon)
+                  widget.vm.hasErrorForKey("coupon")
                       ? UiSpacer.verticalSpace(space: 12)
                       : UiSpacer.verticalSpace(space: 1),
                 ],

@@ -8,7 +8,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PackageDeliveryParcelInfo extends StatelessWidget {
-  const PackageDeliveryParcelInfo({this.vm, Key key}) : super(key: key);
+  const PackageDeliveryParcelInfo({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final NewParcelViewModel vm;
   @override
@@ -29,11 +32,9 @@ class PackageDeliveryParcelInfo extends StatelessWidget {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 textEditingController: vm.packageWeightTEC,
-                validator: (value) => FormValidator.validateCustom(
-                  value,
-                  name: "Weight".tr(),
-                  rules: vm.requireParcelInfo ? "required|gt:0":''
-                ),
+                validator: (value) => FormValidator.validateCustom(value,
+                    name: "Weight".tr(),
+                    rules: vm.requireParcelInfo ? "required|gt:0" : ''),
               ),
               UiSpacer.formVerticalSpace(),
               //
@@ -44,11 +45,9 @@ class PackageDeliveryParcelInfo extends StatelessWidget {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 textEditingController: vm.packageLengthTEC,
-                validator: (value) => FormValidator.validateCustom(
-                  value,
-                  name: "Length".tr(),
-                  rules: vm.requireParcelInfo ?"required|gt:0":''
-                ),
+                validator: (value) => FormValidator.validateCustom(value,
+                    name: "Length".tr(),
+                    rules: vm.requireParcelInfo ? "required|gt:0" : ''),
               ),
               UiSpacer.formVerticalSpace(),
               //
@@ -60,11 +59,9 @@ class PackageDeliveryParcelInfo extends StatelessWidget {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 textEditingController: vm.packageWidthTEC,
-                validator: (value) => FormValidator.validateCustom(
-                  value,
-                  name: "Width".tr(),
-                  rules: vm.requireParcelInfo ?"required|gt:0":''
-                ),
+                validator: (value) => FormValidator.validateCustom(value,
+                    name: "Width".tr(),
+                    rules: vm.requireParcelInfo ? "required|gt:0" : ''),
               ),
               UiSpacer.formVerticalSpace(),
 
@@ -76,11 +73,9 @@ class PackageDeliveryParcelInfo extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.number,
                 textEditingController: vm.packageHeightTEC,
-                validator: (value) => FormValidator.validateCustom(
-                  value,
-                  name: "Height".tr(),
-                  rules: vm.requireParcelInfo ?"required|gt:0":''
-                ),
+                validator: (value) => FormValidator.validateCustom(value,
+                    name: "Height".tr(),
+                    rules: vm.requireParcelInfo ? "required|gt:0" : ''),
               ),
 
               //finish btn

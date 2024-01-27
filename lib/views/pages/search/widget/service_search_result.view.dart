@@ -4,10 +4,11 @@ import 'package:fuodz/view_models/main_search.vm.dart';
 import 'package:fuodz/widgets/custom_grid_view.dart';
 import 'package:fuodz/widgets/custom_list_view.dart';
 import 'package:fuodz/widgets/list_items/service.list_item.dart';
+import 'package:fuodz/widgets/states/search.empty.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ServiceSearchResultView extends StatefulWidget {
-  ServiceSearchResultView(this.vm, {Key key}) : super(key: key);
+  ServiceSearchResultView(this.vm, {Key? key}) : super(key: key);
 
   final MainSearchViewModel vm;
   @override
@@ -20,9 +21,10 @@ class _ServiceSearchResultViewState extends State<ServiceSearchResultView> {
   Widget build(BuildContext context) {
     final refreshController = widget.vm.refreshControllers.last;
     //
-    return (widget.vm.search.layoutType == null ||
-            widget.vm.search.layoutType == "grid")
+    return (widget.vm.search?.layoutType == null ||
+            widget.vm.search?.layoutType == "grid")
         ? CustomGridView(
+            padding: EdgeInsets.symmetric(vertical: 20),
             refreshController: refreshController,
             canPullUp: true,
             canRefresh: true,
@@ -34,6 +36,7 @@ class _ServiceSearchResultViewState extends State<ServiceSearchResultView> {
             isLoading: widget.vm.busy(widget.vm.services),
             childAspectRatio: (context.screenWidth / 2.5) / 80,
             separatorBuilder: (p0, p1) => UiSpacer.vSpace(0),
+            emptyWidget: EmptySearch(type: "service"),
             itemBuilder: (ctx, index) {
               final service = widget.vm.services[index];
               return ServiceListItem(
@@ -45,6 +48,7 @@ class _ServiceSearchResultViewState extends State<ServiceSearchResultView> {
             },
           )
         : CustomListView(
+            padding: EdgeInsets.symmetric(vertical: 20),
             refreshController: refreshController,
             canPullUp: true,
             canRefresh: true,
@@ -52,6 +56,7 @@ class _ServiceSearchResultViewState extends State<ServiceSearchResultView> {
             onLoading: () => widget.vm.searchProducts(initial: false),
             dataSet: widget.vm.services,
             isLoading: widget.vm.busy(widget.vm.services),
+            emptyWidget: EmptySearch(type: "service"),
             itemBuilder: (ctx, index) {
               final service = widget.vm.services[index];
               return ServiceListItem(
@@ -62,7 +67,6 @@ class _ServiceSearchResultViewState extends State<ServiceSearchResultView> {
               );
             },
             separatorBuilder: (p0, p1) => UiSpacer.vSpace(10),
-            padding: EdgeInsets.all(0),
           );
   }
 }

@@ -11,7 +11,7 @@ class TaxiDiscountSection extends StatelessWidget {
   const TaxiDiscountSection(
     this.vm, {
     this.fullView = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final dynamic vm;
@@ -50,8 +50,8 @@ class TaxiDiscountSection extends StatelessWidget {
               CustomTextFormField(
                 hintText: "Coupon Code".tr(),
                 textEditingController: vm.couponTEC,
-                errorText: vm.hasErrorForKey(vm.coupon)
-                    ? vm.error(vm.coupon).toString()
+                errorText: vm.hasErrorForKey("coupon")
+                    ? vm.error("coupon").toString()
                     : null,
                 onChanged: vm.couponCodeChange,
               ).expand(flex: 2),
@@ -62,11 +62,11 @@ class TaxiDiscountSection extends StatelessWidget {
                   CustomButton(
                     title: "Apply".tr(),
                     isFixedHeight: true,
-                    loading: vm.busy(vm.coupon),
+                    loading: vm.busy("coupon"),
                     onPressed: vm.canApplyCoupon ? vm.applyCoupon : null,
                   ).h(Vx.dp56),
                   //
-                  vm.hasErrorForKey(vm.coupon)
+                  vm.hasErrorForKey("coupon")
                       ? UiSpacer.verticalSpace(space: 12)
                       : UiSpacer.verticalSpace(space: 1),
                 ],

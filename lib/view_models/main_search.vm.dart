@@ -8,6 +8,7 @@ import 'package:fuodz/models/search.dart';
 import 'package:fuodz/requests/search.request.dart';
 import 'package:fuodz/requests/vendor_type.request.dart';
 import 'package:fuodz/services/navigation.service.dart';
+import 'package:fuodz/services/search.service.dart';
 import 'package:fuodz/view_models/search.vm.dart';
 import 'package:fuodz/view_models/search_filter.vm.dart';
 import 'package:fuodz/widgets/bottomsheets/search_filter.bottomsheet.dart';
@@ -24,14 +25,14 @@ class MainSearchViewModel extends SearchViewModel {
     RefreshController()
   ];
   String keyword = "";
-  Category category;
+  Category? category;
   //
   int vendorsPage = 1;
   int productsPage = 1;
   int servicesPage = 1;
   bool showVendors = false;
   bool showProducts = false;
-  bool showServices = false;
+  bool? showServices = false;
   List<Vendor> vendors = [];
   List<Product> products = [];
   List<Service> services = [];
@@ -39,12 +40,23 @@ class MainSearchViewModel extends SearchViewModel {
 
   MainSearchViewModel(BuildContext context) : super(context, Search());
 
+  initialise() async {
+    await fetchSearchHistory();
+    await fetchSearchTabs();
+    await onTabChange(0);
+  }
+
+  fetchSearchHistory() async {
+    searchHistory = await SearchService.getSearchHistory();
+    notifyListeners();
+  }
+
   fetchSearchTabs() async {
     setBusy(true);
     try {
       final vendorTypes = await VendorTypeRequest().index();
       for (var vendorType in vendorTypes) {
-        if (vendorType.isService) {
+        if (vendorType.isService || vendorType.isBooking) {
           showServices = true;
         } else if (vendorType.isProduct) {
           showProducts = true;
@@ -61,11 +73,11 @@ class MainSearchViewModel extends SearchViewModel {
   onTabChange(int index) {
     selectedIndex = index;
     notifyListeners();
-    if (index == 0 && (vendors == null || vendors.isEmpty)) {
+    if (index == 0 && (vendors.isEmpty)) {
       searchVendors();
-    } else if (index == 1 && (products == null || products.isEmpty)) {
+    } else if (index == 1 && (products.isEmpty)) {
       searchProducts();
-    } else if (index == 2 && (services == null || services.isEmpty)) {
+    } else if (index == 2 && (services.isEmpty)) {
       searchServices();
     }
   }
@@ -94,8 +106,8 @@ class MainSearchViewModel extends SearchViewModel {
     //
     try {
       List<Vendor> searchResult = (await _searchRequest.searchRequest(
-        keyword: keyword ?? "",
-        search: search,
+        keyword: keyword,
+        search: search!,
         type: "vendor",
         page: vendorsPage,
       ))
@@ -134,8 +146,8 @@ class MainSearchViewModel extends SearchViewModel {
     //
     try {
       List<Product> searchResult = (await _searchRequest.searchRequest(
-        keyword: keyword ?? "",
-        search: search,
+        keyword: keyword,
+        search: search!,
         type: "product",
         page: productsPage,
       ))
@@ -174,8 +186,8 @@ class MainSearchViewModel extends SearchViewModel {
     //
     try {
       List<Service> searchResult = (await _searchRequest.searchRequest(
-        keyword: keyword ?? "",
-        search: search,
+        keyword: keyword,
+        search: search!,
         type: "service",
         page: servicesPage,
       ))
@@ -204,8 +216,11 @@ class MainSearchViewModel extends SearchViewModel {
   //
   void showFilterOptions() async {
     if (searchFilterVM == null) {
-      searchFilterVM = SearchFilterViewModel(viewContext, search);
+      searchFilterVM = SearchFilterViewModel(viewContext, search!);
     }
+
+    refreshController = refreshController = RefreshController();
+    notifyListeners();
 
     showModalBottomSheet(
       context: viewContext,
@@ -213,11 +228,12 @@ class MainSearchViewModel extends SearchViewModel {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return SearchFilterBottomSheet(
-          search: search,
-          vm: searchFilterVM,
+          search: search!,
+          vm: searchFilterVM!,
           onSubmitted: (mSearch) {
             search = mSearch;
             queryPage = 1;
+
             startSearch();
           },
         );
@@ -233,7 +249,7 @@ class MainSearchViewModel extends SearchViewModel {
 
   //
   vendorSelected(Vendor vendor) async {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.vendorDetails,
       arguments: vendor,
     );

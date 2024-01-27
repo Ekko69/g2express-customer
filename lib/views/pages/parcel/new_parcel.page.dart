@@ -19,16 +19,19 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewParcelPage extends StatelessWidget {
-  const NewParcelPage(this.vendorType, {this.onFinish, Key key})
-      : super(key: key);
+  const NewParcelPage(
+    this.vendorType, {
+    this.onFinish,
+    Key? key,
+  }) : super(key: key);
 
   final VendorType vendorType;
-  final Function onFinish;
+  final Function? onFinish;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NewParcelViewModel>.reactive(
       viewModelBuilder: () => NewParcelViewModel(context, onFinish, vendorType),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,

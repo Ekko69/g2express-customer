@@ -16,7 +16,8 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ServiceSearchPage extends StatelessWidget {
-  const ServiceSearchPage({Key key, @required this.search, this.showCancel = true})
+  const ServiceSearchPage(
+      {Key? key, required this.search, this.showCancel = true})
       : super(key: key);
 
   //

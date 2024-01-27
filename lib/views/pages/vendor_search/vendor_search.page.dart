@@ -15,7 +15,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorSearchPage extends StatelessWidget {
-  const VendorSearchPage(this.vendor, {Key key}) : super(key: key);
+  const VendorSearchPage(this.vendor, {Key? key}) : super(key: key);
 
   final Vendor vendor;
   @override

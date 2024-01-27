@@ -7,17 +7,17 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CategoryListItem extends StatelessWidget {
   const CategoryListItem({
-    this.category,
-    this.onPressed,
+    required this.category,
+    required this.onPressed,
     this.maxLine = true,
     this.h,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Function(Category) onPressed;
   final Category category;
   final bool maxLine;
-  final double h;
+  final double? h;
   @override
   Widget build(BuildContext context) {
     return VStack(
@@ -29,7 +29,7 @@ class CategoryListItem extends StatelessWidget {
             [
               //
               CustomImage(
-                imageUrl: category.imageUrl,
+                imageUrl: category.imageUrl ?? "",
                 boxFit: BoxFit.fill,
                 width: AppStrings.categoryImageWidth,
                 height: AppStrings.categoryImageHeight,
@@ -37,7 +37,7 @@ class CategoryListItem extends StatelessWidget {
                   .box
                   .roundedSM
                   .clip(Clip.antiAlias)
-                  .color(Vx.hexToColor(category.color))
+                  .color(Vx.hexToColor(category.color ?? "#ffffff"))
                   .make()
                   .py2(),
 
@@ -72,7 +72,7 @@ class CategoryListItem extends StatelessWidget {
             [
               //
               CustomImage(
-                imageUrl: category.imageUrl,
+                imageUrl: category.imageUrl ?? "",
                 boxFit: BoxFit.fill,
                 width: AppStrings.categoryImageWidth,
                 height: AppStrings.categoryImageHeight,
@@ -80,7 +80,7 @@ class CategoryListItem extends StatelessWidget {
                   .box
                   .roundedSM
                   .clip(Clip.antiAlias)
-                  .color(Vx.hexToColor(category.color))
+                  .color(Vx.hexToColor(category.color ?? "#ffffff"))
                   .make()
                   .py2(),
 

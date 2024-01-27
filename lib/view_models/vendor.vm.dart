@@ -15,8 +15,8 @@ class VendorViewModel extends MyBaseViewModel {
     this.vendorType = vendorType;
   }
   //
-  User currentUser;
-  StreamSubscription currentLocationChangeStream;
+  User? currentUser;
+  StreamSubscription? currentLocationChangeStream;
 
   //
   int queryPage = 1;
@@ -24,24 +24,12 @@ class VendorViewModel extends MyBaseViewModel {
   RefreshController refreshController = RefreshController();
 
   void initialise() async {
+    preloadDeliveryLocation();
     //
     if (AuthServices.authenticated()) {
       currentUser = await AuthServices.getCurrentUser(force: true);
       notifyListeners();
     }
-
-    //listen to user location change
-    currentLocationChangeStream =
-        LocationService.currenctAddressSubject.stream.listen(
-      (location) {
-        //
-
-        deliveryaddress.address = location.addressLine;
-        deliveryaddress.latitude = location.coordinates.latitude;
-        deliveryaddress.longitude = location.coordinates.longitude;
-        notifyListeners();
-      },
-    );
   }
 
   //switch to use current location instead of selected delivery address
@@ -52,8 +40,6 @@ class VendorViewModel extends MyBaseViewModel {
   //
   dispose() {
     super.dispose();
-    currentLocationChangeStream.cancel();
+    currentLocationChangeStream?.cancel();
   }
-
-
 }

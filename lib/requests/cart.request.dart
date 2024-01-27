@@ -5,7 +5,7 @@ import 'package:fuodz/services/http.service.dart';
 
 class CartRequest extends HttpService {
   //
-  Future<Coupon> fetchCoupon(String code, {int vendorTypeId}) async {
+  Future<Coupon> fetchCoupon(String code, {int? vendorTypeId}) async {
     Map<String, dynamic> params = {};
     if (vendorTypeId != null) {
       params = {
@@ -21,7 +21,7 @@ class CartRequest extends HttpService {
     if (apiResponse.allGood) {
       return Coupon.fromJson(apiResponse.body);
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 }

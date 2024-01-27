@@ -2,12 +2,12 @@ import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/vendor.dart';
 
 class Banner {
-  int id;
-  String name;
-  String link;
-  String imageUrl;
-  Category category;
-  Vendor vendor;
+  int? id;
+  String? name;
+  String? link;
+  String? imageUrl;
+  Category? category;
+  Vendor? vendor;
 
   Banner();
 

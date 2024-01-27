@@ -6,38 +6,38 @@ import 'package:fuodz/models/payment_method.dart';
 import 'package:fuodz/models/vendor.dart';
 
 class PackageCheckout {
-  double distance;
+  double? distance;
   double deliveryFee;
-  double packageTypeFee;
-  double subTotal;
-  double discount;
-  double tax;
-  double taxRate;
-  double total;
-  PackageType packageType;
-  Vendor vendor;
-  DeliveryAddress pickupLocation;
-  DeliveryAddress dropoffLocation;
-  List<OrderStop> stopsLocation = [];
-  List<OrderStop> allStops = [];
-  Coupon coupon;
-  String date;
-  String time;
+  double? packageTypeFee;
+  double? subTotal;
+  double? discount;
+  double? tax;
+  double? taxRate;
+  double? total;
+  PackageType? packageType;
+  Vendor? vendor;
+  DeliveryAddress? pickupLocation;
+  DeliveryAddress? dropoffLocation;
+  List<OrderStop>? stopsLocation = [];
+  List<OrderStop?>? allStops = [];
+  Coupon? coupon;
+  String? date;
+  String? time;
   //
-  String recipientName;
-  String recipientPhone;
+  String? recipientName;
+  String? recipientPhone;
 
-  String weight;
-  String length;
-  String height;
-  String width;
+  String? weight;
+  String? length;
+  String? height;
+  String? width;
   bool payer = true;
 
-  PaymentMethod paymentMethod;
-  bool isScheduled;
-  String deliverySlotDate;
-  String deliverySlotTime;
-  String token;
+  PaymentMethod? paymentMethod;
+  bool? isScheduled;
+  String? deliverySlotDate;
+  String? deliverySlotTime;
+  String? token;
 
   //
   PackageCheckout({
@@ -53,8 +53,8 @@ class PackageCheckout {
     this.vendor,
     this.pickupLocation,
     this.dropoffLocation,
-    this.stopsLocation,
-    this.allStops,
+    this.stopsLocation = const [],
+    this.allStops = const [],
     this.date,
     this.time,
     this.recipientName,
@@ -72,35 +72,35 @@ class PackageCheckout {
   });
 
   //
-  factory PackageCheckout.fromJson(Map<String, dynamic> json) =>
-      PackageCheckout(
-        distance: json["distance"] == null
-            ? null
-            : double.parse(json["distance"].toString()),
-        deliveryFee: json["delivery_fee"] == null
-            ? null
-            : double.parse(json["delivery_fee"].toString()),
-        packageTypeFee: json["package_type_fee"] == null
-            ? null
-            : double.parse(json["package_type_fee"].toString()),
-        subTotal: json["sub_total"] == null
-            ? null
-            : double.parse(json["sub_total"].toString()),
-        tax: json["tax"] == null ? null : double.parse(json["tax"].toString()),
-        taxRate: json["tax_rate"] == null
-            ? null
-            : double.parse(json["tax_rate"].toString()),
-        total: json["total"] == null
-            ? null
-            : double.parse(json["total"].toString()),
-        discount: json["discount"] == null
-            ? null
-            : double.parse(json["discount"].toString()),
-        token: json["token"],
-      );
+  factory PackageCheckout.fromJson(Map<String, dynamic> json) {
+    return PackageCheckout(
+      distance: json["distance"] == null
+          ? null
+          : double.parse(json["distance"].toString()),
+      deliveryFee: double.parse(json["delivery_fee"].toString()),
+      packageTypeFee: json["package_type_fee"] == null
+          ? null
+          : double.parse(json["package_type_fee"].toString()),
+      subTotal: json["sub_total"] == null
+          ? null
+          : double.parse(json["sub_total"].toString()),
+      tax: json["tax"] == null ? null : double.parse(json["tax"].toString()),
+      taxRate: json["tax_rate"] == null
+          ? null
+          : double.parse(json["tax_rate"].toString()),
+      total:
+          json["total"] == null ? null : double.parse(json["total"].toString()),
+      discount: json["discount"] == null
+          ? null
+          : double.parse(json["discount"].toString()),
+      token: json["token"],
+      //if coupon is not null
+      coupon: json["coupon"] != null ? Coupon.fromJson(json["coupon"]) : null,
+    );
+  }
 
   PackageCheckout copyWith({
-    PackageCheckout packageCheckout,
+    required PackageCheckout packageCheckout,
   }) {
     this.distance = packageCheckout.distance;
     this.deliveryFee = packageCheckout.deliveryFee;
@@ -111,12 +111,13 @@ class PackageCheckout {
     this.total = packageCheckout.total;
     this.discount = packageCheckout.discount;
     this.token = packageCheckout.token;
+    this.coupon = packageCheckout.coupon;
     return this;
   }
 
   Map<String, dynamic> toJson() => {
         "distance": distance == null ? null : distance,
-        "delivery_fee": deliveryFee == null ? null : deliveryFee,
+        "delivery_fee": deliveryFee,
         "package_type_fee": packageTypeFee == null ? null : packageTypeFee,
         "sub_total": subTotal == null ? null : subTotal,
         "tax": tax == null ? null : tax,

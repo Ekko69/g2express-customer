@@ -13,12 +13,12 @@ class SimpleStyledBanners extends StatelessWidget {
     this.height,
     this.radius,
     this.withPadding = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
-  final double height;
-  final double radius;
+  final double? height;
+  final double? radius;
   final bool withPadding;
 
   @override
@@ -29,7 +29,7 @@ class SimpleStyledBanners extends StatelessWidget {
         vendorType,
         featured: false,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return model.isBusy
             ? BusyIndicator().centered().h(150)
@@ -54,7 +54,7 @@ class SimpleStyledBanners extends StatelessWidget {
                   items: model.banners.map(
                     (banner) {
                       return BannerListItem(
-                        imageUrl: banner.imageUrl,
+                        imageUrl: banner.imageUrl ?? "",
                         radius: 0,
                         noMargin: true,
                         onPressed: () => model.bannerSelected(banner),

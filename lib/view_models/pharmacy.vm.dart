@@ -5,7 +5,6 @@ import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/requests/vendor.request.dart';
 import 'package:fuodz/services/auth.service.dart';
-import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:fuodz/views/pages/vendor_details/vendor_details.page.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -19,8 +18,8 @@ class PharmacyViewModel extends MyBaseViewModel {
   }
 
   //
-  User currentUser;
-  StreamSubscription currentLocationChangeStream;
+  User? currentUser;
+  StreamSubscription? currentLocationChangeStream;
 
   //
   VendorRequest vendorRequest = VendorRequest();
@@ -28,25 +27,12 @@ class PharmacyViewModel extends MyBaseViewModel {
   List<Vendor> vendors = [];
 
   void initialise() async {
+    preloadDeliveryLocation();
     //
     if (AuthServices.authenticated()) {
       currentUser = await AuthServices.getCurrentUser(force: true);
       notifyListeners();
     }
-
-    //listen to user location change
-    currentLocationChangeStream =
-        LocationService.currenctAddressSubject.stream.listen(
-      (location) {
-        //
-
-        deliveryaddress.address = location.addressLine;
-        deliveryaddress.latitude = location.coordinates.latitude;
-        deliveryaddress.longitude = location.coordinates.longitude;
-        notifyListeners();
-      },
-    );
-
     //get vendors
     getVendors();
   }
@@ -54,7 +40,7 @@ class PharmacyViewModel extends MyBaseViewModel {
   //
   dispose() {
     super.dispose();
-    currentLocationChangeStream.cancel();
+    currentLocationChangeStream?.cancel();
   }
 
   //
@@ -64,7 +50,7 @@ class PharmacyViewModel extends MyBaseViewModel {
     try {
       vendors = await vendorRequest.nearbyVendorsRequest(
         params: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
         },
       );
     } catch (error) {
@@ -82,8 +68,6 @@ class PharmacyViewModel extends MyBaseViewModel {
     );
   }
 
-
-  // 
-  void uploadPrescription() {
-  }
+  //
+  void uploadPrescription() {}
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/constants/home_screen.config.dart';
+import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/app.service.dart';
 import 'package:fuodz/services/auth.service.dart';
@@ -19,7 +20,7 @@ import 'package:velocity_x/velocity_x.dart';
 class PlainWelcomeHeaderSection extends StatelessWidget {
   const PlainWelcomeHeaderSection(
     this.vm, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final WelcomeViewModel vm;
@@ -48,17 +49,15 @@ class PlainWelcomeHeaderSection extends StatelessWidget {
                         .color(Utils.textColorByTheme())
                         .sm
                         .make(),
-                    StreamBuilder(
-                      stream: LocationService.currenctAddressSubject,
+                    StreamBuilder<DeliveryAddress?>(
+                      stream: LocationService.currenctDeliveryAddressSubject,
+                      initialData: vm.deliveryaddress,
                       builder: (conxt, snapshot) {
-                        return (snapshot.hasData
-                                ? "${snapshot.data?.addressLine}"
-                                : "Current Location".tr())
+                        return "${snapshot.data?.address ?? ""}"
                             .text
-                            .color(Utils.textColorByTheme())
-                            .medium
                             .maxLines(1)
                             .ellipsis
+                            .base
                             .make();
                       },
                     ).flexible(),
@@ -79,9 +78,11 @@ class PlainWelcomeHeaderSection extends StatelessWidget {
               stream: AuthServices.listenToAuthState(),
               initialData: false,
               builder: (ctx, snapshot) {
-                if (snapshot.hasData && snapshot.data is bool && snapshot.data) {
+                if (snapshot.hasData &&
+                    snapshot.data is bool &&
+                    snapshot.data) {
                   return CustomImage(
-                    imageUrl: AuthServices.currentUser?.photo,
+                    imageUrl: AuthServices.currentUser?.photo ?? "",
                   )
                       .wh(35, 35)
                       .box
@@ -122,7 +123,7 @@ class PlainWelcomeHeaderSection extends StatelessWidget {
           builder: (ctx, snapshot) {
             if (snapshot.hasData && snapshot.data is bool && snapshot.data) {
               return CustomVisibilty(
-                visible: HomeScreenConfig.showWalletOnHomeScreen ?? true,
+                visible: HomeScreenConfig.showWalletOnHomeScreen,
                 child: PlainWalletManagementView().py(15),
               );
             } else {

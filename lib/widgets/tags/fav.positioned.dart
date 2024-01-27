@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/view_models/favourite.vm.dart';
@@ -8,7 +9,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class FavPositiedView extends StatelessWidget {
-  const FavPositiedView(this.product, {Key key}) : super(key: key);
+  const FavPositiedView(this.product, {Key? key}) : super(key: key);
 
   final Product product;
 
@@ -29,21 +30,21 @@ class FavPositiedView extends StatelessWidget {
                   product.isFavourite
                       ? FlutterIcons.favorite_mdi
                       : FlutterIcons.favorite_border_mdi,
-                  color: Colors.red.shade600,
+                  color: AppColor.primaryColor,
                   size: 20,
                 )
                   .p4()
-                  .box
-                  .withDecoration(
-                    BoxDecoration(
-                      color: context.theme.colorScheme.background,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(Utils.isArabic ? 6 : 0),
-                        bottomLeft: Radius.circular(!Utils.isArabic ? 6 : 0),
-                      ),
-                    ),
-                  )
-                  .make()
+                  // .box
+                  // .withDecoration(
+                  //   BoxDecoration(
+                  //     color: context.theme.colorScheme.background,
+                  //     borderRadius: BorderRadius.only(
+                  //       bottomRight: Radius.circular(Utils.isArabic ? 6 : 0),
+                  //       bottomLeft: Radius.circular(!Utils.isArabic ? 6 : 0),
+                  //     ),
+                  //   ),
+                  // )
+                  // .make()
                   .onTap(
                   () {
                     !model.isAuthenticated()

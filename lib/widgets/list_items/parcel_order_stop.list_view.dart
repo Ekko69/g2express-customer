@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/models/order_stop.dart';
-import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/widgets/buttons/custom_button.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -12,7 +11,7 @@ class ParcelOrderStopListView extends StatefulWidget {
   const ParcelOrderStopListView(
     this.title,
     this.stop, {
-    Key key,
+    Key? key,
     this.canCall = false,
   }) : super(key: key);
 
@@ -33,8 +32,8 @@ class _ParcelOrderStopListViewState extends State<ParcelOrderStopListView> {
     return VStack(
       [
         "${widget.title}".tr().text.gray500.medium.sm.make(),
-        "${widget.stop?.deliveryAddress?.name}".text.xl.medium.make(),
-        "${widget.stop?.deliveryAddress?.address}"
+        "${widget.stop.deliveryAddress?.name}".text.xl.medium.make(),
+        "${widget.stop.deliveryAddress?.address}"
             .text
             .make()
             .pOnly(bottom: Vx.dp4),
@@ -79,21 +78,20 @@ class _ParcelOrderStopListViewState extends State<ParcelOrderStopListView> {
                 ],
               ).expand(),
               //call
-              (widget.stop.phone.isNotBlank && widget.canCall)
-                  ? CustomButton(
-                      icon: FlutterIcons.phone_call_fea,
-                      iconColor: Colors.white,
-                      title: "",
-                      color: AppColor.primaryColor,
-                      shapeRadius: Vx.dp24,
-                      onPressed: () async {
-                        final phoneNumber = "tel:${widget.stop.phone}";
-                        if (await canLaunchUrlString(phoneNumber)) {
-                          launchUrlString(phoneNumber);
-                        }
-                      },
-                    ).wh(Vx.dp64, Vx.dp40).p12()
-                  : UiSpacer.emptySpace(),
+              if ("${widget.stop.phone}".isNotBlank && widget.canCall)
+                CustomButton(
+                  icon: FlutterIcons.phone_call_fea,
+                  iconColor: Colors.white,
+                  title: "",
+                  color: AppColor.primaryColor,
+                  shapeRadius: Vx.dp24,
+                  onPressed: () async {
+                    final phoneNumber = "tel:${widget.stop.phone}";
+                    if (await canLaunchUrlString(phoneNumber)) {
+                      launchUrlString(phoneNumber);
+                    }
+                  },
+                ).wh(Vx.dp64, Vx.dp40).p12(),
             ],
           ),
         ),

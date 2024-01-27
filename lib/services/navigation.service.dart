@@ -21,9 +21,15 @@ import 'package:fuodz/views/pages/vendor/vendor.page.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NavigationService {
-  static pageSelected(VendorType vendorType,
-      {BuildContext context, bool loadNext = true}) async {
-    Widget nextpage = vendorTypePage(vendorType);
+  static pageSelected(
+    VendorType vendorType, {
+    required BuildContext context,
+    bool loadNext = true,
+  }) async {
+    Widget nextpage = vendorTypePage(
+      vendorType,
+      context: context,
+    );
 
     //
     if (vendorType.authRequired && !AuthServices.authenticated()) {
@@ -43,7 +49,10 @@ class NavigationService {
     }
   }
 
-  static Widget vendorTypePage(VendorType vendorType, {BuildContext context}) {
+  static Widget vendorTypePage(
+    VendorType vendorType, {
+    required BuildContext context,
+  }) {
     Widget homeView = VendorPage(vendorType);
     switch (vendorType.slug) {
       case "parcel":
@@ -92,9 +101,13 @@ class NavigationService {
 
   //
   Widget searchPageWidget(Search search) {
-    if (search.vendorType.isProduct) {
+    if (search.vendorType == null) {
+      return SearchPage(search: search);
+    }
+    //
+    if (search.vendorType!.isProduct) {
       return ProductSearchPage(search: search);
-    } else if (search.vendorType.isService) {
+    } else if (search.vendorType!.isService) {
       return ServiceSearchPage(search: search);
     } else {
       return SearchPage(search: search);

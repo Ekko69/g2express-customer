@@ -14,7 +14,7 @@ class VendorSearchHeaderview extends StatelessWidget {
     this.showVendors = false,
     this.showProviders = false,
     this.showServices = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final SearchViewModel model;

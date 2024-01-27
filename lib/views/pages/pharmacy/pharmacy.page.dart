@@ -16,7 +16,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PharmacyPage extends StatefulWidget {
-  const PharmacyPage(this.vendorType, {Key key}) : super(key: key);
+  const PharmacyPage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -32,7 +32,7 @@ class _PharmacyPageState extends State<PharmacyPage>
 
     return ViewModelBuilder<PharmacyViewModel>.reactive(
       viewModelBuilder: () => PharmacyViewModel(context, widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,

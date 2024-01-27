@@ -13,15 +13,15 @@ import 'package:velocity_x/velocity_x.dart';
 
 class AccountVerificationEntry extends StatefulWidget {
   const AccountVerificationEntry({
-    this.onSubmit,
+    required this.onSubmit,
     this.onResendCode,
     this.vm,
-    Key key,
+    Key? key,
     this.phone = "",
   }) : super(key: key);
 
   final Function(String) onSubmit;
-  final Function onResendCode;
+  final Function? onResendCode;
   final dynamic vm;
   final String phone;
 
@@ -32,7 +32,7 @@ class AccountVerificationEntry extends StatefulWidget {
 
 class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
   TextEditingController pinTEC = new TextEditingController();
-  String smsCode;
+  String? smsCode;
   int resendSecs = 20;
   int resendSecsIncreamental = 5;
   int maxResendSeconds = 30;
@@ -84,7 +84,7 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
             obscureText: false,
             keyboardType: TextInputType.number,
             animationType: AnimationType.fade,
-            textStyle: context.textTheme.bodyLarge.copyWith(fontSize: 16),
+            textStyle: context.textTheme.bodyLarge!.copyWith(fontSize: 16),
             controller: pinTEC,
             pinTheme: PinTheme(
               shape: PinCodeFieldShape.underline,
@@ -145,7 +145,7 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
                 title: resendSecs > 0
                     ? ("Resend in".tr() + " $resendSecs " + "sec".tr())
                     : ("Resend".tr()),
-                titleStyle: context.textTheme.bodyLarge.copyWith(
+                titleStyle: context.textTheme.bodyLarge!.copyWith(
                   color: resendSecs <= 0
                       ? Utils.textColorByTheme()
                       : Colors.grey.shade500,
@@ -159,7 +159,7 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
                         });
                         //custom otp
                         if (widget.onResendCode != null) {
-                          await widget.onResendCode();
+                          await widget.onResendCode!();
                         }
                         //firebase opt
                         else {
@@ -181,7 +181,7 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
               //
               CustomOutlineButton(
                 title: "Edit Phone No.".tr(),
-                titleStyle: context.textTheme.bodyLarge.copyWith(
+                titleStyle: context.textTheme.bodyLarge!.copyWith(
                   // fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Utils.textColorByTheme(),
@@ -200,13 +200,13 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
                 widget.vm.isBusy,
             onPressed: () async {
               //
-              if (smsCode == null || smsCode.length != 6) {
+              if (smsCode == null || smsCode!.length != 6) {
                 widget.vm.toastError("Verification code required".tr());
               } else {
                 setState(() {
                   loading = true;
                 });
-                await widget.onSubmit(smsCode);
+                await widget.onSubmit(smsCode!);
                 setState(() {
                   loading = false;
                 });
@@ -238,7 +238,7 @@ class _AccountVerificationEntryState extends State<AccountVerificationEntry> {
                       setState(() {
                         loading = true;
                       });
-                      await widget.onResendCode();
+                      await widget.onResendCode!();
                       setState(() {
                         loading = false;
                         resendSecs = maxResendSeconds;

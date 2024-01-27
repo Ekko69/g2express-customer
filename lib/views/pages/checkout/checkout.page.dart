@@ -15,11 +15,13 @@ import 'package:fuodz/widgets/custom_text_form_field.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:supercharged/supercharged.dart';
 import 'package:flutter/services.dart';
 
 class CheckoutPage extends StatelessWidget {
-  const CheckoutPage({this.checkout, Key key}) : super(key: key);
+  const CheckoutPage({
+    required this.checkout,
+    Key? key,
+  }) : super(key: key);
 
   final CheckOut checkout;
 
@@ -27,7 +29,7 @@ class CheckoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CheckoutViewModel>.reactive(
       viewModelBuilder: () => CheckoutViewModel(context, checkout),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,
@@ -38,14 +40,14 @@ class CheckoutPage extends StatelessWidget {
               //
               UiSpacer.verticalSpace(),
               Visibility(
-                visible: !vm.isPickup ?? true,
+                visible: !vm.isPickup,
                 child: CustomTextFormField(
                   labelText:
                       "Driver Tip".tr() + " (${AppStrings.currencySymbol})",
                   textEditingController: vm.driverTipTEC,
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: (value) => vm.updateCheckoutTotalAmount(),
+                  onFieldSubmitted: (value) => vm.updateTotalOrderSummary(),
                 ).pOnly(bottom: Vx.dp20),
               ),
               //
@@ -71,18 +73,26 @@ class CheckoutPage extends StatelessWidget {
 
               //order final price preview
               OrderSummary(
-                subTotal: vm.checkout.subTotal,
-                discount: vm.checkout.discount,
-                deliveryFee: vm.checkout.deliveryFee,
-                tax: vm.checkout.tax,
-                vendorTax: vm.vendor.tax,
-                driverTip: vm.driverTipTEC.text.toDouble() ?? 0.00,
-                total: vm.checkout.totalWithTip,
-                fees: vm.vendor.fees,
+                subTotal: vm.checkout!.subTotal,
+                discount: (vm.checkout!.coupon?.for_delivery ?? false)
+                    ? null
+                    : vm.checkout!.discount,
+                deliveryDiscount: (vm.checkout!.coupon?.for_delivery ?? false)
+                    ? vm.checkout!.deliveryDiscount
+                    : null,
+                deliveryFee: vm.checkout!.deliveryFee,
+                tax: vm.checkout!.tax,
+                vendorTax: vm.vendor!.tax,
+                driverTip: double.tryParse("${vm.driverTipTEC.text}") ?? 0.00,
+                total: vm.checkout!.totalWithTip,
+                fees: vm.vendor!.fees,
               ),
 
               //show notice it driver should be paid in cash
-              CheckoutDriverCashDeliveryNoticeView(vm.checkout.deliveryAddress),
+              if (vm.checkout!.deliveryAddress != null)
+                CheckoutDriverCashDeliveryNoticeView(
+                  vm.checkout!.deliveryAddress!,
+                ),
               //
               CustomButton(
                 title: "PLACE ORDER".tr().padRight(14),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/services/alert.service.dart';
 import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
@@ -11,7 +12,7 @@ import 'package:velocity_x/velocity_x.dart';
 class WelcomeHeaderSection extends StatelessWidget {
   const WelcomeHeaderSection(
     this.vm, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final WelcomeViewModel vm;
@@ -29,17 +30,15 @@ class WelcomeHeaderSection extends StatelessWidget {
             VStack(
               [
                 "Deliver To".tr().text.thin.light.sm.make(),
-                StreamBuilder(
-                  stream: LocationService.currenctAddressSubject,
+                StreamBuilder<DeliveryAddress?>(
+                  stream: LocationService.currenctDeliveryAddressSubject,
+                  initialData: vm.deliveryaddress,
                   builder: (conxt, snapshot) {
-                    return (snapshot.hasData
-                            ? "${snapshot.data?.addressLine}"
-                            : "Current Location".tr())
+                    return "${snapshot.data?.address ?? ""}"
                         .text
-                        .lg
-                        .semiBold
                         .maxLines(1)
                         .ellipsis
+                        .base
                         .make();
                   },
                 ).flexible(),

@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ParcelDeliveryDiscountSection extends StatefulWidget {
-  const ParcelDeliveryDiscountSection(this.vm, {Key key}) : super(key: key);
+  const ParcelDeliveryDiscountSection(this.vm, {Key? key}) : super(key: key);
 
   final NewParcelViewModel vm;
 
@@ -35,9 +35,9 @@ class _ParcelDeliveryDiscountSectionState
             CustomTextFormField(
               hintText: "Coupon Code".tr(),
               textEditingController: widget.vm.couponTEC,
-              errorText: widget.vm.hasErrorForKey(widget.vm.coupon)
-                  ? widget.vm.error(widget.vm.coupon).toString()
-                  : null,
+              errorText: widget.vm.hasErrorForKey("coupon")
+                  ? widget.vm.error("coupon").toString()
+                  : "",
               onChanged: widget.vm.couponCodeChange,
             ).expand(),
             //
@@ -51,13 +51,15 @@ class _ParcelDeliveryDiscountSectionState
                     title: "Apply".tr(),
                     shapeRadius: 0,
                     isFixedHeight: true,
-                    loading: widget.vm.busy(widget.vm.coupon),
+                    loading: widget.vm.busy("coupon"),
                     onPressed: widget.vm.canApplyCoupon
                         ? () {
                             if (widget.vm.couponTEC.text.isEmpty) {
                               //show validation error
                               widget.vm.setErrorForObject(
-                                  widget.vm.coupon, "Required".tr());
+                                "coupon",
+                                "Required".tr(),
+                              );
                               return;
                             }
                             //

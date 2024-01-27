@@ -11,7 +11,7 @@ import 'package:velocity_x/velocity_x.dart';
 class OrderDetailsSummary extends StatelessWidget {
   const OrderDetailsSummary(
     this.order, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Order order;
@@ -44,25 +44,25 @@ class OrderDetailsSummary extends StatelessWidget {
               " $currencySymbol ${order.tax ?? 0}"
                   .currencyFormat(currencySymbol),
         ).py2(),
-        DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+        DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
         Visibility(
-          visible: order.fees != null && order.fees.isNotEmpty,
+          visible: order.fees != null && order.fees!.isNotEmpty,
           child: VStack(
             [
-              ...(order.fees.map((fee) {
+              ...((order.fees ?? []).map((fee) {
                 return AmountTile(
                   "${fee.name}".tr(),
                   "+ " +
-                      " $currencySymbol ${fee.amount ?? 0}"
+                      " $currencySymbol ${fee.amount}"
                           .currencyFormat(currencySymbol),
                 ).py2();
               }).toList()),
-              DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+              DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
             ],
           ),
         ),
         Visibility(
-          visible: order.tip != null && order.tip > 0,
+          visible: order.tip != null && order.tip! > 0,
           child: VStack(
             [
               AmountTile(
@@ -71,7 +71,7 @@ class OrderDetailsSummary extends StatelessWidget {
                     "$currencySymbol ${order.tip ?? 0}"
                         .currencyFormat(currencySymbol),
               ).py2(),
-              DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+              DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
             ],
           ),
         ),

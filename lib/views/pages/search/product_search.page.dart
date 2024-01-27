@@ -19,7 +19,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 class ProductSearchPage extends StatelessWidget {
   const ProductSearchPage(
-      {Key key, @required this.search, this.showCancel = true})
+      {Key? key, required this.search, this.showCancel = true})
       : super(key: key);
 
   //
@@ -30,6 +30,7 @@ class ProductSearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SearchViewModel>.reactive(
       viewModelBuilder: () => SearchViewModel(context, search),
+      onViewModelReady: (model) => model.startSearch(),
       disposeViewModel: false,
       builder: (context, model, child) {
         return BasePage(
@@ -65,16 +66,13 @@ class ProductSearchPage extends StatelessWidget {
                       final searchResult = model.searchResults[index];
                       if (searchResult is Product) {
                         //grocery product list item
-                        if (searchResult?.vendor?.vendorType?.isGrocery ??
-                            false) {
+                        if (searchResult.vendor.vendorType.isGrocery) {
                           return GroceryProductListItem(
                             product: searchResult,
                             onPressed: model.productSelected,
                             qtyUpdated: model.addToCartDirectly,
                           );
-                        } else if (searchResult
-                                ?.vendor?.vendorType?.isCommerce ??
-                            false) {
+                        } else if (searchResult.vendor.vendorType.isCommerce) {
                           return CommerceProductListItem(
                             searchResult,
                             height: 80,
@@ -122,16 +120,14 @@ class ProductSearchPage extends StatelessWidget {
                             final searchResult = model.searchResults[index];
                             if (searchResult is Product) {
                               //grocery product list item
-                              if (searchResult?.vendor?.vendorType?.isGrocery ??
-                                  false) {
+                              if (searchResult.vendor.vendorType.isGrocery) {
                                 return GroceryProductListItem(
                                   product: searchResult,
                                   onPressed: model.productSelected,
                                   qtyUpdated: model.addToCartDirectly,
                                 );
                               } else if (searchResult
-                                      ?.vendor?.vendorType?.isCommerce ??
-                                  false) {
+                                  .vendor.vendorType.isCommerce) {
                                 return CommerceProductListItem(
                                   searchResult,
                                   height: 80,

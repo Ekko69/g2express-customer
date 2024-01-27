@@ -10,7 +10,7 @@ class ScanLoginView extends StatelessWidget {
   const ScanLoginView(
     this.model, {
     this.bottomPadding = Vx.dp48,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final LoginViewModel model;
@@ -19,7 +19,7 @@ class ScanLoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: AppStrings.qrcodeLogin ?? false,
+      visible: AppStrings.qrcodeLogin,
       child: HStack(
         [
           "Scan to login".tr().text.make(),

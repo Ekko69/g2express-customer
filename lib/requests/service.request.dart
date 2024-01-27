@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:fuodz/constants/api.dart';
 import 'package:fuodz/models/api_response.dart';
 import 'package:fuodz/models/service.dart';
@@ -7,38 +10,53 @@ import 'package:fuodz/services/location.service.dart';
 class ServiceRequest extends HttpService {
   //
   Future<List<Service>> getServices({
-    Map<String, dynamic> queryParams,
-    int page = 1,
+    Map<String, dynamic>? queryParams,
+    int? page = 1,
     bool byLocation = false,
   }) async {
+    Map<String, dynamic>? qParams = {
+      ...(queryParams != null ? queryParams : {}),
+      "page": "$page",
+    };
+
+    //
+    if (byLocation &&
+        LocationService.currenctAddress?.coordinates?.latitude != null) {
+      qParams["latitude"] =
+          LocationService.currenctAddress?.coordinates?.latitude;
+      qParams["longitude"] =
+          LocationService.currenctAddress?.coordinates?.longitude;
+    }
+
     final apiResult = await get(
       Api.services,
-      queryParameters: {
-        ...(queryParams != null ? queryParams : {}),
-        "page": "$page",
-        "latitude": byLocation
-            ? LocationService?.currenctAddress?.coordinates?.latitude
-            : null,
-        "longitude": byLocation
-            ? LocationService?.currenctAddress?.coordinates?.longitude
-            : null,
-      },
+      queryParameters: qParams,
     );
 
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
+      List<Service> services = [];
+      List<dynamic> serviceJsonList;
       if (page == null || page == 0) {
-        return (apiResponse.body as List)
-            .map((jsonObject) => Service.fromJson(jsonObject))
-            .toList();
+        serviceJsonList = (apiResponse.body as List);
       } else {
-        return apiResponse.data
-            .map((jsonObject) => Service.fromJson(jsonObject))
-            .toList();
+        serviceJsonList = apiResponse.data;
       }
+
+      serviceJsonList.forEach((jsonObject) {
+        try {
+          services.add(Service.fromJson(jsonObject));
+        } catch (error) {
+          print("ServiceRequest getServices Error ==> $error");
+          print("Service ID ==> ${jsonObject['id']}");
+          log("service ==> ${jsonEncode(jsonObject)}");
+        }
+      });
+
+      return services;
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   //
@@ -50,6 +68,6 @@ class ServiceRequest extends HttpService {
       return Service.fromJson(apiResponse.body);
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 }

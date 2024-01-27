@@ -11,10 +11,10 @@ import 'package:velocity_x/velocity_x.dart';
 
 class FrequentBoughtProductListItem extends StatefulWidget {
   FrequentBoughtProductListItem({
-    this.product,
-    this.oncheckChange,
+    required this.product,
+    required this.oncheckChange,
     this.selected = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Product product;
@@ -35,7 +35,7 @@ class _FrequentBoughtProductListItemState
         Checkbox(
           value: widget.selected,
           onChanged: (value) {
-            widget.oncheckChange(value);
+            widget.oncheckChange(value ?? false);
           },
         ).p8(),
 

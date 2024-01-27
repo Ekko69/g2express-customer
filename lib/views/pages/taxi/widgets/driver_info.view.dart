@@ -5,7 +5,7 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiDriverInfoView extends StatelessWidget {
-  const TaxiDriverInfoView(this.driver, {Key key}) : super(key: key);
+  const TaxiDriverInfoView(this.driver, {Key? key}) : super(key: key);
 
   final Driver driver;
   @override
@@ -26,9 +26,9 @@ class TaxiDriverInfoView extends StatelessWidget {
             VxRating(
               size: 14,
               maxRating: 5.0,
-              value: driver.rating,
+              value: driver.rating ?? 0.0,
               isSelectable: false,
-              onRatingUpdate: null,
+              onRatingUpdate: (value) {},
               selectionColor: AppColor.ratingColor,
             ),
           ],
@@ -36,8 +36,8 @@ class TaxiDriverInfoView extends StatelessWidget {
         //vehicle info
         VStack(
           [
-            driver.vehicle.reg_no.text.xl2.semiBold.make(),
-            driver.vehicle.vehicleInfo.text.medium.sm.make(),
+            "${driver.vehicle?.reg_no}".text.xl2.semiBold.make(),
+            "${driver.vehicle?.vehicleInfo}".text.medium.sm.make(),
           ],
           crossAlignment: CrossAxisAlignment.end,
         ),

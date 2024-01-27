@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class Categories extends StatelessWidget {
-  const Categories(this.vendorType, {Key key}) : super(key: key);
+  const Categories(this.vendorType, {Key? key}) : super(key: key);
   final VendorType vendorType;
 
   @override
@@ -21,7 +21,7 @@ class Categories extends StatelessWidget {
         context,
         vendorType: vendorType,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [

@@ -7,11 +7,11 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CustomListedListView extends StatelessWidget {
   //
-  final ScrollController scrollController;
-  final Widget title;
-  final Widget loadingWidget;
-  final Widget errorWidget;
-  final Widget emptyWidget;
+  final ScrollController? scrollController;
+  final Widget? title;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
+  final Widget? emptyWidget;
   final List<Widget> items;
   final bool isLoading;
   final bool hasError;
@@ -19,17 +19,17 @@ class CustomListedListView extends StatelessWidget {
   final bool reversed;
   final bool noScrollPhysics;
   final Axis scrollDirection;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   //
   final bool canRefresh;
-  final RefreshController refreshController;
-  final Function onRefresh;
-  final Function onLoading;
+  final RefreshController? refreshController;
+  final Function? onRefresh;
+  final Function? onLoading;
   final bool canPullUp;
 
   const CustomListedListView({
-    @required this.items,
+    required this.items,
     this.scrollController,
     this.title,
     this.loadingWidget,
@@ -49,7 +49,7 @@ class CustomListedListView extends StatelessWidget {
     this.onRefresh,
     this.onLoading,
     this.canPullUp = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -83,9 +83,9 @@ class CustomListedListView extends StatelessWidget {
             scrollDirection: this.scrollDirection,
             enablePullDown: true,
             enablePullUp: canPullUp,
-            controller: this.refreshController,
-            onRefresh: this.onRefresh,
-            onLoading: this.onLoading,
+            controller: this.refreshController!,
+            onRefresh: this.onRefresh != null ? () => this.onRefresh!() : null,
+            onLoading: this.onLoading != null ? () => this.onLoading!() : null,
             child: contentBody,
           )
         : contentBody;

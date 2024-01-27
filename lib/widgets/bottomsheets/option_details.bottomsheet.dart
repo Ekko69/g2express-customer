@@ -8,7 +8,7 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OptionDetailsBottomSheet extends StatelessWidget {
-  const OptionDetailsBottomSheet(this.option, {Key key}) : super(key: key);
+  const OptionDetailsBottomSheet(this.option, {Key? key}) : super(key: key);
 
   final Option option;
   @override
@@ -16,7 +16,7 @@ class OptionDetailsBottomSheet extends StatelessWidget {
     return VStack(
       [
         Visibility(
-          visible: option.photo != null && option.photo.isNotDefaultImage,
+          visible: option.photo.isNotDefaultImage,
           child: CustomImage(
             imageUrl: option.photo,
             width: context.percentWidth * 100,
@@ -30,7 +30,7 @@ class OptionDetailsBottomSheet extends StatelessWidget {
         UiSpacer.vSpace(10),
         //price
         Visibility(
-          visible: option.price != null && option.price > 0,
+          visible: option.price > 0,
           child: CurrencyHStack(
             [
               AppStrings.currencySymbol.text.sm.bold
@@ -50,7 +50,7 @@ class OptionDetailsBottomSheet extends StatelessWidget {
         UiSpacer.vSpace(15),
         //description
         Visibility(
-          visible: option.description != null,
+          visible: "${option.description}".isNotEmpty,
           child: "${option.description}".text.sm.make(),
         ),
       ],

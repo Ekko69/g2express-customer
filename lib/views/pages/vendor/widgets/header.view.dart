@@ -7,14 +7,16 @@ import 'package:velocity_x/velocity_x.dart';
 
 class VendorHeader extends StatefulWidget {
   const VendorHeader({
-    Key key,
-    this.model,
+    Key? key,
+    required this.model,
     this.showSearch = true,
-    @required this.onrefresh,
+    this.bottomPadding = true,
+    required this.onrefresh,
   }) : super(key: key);
 
   final MyBaseViewModel model;
   final bool showSearch;
+  final bool bottomPadding;
   final Function onrefresh;
 
   @override
@@ -60,7 +62,8 @@ class _VendorHeaderState extends State<VendorHeader> {
                     ).px4(),
                   ],
                 ),
-                widget.model.deliveryaddress.address.text
+                "${widget.model.deliveryaddress?.address}"
+                    .text
                     .maxLines(1)
                     .ellipsis
                     .base
@@ -104,6 +107,6 @@ class _VendorHeaderState extends State<VendorHeader> {
         .bottomRounded()
         .outerShadowSm
         .make()
-        .pOnly(bottom: Vx.dp20);
+        .pOnly(bottom: widget.bottomPadding ? Vx.dp20 : 0);
   }
 }

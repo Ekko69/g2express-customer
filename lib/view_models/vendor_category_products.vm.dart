@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/models/category.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:fuodz/models/product.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/requests/product.request.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class VendorCategoryProductsViewModel extends MyBaseViewModel {
   //
@@ -27,7 +25,7 @@ class VendorCategoryProductsViewModel extends MyBaseViewModel {
 
   //
   Category category;
-  Vendor vendor;
+  Vendor? vendor;
   Map<int, List> categoriesProducts = {};
   Map<int, int> categoriesProductsQueryPages = {};
   final currencySymbol = AppStrings.currencySymbol;
@@ -49,7 +47,7 @@ class VendorCategoryProductsViewModel extends MyBaseViewModel {
   }
 
   void productSelected(Product product) async {
-    await viewContext.navigator.pushNamed(
+    await Navigator.of(viewContext).pushNamed(
       AppRoutes.product,
       arguments: product,
     );
@@ -88,7 +86,7 @@ class VendorCategoryProductsViewModel extends MyBaseViewModel {
       if (initialLoad) {
         categoriesProducts[id] = mProducts;
       } else {
-        categoriesProducts[id].addAll(mProducts);
+        categoriesProducts[id]?.addAll(mProducts);
       }
     } catch (error) {}
 

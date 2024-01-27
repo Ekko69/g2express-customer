@@ -9,7 +9,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WalletAddressBottomSheet extends StatelessWidget {
-  const WalletAddressBottomSheet(this.apiResponse, {Key key}) : super(key: key);
+  const WalletAddressBottomSheet(this.apiResponse, {Key? key})
+      : super(key: key);
 
   final ApiResponse apiResponse;
 
@@ -23,7 +24,7 @@ class WalletAddressBottomSheet extends StatelessWidget {
         "My Wallet Address".tr().text.xl2.semiBold.makeCentered(),
         UiSpacer.verticalSpace(),
         //
-        QrImage(
+        QrImageView(
           data: jsonEncode(apiResponse.body),
           version: QrVersions.auto,
           size: context.percentWidth * 70,
@@ -40,10 +41,10 @@ class WalletAddressBottomSheet extends StatelessWidget {
       ],
     )
         .p20()
-        .hTwoThird(context)
+        // .hTwoThird(context)
         .box
         .color(context.theme.colorScheme.background)
-        .roundedLg
+        .topRounded(value: 20)
         .make();
   }
 }

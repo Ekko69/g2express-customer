@@ -18,7 +18,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PackageDeliveryPayment extends StatelessWidget {
-  const PackageDeliveryPayment({this.vm, Key key}) : super(key: key);
+  const PackageDeliveryPayment({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final NewParcelViewModel vm;
   @override
@@ -66,7 +69,7 @@ class PackageDeliveryPayment extends StatelessWidget {
                   .box
                   .p12
                   .roundedSM
-                  .border(color: Colors.grey[400])
+                  .border(color: Colors.grey.shade400)
                   .make()
                   .wFull(context),
             ),
@@ -78,7 +81,7 @@ class PackageDeliveryPayment extends StatelessWidget {
                 [
                   AmountTile(
                     "Distance".tr(),
-                    vm.packageCheckout.distance.numCurrency + " km",
+                    "${vm.packageCheckout.distance?.numCurrency} km",
                   ),
                   AmountTile(
                     "Delivery Charges".tr(),
@@ -110,14 +113,14 @@ class PackageDeliveryPayment extends StatelessWidget {
                   ),
                   //fees
                   VendorFeesView(
-                    fees: vm.packageCheckout.vendor.fees,
-                    subTotal: vm.packageCheckout.subTotal,
+                    fees: vm.packageCheckout.vendor!.fees,
+                    subTotal: vm.packageCheckout.subTotal!,
                   ),
                   DottedLine().py12(),
                   //total
                   AmountTile(
                     "Total".tr(),
-                    "${vm.currencySymbol} ${(vm.packageCheckout.total - vm.packageCheckout.discount) ?? ''}"
+                    "${vm.currencySymbol} ${(vm.packageCheckout.total)}"
                         .currencyFormat(),
                   ),
                 ],
@@ -153,8 +156,7 @@ class PackageDeliveryPayment extends StatelessWidget {
           onPreviousPressed: () => vm.nextForm(5),
           nextTitle: "PLACE ORDER".tr(),
           nextBtnWidth: context.percentWidth * 45,
-          onNextPressed: vm.selectedPaymentMethod != null &&
-                  !vm.hasErrorForKey(vm.packageCheckout)
+          onNextPressed: !vm.hasErrorForKey(vm.packageCheckout)
               ? vm.initiateOrderPayment
               : null,
         ),

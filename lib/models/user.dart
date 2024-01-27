@@ -2,37 +2,41 @@ class User {
   int id;
 
   String name;
-  String code;
+  String? code;
   String email;
   String phone;
-  String rawPhone;
-  String countryCode;
+  String? rawPhone;
+  String? countryCode;
   String photo;
   String role;
   String walletAddress;
 
   User({
-    this.id,
-    this.name,
-    this.email,
-    this.phone,
-    this.countryCode,
-    this.photo,
-    this.role,
-    this.walletAddress,
+    required this.id,
+    this.code,
+    required this.name,
+    required this.email,
+    required this.phone,
+    this.rawPhone,
+    required this.countryCode,
+    required this.photo,
+    required this.role,
+    required this.walletAddress,
   });
 
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
-    rawPhone = json['raw_phone'];
-    walletAddress = json['wallet_address'] ?? "";
-    countryCode = json['country_code'];
-    photo = json['photo'] ?? "";
-    role = json['role_name'] ?? "client";
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      code: json['code'],
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone'] ?? "",
+      rawPhone: json['raw_phone'],
+      walletAddress: json['wallet_address'] ?? "",
+      countryCode: json['country_code'],
+      photo: json['photo'] ?? "",
+      role: json['role_name'] ?? "client",
+    );
   }
 
   Map<String, dynamic> toJson() {

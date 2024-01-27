@@ -5,10 +5,10 @@ import 'package:velocity_x/velocity_x.dart';
 class CustomTimelineConnector extends StatelessWidget {
   const CustomTimelineConnector({
     this.height,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final double height;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {

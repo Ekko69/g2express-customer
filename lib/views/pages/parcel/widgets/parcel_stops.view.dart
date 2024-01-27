@@ -10,7 +10,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ParcelDeliveryStopsView extends StatelessWidget {
-  const ParcelDeliveryStopsView(this.vm, {Key key}) : super(key: key);
+  const ParcelDeliveryStopsView(this.vm, {Key? key}) : super(key: key);
 
   final NewParcelViewModel vm;
   @override
@@ -52,7 +52,7 @@ class ParcelDeliveryStopsView extends StatelessWidget {
         .p12()
         .box
         .roundedSM
-        .border(color: Colors.grey[300])
+        .border(color: Colors.grey.shade300)
         .make()
         .pOnly(bottom: Vx.dp20);
   }
@@ -72,7 +72,8 @@ class ParcelDeliveryStopsView extends StatelessWidget {
               ? FlutterIcons.location_oct
               : FlutterIcons.location_arrow_faw,
           size: 20,
-          color: lastStop ? Colors.red[700] : context.textTheme.bodyLarge.color,
+          color:
+              lastStop ? Colors.red[700] : context.textTheme.bodyLarge!.color,
         ),
         hintText: "Where to ...".tr(),
         tec: tec,
@@ -91,7 +92,7 @@ class ParcelDeliveryStopsView extends StatelessWidget {
             ? null
             : Icon(
                 FlutterIcons.close_ant,
-                color: context.textTheme.bodyLarge.color,
+                color: context.textTheme.bodyLarge!.color,
                 size: 18,
               )
                 .onInkTap(

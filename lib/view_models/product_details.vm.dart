@@ -1,4 +1,5 @@
 import 'package:cool_alert/cool_alert.dart';
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/constants/app_routes.dart';
@@ -16,6 +17,7 @@ import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:fuodz/views/pages/cart/cart.page.dart';
 import 'package:fuodz/views/pages/vendor_details/vendor_details.page.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:fuodz/constants/app_strings.dart';
 
@@ -31,6 +33,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
   //
   ProductRequest _productRequest = ProductRequest();
   FavouriteRequest _favouriteRequest = FavouriteRequest();
+  RefreshController refreshController = RefreshController();
 
   //
   Product product;
@@ -82,12 +85,24 @@ class ProductDetailsViewModel extends MyBaseViewModel {
       //if it allows only one selection
       if (optionGroup.multiple == 0) {
         //
-        final foundOption = selectedProductOptions.firstWhere(
-            (option) => option.optionGroupId == optionGroup.id,
-            orElse: () => null);
-        if (foundOption != null) {
-          selectedProductOptionsIDs.remove(foundOption.id);
-          selectedProductOptions.remove(foundOption);
+        final foundOption = selectedProductOptions.firstOrNullWhere(
+          (option) => option.optionGroupId == optionGroup.id,
+        );
+        selectedProductOptionsIDs.remove(foundOption?.id);
+        selectedProductOptions.remove(foundOption);
+      }
+      //prevent selecting more than the max allowed
+      if (optionGroup.maxOptions != null) {
+        int selectedOptionsForGroup = selectedProductOptions
+            .where((e) => e.optionGroupId == optionGroup.id)
+            .length;
+        if (selectedOptionsForGroup >= optionGroup.maxOptions!) {
+          String errorMsg = "You can only select".tr();
+          errorMsg += " ${optionGroup.maxOptions} ";
+          errorMsg += "options for".tr();
+          errorMsg += " ${optionGroup.name}";
+          AlertService.error(text: errorMsg);
+          return;
         }
       }
 
@@ -123,7 +138,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
     } else {
       subTotal = totalOptionPrice;
     }
-    total = subTotal * (product.selectedQty ?? 1);
+    total = subTotal * (product.selectedQty);
     notifyListeners();
   }
 
@@ -143,7 +158,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
         AlertService.success(text: apiResponse.message);
       } else {
         viewContext.showToast(
-          msg: apiResponse.message,
+          msg: "${apiResponse.message}",
           bgColor: Colors.red,
           textColor: Colors.white,
           position: VxToastPosition.top,
@@ -169,7 +184,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
         AlertService.success(text: apiResponse.message);
       } else {
         viewContext.showToast(
-          msg: apiResponse.message,
+          msg: "${apiResponse.message}",
           bgColor: Colors.red,
           textColor: Colors.white,
           position: VxToastPosition.top,
@@ -185,15 +200,15 @@ class ProductDetailsViewModel extends MyBaseViewModel {
   optionGroupRequirementCheck() {
     //check if the option groups with required setting has an option selected
     bool optionGroupRequiredFail = false;
-    OptionGroup optionGroupRequired;
+    OptionGroup? optionGroupRequired;
     //
     for (var optionGroup in product.optionGroups) {
       //
       optionGroupRequired = optionGroup;
       //
-      final selectedOptionInOptionGroup = selectedProductOptions.firstWhere(
+      final selectedOptionInOptionGroup =
+          selectedProductOptions.firstOrNullWhere(
         (e) => e.optionGroupId == optionGroup.id,
-        orElse: () => null,
       );
 
       //check if there is an option group that is required but customer is yet to select an option
@@ -210,7 +225,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
         context: viewContext,
         title: "Option required".tr(),
         text: "You are required to select at least one option of".tr() +
-            " ${optionGroupRequired.name}",
+            " ${optionGroupRequired?.name}",
         type: CoolAlertType.error,
       );
 
@@ -224,7 +239,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
     final cart = Cart();
     cart.price = subTotal;
     cart.product = product;
-    cart.selectedQty = product.selectedQty ?? 1;
+    cart.selectedQty = product.selectedQty;
     cart.options = selectedProductOptions;
     cart.optionsIds = selectedProductOptionsIDs;
     bool done = false;
@@ -254,7 +269,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
             showCancelBtn: true,
             confirmBtnColor: AppColor.primaryColor,
             confirmBtnText: "GO TO CART".tr(),
-            confirmBtnTextStyle: viewContext.textTheme.bodyLarge.copyWith(
+            confirmBtnTextStyle: viewContext.textTheme.bodyLarge?.copyWith(
               fontSize: Vx.dp12,
               color: Colors.white,
             ),
@@ -265,7 +280,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
             },
             cancelBtnText: "Keep Shopping".tr(),
             cancelBtnTextStyle:
-                viewContext.textTheme.bodyLarge.copyWith(fontSize: Vx.dp12),
+                viewContext.textTheme.bodyLarge?.copyWith(fontSize: Vx.dp12),
           );
         }
       } else if (product.isDigital) {
@@ -311,7 +326,7 @@ class ProductDetailsViewModel extends MyBaseViewModel {
 
   //
   void openVendorPage() {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.vendorDetails,
       arguments: product.vendor,
     );

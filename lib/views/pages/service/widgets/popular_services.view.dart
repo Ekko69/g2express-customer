@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PopularServicesView extends StatefulWidget {
-  const PopularServicesView(this.vendorType, {Key key}) : super(key: key);
+  const PopularServicesView(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
 
@@ -28,8 +28,13 @@ class _PopularServicesViewState extends State<PopularServicesView> {
         context,
         widget.vendorType,
       ),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
+        //
+        if (!vm.isBusy && vm.services.isEmpty) {
+          return SizedBox.shrink();
+        }
+        //
         return VStack(
           [
             //
@@ -39,7 +44,6 @@ class _PopularServicesViewState extends State<PopularServicesView> {
                 .medium
                 .make()
                 .px12(),
-
 
             CustomMasonryGridView(
               isLoading: vm.isBusy,

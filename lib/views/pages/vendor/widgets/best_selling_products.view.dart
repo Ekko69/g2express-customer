@@ -12,11 +12,11 @@ class BestSellingProducts extends StatelessWidget {
   const BestSellingProducts(
     this.vendorType, {
     this.imageHeight,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
-  final double imageHeight;
+  final double? imageHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class BestSellingProducts extends StatelessWidget {
         context,
         vendorType,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [

@@ -8,16 +8,16 @@ import 'package:velocity_x/velocity_x.dart';
 
 class OPSAutocompleteTextField extends StatelessWidget {
   const OPSAutocompleteTextField({
-    this.onselected,
+    required this.onselected,
     this.textEditingController,
     this.inputDecoration,
-    this.debounceTime,
-    Key key,
+    required this.debounceTime,
+    Key? key,
   }) : super(key: key);
 
   final Function(Address) onselected;
-  final TextEditingController textEditingController;
-  final InputDecoration inputDecoration;
+  final TextEditingController? textEditingController;
+  final InputDecoration? inputDecoration;
   final int debounceTime;
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,8 @@ class OPSAutocompleteTextField extends StatelessWidget {
           },
           itemBuilder: (context, suggestion) {
             return ListTile(
-              title: suggestion.addressLine.text.base.semiBold.make(),
-              subtitle: suggestion.adminArea.text.sm.make(),
+              title: "${suggestion.addressLine}".text.base.semiBold.make(),
+              subtitle: "${suggestion.adminArea}".text.sm.make(),
             );
           },
 

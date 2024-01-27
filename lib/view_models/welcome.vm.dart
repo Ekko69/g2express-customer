@@ -13,17 +13,19 @@ class WelcomeViewModel extends MyBaseViewModel {
     this.viewContext = context;
   }
 
-  Widget selectedPage;
+  Widget? selectedPage;
   List<VendorType> vendorTypes = [];
   VendorTypeRequest vendorTypeRequest = VendorTypeRequest();
   bool showGrid = true;
-  StreamSubscription authStateSub;
+  StreamSubscription? authStateSub;
 
   //
   //
   initialise({bool initial = true}) async {
     //
-    if (refreshController != null && refreshController.isRefresh) {
+    preloadDeliveryLocation();
+    //
+    if (refreshController.isRefresh) {
       refreshController.refreshCompleted();
     }
 

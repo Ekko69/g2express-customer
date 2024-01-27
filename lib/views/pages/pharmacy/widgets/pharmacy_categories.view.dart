@@ -8,7 +8,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PharmacyCategories extends StatefulWidget {
-  const PharmacyCategories(this.vendorType, {Key key}) : super(key: key);
+  const PharmacyCategories(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -23,7 +23,7 @@ class _PharmacyCategoriesState extends State<PharmacyCategories> {
     return ViewModelBuilder<CategoriesViewModel>.reactive(
       viewModelBuilder: () =>
           CategoriesViewModel(context, vendorType: widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [
@@ -36,7 +36,6 @@ class _PharmacyCategoriesState extends State<PharmacyCategories> {
               childAspectRatio: 1.4,
               crossAxisCount: AppStrings.categoryPerRow,
             ),
-
           ],
         );
       },

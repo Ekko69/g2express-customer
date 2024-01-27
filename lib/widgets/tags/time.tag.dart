@@ -4,10 +4,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TimeTag extends StatelessWidget {
-  const TimeTag(this.value, {@required this.iconData, Key key})
+  const TimeTag(this.value, {required this.iconData, Key? key})
       : super(key: key);
 
-  final String value;
+  final String? value;
   final IconData iconData;
   @override
   Widget build(BuildContext context) {

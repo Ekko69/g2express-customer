@@ -20,7 +20,7 @@ class CategoriesViewModel extends MyBaseViewModel {
 
   //
   List<Category> categories = [];
-  final VendorType vendorType;
+  VendorType? vendorType;
   int queryPage = 1;
 
   //
@@ -28,7 +28,7 @@ class CategoriesViewModel extends MyBaseViewModel {
     setBusy(true);
     try {
       categories = await _categoryRequest.categories(
-        vendorTypeId: vendorType.id,
+        vendorTypeId: vendorType?.id,
         page: queryPage,
         full: all ? 1 : 0,
       );
@@ -51,7 +51,7 @@ class CategoriesViewModel extends MyBaseViewModel {
     //
     try {
       final mCategories = await _categoryRequest.categories(
-        vendorTypeId: vendorType.id,
+        vendorTypeId: vendorType?.id,
         page: queryPage,
         full: all ? 1 : 0,
       );
@@ -82,7 +82,7 @@ class CategoriesViewModel extends MyBaseViewModel {
       final search = Search(
         vendorType: category.vendorType,
         category: category,
-        showType: (category.vendorType.isService ?? false) ? 5 : 4,
+        showType: (category.vendorType?.isService ?? false) ? 5 : 4,
       );
       page = NavigationService().searchPageWidget(search);
     }

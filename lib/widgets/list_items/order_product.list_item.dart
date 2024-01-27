@@ -9,15 +9,16 @@ import 'package:fuodz/views/pages/order/widgets/order_digitial_product_download.
 import 'package:fuodz/widgets/bottomsheets/order_product_action.bottomsheet.dart';
 import 'package:fuodz/widgets/buttons/arrow_indicator.dart';
 import 'package:fuodz/widgets/cards/custom.visibility.dart';
+import 'package:fuodz/widgets/cards/rounded_container.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderProductListItem extends StatelessWidget {
   const OrderProductListItem({
-    this.orderProduct,
-    this.order,
-    Key key,
+    required this.orderProduct,
+    required this.order,
+    Key? key,
   }) : super(key: key);
 
   final OrderProduct orderProduct;
@@ -28,20 +29,30 @@ class OrderProductListItem extends StatelessWidget {
       [
         //other status
         CustomVisibilty(
-          visible: order == null || !order.isCommerce,
+          visible: !order.isCommerce,
           child: HStack(
             [
-              //qty
-              "x ${orderProduct.quantity}".text.semiBold.make(),
+              RoundedContainer(
+                child: CustomImage(
+                  imageUrl: orderProduct.product!.photo,
+                  width: 50,
+                  height: 50,
+                ),
+              ),
+
               VStack(
                 [
                   //
-                  orderProduct.product.name.text.make(),
+                  "${orderProduct.product!.name}".text.make(),
                   Visibility(
-                    visible: orderProduct.options != null &&
-                        orderProduct.options.isNotEmpty,
-                    child: "${orderProduct.options}".text.sm.gray500.medium.make(),
+                    visible: orderProduct.options != null,
+                    child:
+                        "${orderProduct.options}".text.sm.gray500.medium.make(),
                   ),
+                  //
+                  5.heightBox,
+                  //qty
+                  "x ${orderProduct.quantity}".text.bold.make(),
                 ],
               ).px12().expand(),
               "${AppStrings.currencySymbol}${orderProduct.price}"
@@ -56,29 +67,30 @@ class OrderProductListItem extends StatelessWidget {
 
         //completed order
         CustomVisibilty(
-          visible: order != null && order.isCommerce,
+          visible: order.isCommerce,
           child: VStack(
             [
               HStack(
                 [
                   //
-                  CustomImage(
-                    imageUrl: orderProduct.product.photo,
-                    width: 70,
-                    height: 70,
+                  RoundedContainer(
+                    child: CustomImage(
+                      imageUrl: orderProduct.product!.photo,
+                      width: 60,
+                      height: 60,
+                    ),
                   ),
-                  UiSpacer.hSpace(6),
 
                   VStack(
                     [
                       //
-                      orderProduct.product.name.text
+                      orderProduct.product!.name.text
                           .maxLines(2)
                           .ellipsis
                           .light
                           .make(),
-                      orderProduct.options != null
-                          ? orderProduct.options.text.sm.gray500.medium.make()
+                      orderProduct.options.isNotEmptyAndNotNull
+                          ? orderProduct.options!.text.sm.gray500.medium.make()
                           : UiSpacer.emptySpace(),
 
                       HStack(

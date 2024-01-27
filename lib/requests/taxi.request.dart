@@ -18,7 +18,7 @@ class TaxiRequest extends HttpService {
           .map((object) => VehicleType.fromJson(object))
           .toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 
@@ -26,10 +26,8 @@ class TaxiRequest extends HttpService {
   Future<List<VehicleType>> getVehicleTypePricing(
     DeliveryAddress pickup,
     DeliveryAddress dropoff, {
-    String countryCode,
+    String? countryCode,
   }) async {
-    //
-    print("countryCode ==> $countryCode");
     //
     final apiResult = await get(
       "${Api.vehicleTypePricing}",
@@ -41,11 +39,22 @@ class TaxiRequest extends HttpService {
     );
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
-      return (apiResponse.body as List)
-          .map((object) => VehicleType.fromJson(object))
-          .toList();
+      List<VehicleType> vehicleTypes = [];
+      (apiResponse.body as List).forEach(
+        (object) {
+          //
+          try {
+            final vehicleType = VehicleType.fromJson(object);
+            vehicleTypes.add(vehicleType);
+          } catch (e) {
+            print(e);
+          }
+        },
+      );
+
+      return vehicleTypes;
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 
@@ -63,7 +72,9 @@ class TaxiRequest extends HttpService {
     return ApiResponse.fromResponse(apiResult);
   }
 
-  Future<ApiResponse> placeNeworder({Map<String, dynamic> params}) async {
+  Future<ApiResponse> placeNeworder({
+    Map<String, dynamic>? params,
+  }) async {
     final apiResult = await post(
       "${Api.newTaxiBooking}",
       params,
@@ -71,7 +82,7 @@ class TaxiRequest extends HttpService {
     return ApiResponse.fromResponse(apiResult);
   }
 
-  Future<Order> getOnGoingTrip() async {
+  Future<Order?> getOnGoingTrip() async {
     final apiResult = await get(
       "${Api.currentTaxiBooking}",
     );

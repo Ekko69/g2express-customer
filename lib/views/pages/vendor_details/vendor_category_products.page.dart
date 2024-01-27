@@ -10,8 +10,11 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorCategoryProductsPage extends StatefulWidget {
-  VendorCategoryProductsPage({this.category, this.vendor, Key key})
-      : super(key: key);
+  VendorCategoryProductsPage({
+    required this.category,
+    required this.vendor,
+    Key? key,
+  }) : super(key: key);
 
   final Category category;
   final Vendor vendor;
@@ -24,7 +27,7 @@ class VendorCategoryProductsPage extends StatefulWidget {
 class _VendorCategoryProductsPageState extends State<VendorCategoryProductsPage>
     with TickerProviderStateMixin {
   //
-  TabController tabBarController;
+  late TabController tabBarController;
 
   @override
   void initState() {
@@ -42,7 +45,7 @@ class _VendorCategoryProductsPageState extends State<VendorCategoryProductsPage>
         widget.category,
         widget.vendor,
       ),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       //
       builder: (context, model, child) {
         return BasePage(
@@ -85,7 +88,8 @@ class _VendorCategoryProductsPageState extends State<VendorCategoryProductsPage>
                     //
                     return CustomListView(
                       noScrollPhysics: false,
-                      refreshController: model.getRefreshController(subcategory.id),
+                      refreshController:
+                          model.getRefreshController(subcategory.id),
                       canPullUp: true,
                       canRefresh: true,
                       padding: EdgeInsets.symmetric(vertical: 10),

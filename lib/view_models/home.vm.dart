@@ -37,7 +37,7 @@ class HomeViewModel extends MyBaseViewModel {
   int currentIndex = 0;
   PageController pageViewController = PageController(initialPage: 0);
   int totalCartItems = 0;
-  StreamSubscription homePageChangeStream;
+  StreamSubscription? homePageChangeStream;
   Widget homeView = WelcomePage();
 
   @override
@@ -64,7 +64,7 @@ class HomeViewModel extends MyBaseViewModel {
     }
 
     //start listening to changes to items in cart
-    LocalStorageService.rxPrefs.getIntStream(CartServices.totalItemKey).listen(
+    LocalStorageService.rxPrefs?.getIntStream(CartServices.totalItemKey).listen(
       (total) {
         if (total != null) {
           totalCartItems = total;
@@ -96,20 +96,26 @@ class HomeViewModel extends MyBaseViewModel {
 
   //
   onTabChange(int index) {
-    currentIndex = index;
-    pageViewController.animateToPage(
-      currentIndex,
-      duration: Duration(microseconds: 5),
-      curve: Curves.bounceInOut,
-    );
+    try {
+      currentIndex = index;
+      pageViewController.animateToPage(
+        currentIndex,
+        duration: Duration(microseconds: 5),
+        curve: Curves.bounceInOut,
+      );
+    } catch (error) {
+      print("error ==> $error");
+    }
     notifyListeners();
   }
 
   //
   handleAppLink() async {
     // Get any initial links
-    final PendingDynamicLinkData initialLink =
+    final PendingDynamicLinkData? initialLink =
         await FirebaseDynamicLinks.instance.getInitialLink();
+
+    //
     if (initialLink != null) {
       final Uri deepLink = initialLink.link;
       openPageByLink(deepLink);
@@ -135,53 +141,70 @@ class HomeViewModel extends MyBaseViewModel {
     if (cleanLink.contains(Api.appShareLink)) {
       //
       try {
-        final linkFragments = cleanLink.split(Api.appShareLink);
-        final dataSection = linkFragments[1];
-        final pathFragments = dataSection.split("/");
-        final dataId = pathFragments[pathFragments.length - 1];
+        final isProductLink = cleanLink.contains("/product");
+        final isVendorLink = cleanLink.contains("/vendor");
+        final isServiceLink = cleanLink.contains("/service");
+        final pathFragments = cleanLink.split("/");
+        final dataId = pathFragments.last;
 
-        if (dataSection.contains("product")) {
-          Product product = Product(id: int.parse(dataId));
-          ProductRequest _productRequest = ProductRequest();
+        if (isProductLink) {
           AlertService.showLoading();
-          product = await _productRequest.productDetails(product.id);
-          AlertService.stopLoading();
-          if (!product.vendor.vendorType.slug.contains("commerce")) {
-            viewContext.push(
-              (context) => ProductDetailsPage(
-                product: product,
-              ),
-            );
-          } else {
-            viewContext.push(
-              (context) => AmazonStyledCommerceProductDetailsPage(
-                product: product,
-              ),
-            );
+          try {
+            ProductRequest _productRequest = ProductRequest();
+            Product product =
+                await _productRequest.productDetails(int.parse(dataId));
+            AlertService.stopLoading();
+            if (!product.vendor.vendorType.slug.contains("commerce")) {
+              viewContext.push(
+                (context) => ProductDetailsPage(
+                  product: product,
+                ),
+              );
+            } else {
+              viewContext.push(
+                (context) => AmazonStyledCommerceProductDetailsPage(
+                  product: product,
+                ),
+              );
+            }
+          } catch (error) {
+            print("error ==> $error");
+            AlertService.stopLoading();
           }
-        } else if (dataSection.contains("vendor")) {
-          Vendor vendor = Vendor(id: int.parse(dataId));
-          VendorRequest _vendorRequest = VendorRequest();
+        } else if (isVendorLink) {
           AlertService.showLoading();
-          vendor = await _vendorRequest.vendorDetails(vendor.id);
-          AlertService.stopLoading();
-          viewContext.push(
-            (context) => VendorDetailsPage(
-              vendor: vendor,
-            ),
-          );
-        } else if (dataSection.contains("service")) {
-          Service service = Service(id: int.parse(dataId));
-          ServiceRequest _serviceRequest = ServiceRequest();
+          try {
+            VendorRequest _vendorRequest = VendorRequest();
+            Vendor vendor = await _vendorRequest.vendorDetails(
+              int.parse(dataId),
+              params: {'type': 'small'},
+            );
+            AlertService.stopLoading();
+            viewContext.push(
+              (context) => VendorDetailsPage(
+                vendor: vendor,
+              ),
+            );
+          } catch (error) {
+            print("error ==> $error");
+            AlertService.stopLoading();
+          }
+        } else if (isServiceLink) {
           AlertService.showLoading();
-          service = await _serviceRequest.serviceDetails(service.id);
-          AlertService.stopLoading();
-          viewContext.push(
-            (context) => ServiceDetailsPage(service),
-          );
+          try {
+            ServiceRequest _serviceRequest = ServiceRequest();
+            Service service =
+                await _serviceRequest.serviceDetails(int.parse(dataId));
+            AlertService.stopLoading();
+            viewContext.push(
+              (context) => ServiceDetailsPage(service),
+            );
+          } catch (error) {
+            print("error ==> $error");
+            AlertService.stopLoading();
+          }
         }
       } catch (error) {
-        AlertService.stopLoading();
         toastError("$error");
       }
     }

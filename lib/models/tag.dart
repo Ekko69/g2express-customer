@@ -10,14 +10,14 @@ String tagToJson(Tag data) => json.encode(data.toJson());
 
 class Tag {
   Tag({
-    this.id,
-    this.name,
-    this.inOrder,
+    required this.id,
+    required this.name,
+    required this.inOrder,
   });
 
   int id;
   String name;
-  int inOrder;
+  int? inOrder;
 
   factory Tag.fromJson(Map<String, dynamic> json) => Tag(
         id: json["id"],

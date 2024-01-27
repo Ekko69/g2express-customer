@@ -13,24 +13,28 @@ class OrderSummary extends StatelessWidget {
     this.subTotal,
     this.discount,
     this.deliveryFee,
+    this.deliveryDiscount,
     this.tax,
     this.vendorTax,
-    this.fees,
-    this.total,
+    this.fees = const [],
+    required this.total,
     this.driverTip = 0.00,
     this.mCurrencySymbol,
-    Key key,
+    this.customWidget,
+    Key? key,
   }) : super(key: key);
 
-  final double subTotal;
-  final double discount;
-  final double deliveryFee;
-  final double tax;
-  final String vendorTax;
+  final double? subTotal;
+  final double? discount;
+  final double? deliveryFee;
+  final double? deliveryDiscount;
+  final double? tax;
+  final String? vendorTax;
   final double total;
-  final double driverTip;
-  final String mCurrencySymbol;
+  final double? driverTip;
+  final String? mCurrencySymbol;
   final List<Fee> fees;
+  final Widget? customWidget;
   @override
   Widget build(BuildContext context) {
     final currencySymbol =
@@ -38,21 +42,18 @@ class OrderSummary extends StatelessWidget {
     return VStack(
       [
         "Order Summary".tr().text.semiBold.xl.make().pOnly(bottom: Vx.dp12),
+        //custom details
+        if (customWidget != null) customWidget!,
         AmountTile(
           "Subtotal".tr(),
           "$currencySymbol ${subTotal ?? 0}".currencyFormat(currencySymbol),
         ).py2(),
-        AmountTile(
-          "Discount".tr(),
-          "- " +
-              "$currencySymbol ${discount ?? 0}".currencyFormat(currencySymbol),
-        ).py2(),
         Visibility(
-          visible: deliveryFee != null,
+          visible: discount != null,
           child: AmountTile(
-            "Delivery Fee".tr(),
-            "+ " +
-                "$currencySymbol ${deliveryFee ?? 0}"
+            "Discount".tr(),
+            "- " +
+                "$currencySymbol ${discount ?? 0}"
                     .currencyFormat(currencySymbol),
           ).py2(),
         ),
@@ -60,36 +61,57 @@ class OrderSummary extends StatelessWidget {
           "Tax (%s)".tr().fill(["${vendorTax ?? 0}%"]),
           "+ " + " $currencySymbol ${tax ?? 0}".currencyFormat(currencySymbol),
         ).py2(),
-        DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
         Visibility(
-          visible: fees != null && fees.isNotEmpty,
+          visible: deliveryFee != null,
+          child: VStack([
+            DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
+            AmountTile(
+              "Delivery Fee".tr(),
+              "+ " +
+                  "$currencySymbol ${deliveryFee ?? 0}"
+                      .currencyFormat(currencySymbol),
+            ),
+            Visibility(
+              visible: deliveryDiscount != null,
+              child: AmountTile(
+                "Delivery Discount".tr(),
+                "- " +
+                    "$currencySymbol ${deliveryDiscount ?? 0}"
+                        .currencyFormat(currencySymbol),
+              ),
+            ),
+          ]).py2(),
+        ),
+        DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
+        Visibility(
+          visible: fees.isNotEmpty,
           child: VStack(
             [
-              ...((fees ?? []).map((fee) {
+              ...((fees).map((fee) {
                 //fixed
                 if ((fee.percentage != 1)) {
                   return AmountTile(
                     "${fee.name}".tr(),
                     "+ " +
-                        " $currencySymbol ${fee.value ?? 0}"
+                        " $currencySymbol ${fee.value}"
                             .currencyFormat(currencySymbol),
                   ).py2();
                 } else {
                   //percentage
                   return AmountTile(
-                    "${fee.name} (%s)".tr().fill(["${fee.value ?? 0}%"]),
+                    "${fee.name} (%s)".tr().fill(["${fee.value}%"]),
                     "+ " +
-                        " $currencySymbol ${fee.getRate(subTotal) ?? 0}"
+                        " $currencySymbol ${fee.getRate(subTotal ?? 0)}"
                             .currencyFormat(currencySymbol),
                   ).py2();
                 }
               }).toList()),
-              DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+              DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
             ],
           ),
         ),
         Visibility(
-          visible: driverTip != null && driverTip > 0,
+          visible: driverTip != null && driverTip! > 0,
           child: VStack(
             [
               AmountTile(
@@ -98,13 +120,13 @@ class OrderSummary extends StatelessWidget {
                     "$currencySymbol ${driverTip ?? 0}"
                         .currencyFormat(currencySymbol),
               ).py2(),
-              DottedLine(dashColor: context.textTheme.bodyLarge.color).py8(),
+              DottedLine(dashColor: context.textTheme.bodyLarge!.color!).py8(),
             ],
           ),
         ),
         AmountTile(
           "Total Amount".tr(),
-          "$currencySymbol ${total ?? 0}".currencyFormat(currencySymbol),
+          "$currencySymbol ${total}".currencyFormat(currencySymbol),
         ),
       ],
     );

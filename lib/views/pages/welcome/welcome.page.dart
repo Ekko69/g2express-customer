@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class _WelcomePageState extends State<WelcomePage>
     return BasePage(
       body: ViewModelBuilder<WelcomeViewModel>.reactive(
         viewModelBuilder: () => WelcomeViewModel(context),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         disposeViewModel: false,
         builder: (context, vm, child) {
           return SmartRefresher(

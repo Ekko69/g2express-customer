@@ -5,7 +5,6 @@ import 'package:fuodz/models/user.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/requests/product.request.dart';
 import 'package:fuodz/services/auth.service.dart';
-import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
@@ -17,8 +16,8 @@ class GroceryViewModel extends MyBaseViewModel {
   }
 
   //
-  User currentUser;
-  StreamSubscription currentLocationChangeStream;
+  User? currentUser;
+  StreamSubscription? currentLocationChangeStream;
 
   //
   ProductRequest productRequest = ProductRequest();
@@ -26,25 +25,12 @@ class GroceryViewModel extends MyBaseViewModel {
   List<Product> productPicks = [];
 
   void initialise() async {
+    preloadDeliveryLocation();
     //
     if (AuthServices.authenticated()) {
       currentUser = await AuthServices.getCurrentUser(force: true);
       notifyListeners();
     }
-
-    //listen to user location change
-    currentLocationChangeStream =
-        LocationService.currenctAddressSubject.stream.listen(
-      (location) {
-        //
-
-        deliveryaddress.address = location.addressLine;
-        deliveryaddress.latitude = location.coordinates.latitude;
-        deliveryaddress.longitude = location.coordinates.longitude;
-        notifyListeners();
-      },
-    );
-
     //get today picks
     getTodayPicks();
   }
@@ -52,7 +38,7 @@ class GroceryViewModel extends MyBaseViewModel {
   //
   dispose() {
     super.dispose();
-    currentLocationChangeStream.cancel();
+    currentLocationChangeStream?.cancel();
   }
 
   //
@@ -62,12 +48,12 @@ class GroceryViewModel extends MyBaseViewModel {
     try {
       productPicks = await productRequest.getProdcuts(
         queryParams: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
           "type": "best",
         },
       );
     } catch (error) {
-      print("Error ==> $error");
+      print("getTodayPicks Error ==> $error");
     }
     setBusyForObject(productPicks, false);
   }

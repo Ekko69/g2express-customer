@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/enums/product_fetch_data_type.enum.dart';
@@ -16,29 +17,32 @@ class ProductsViewModel extends MyBaseViewModel {
     this.vendorType,
     this.type, {
     this.categoryId,
-    this.byLocation = true,
+    this.byLocation,
   }) {
     this.viewContext = context;
-    this.byLocation = AppStrings.enableFatchByLocation;
+    if (this.byLocation == null) {
+      this.byLocation = AppStrings.enableFatchByLocation;
+    }
   }
 
   //
-  User currentUser;
+  User? currentUser;
 
   //
-  VendorType vendorType;
-  int categoryId;
+  VendorType? vendorType;
+  int? categoryId;
   ProductFetchDataType type;
   ProductRequest productRequest = ProductRequest();
   List<Product> products = [];
-  bool byLocation;
+  late bool? byLocation;
 
   bool get anyProductWithOptions {
     try {
-      return products.firstWhere((e) =>
-              e.optionGroups != null &&
-              e.optionGroups.first != null &&
-              e.optionGroups.first.options.isNotEmpty) !=
+      return products.firstOrNullWhere(
+            (e) =>
+                e.optionGroups.isNotEmpty &&
+                e.optionGroups.first.options.isNotEmpty,
+          ) !=
           null;
     } catch (error) {
       return false;
@@ -52,11 +56,11 @@ class ProductsViewModel extends MyBaseViewModel {
       notifyListeners();
     }
 
-    deliveryaddress.address = LocationService?.currenctAddress?.addressLine;
-    deliveryaddress.latitude =
-        LocationService?.currenctAddress?.coordinates?.latitude;
-    deliveryaddress.longitude =
-        LocationService?.currenctAddress?.coordinates?.longitude;
+    deliveryaddress?.address = LocationService.currenctAddress?.addressLine;
+    deliveryaddress?.latitude =
+        LocationService.currenctAddress?.coordinates?.latitude;
+    deliveryaddress?.longitude =
+        LocationService.currenctAddress?.coordinates?.longitude;
 
     //get today picks
     fetchProducts();
@@ -67,17 +71,25 @@ class ProductsViewModel extends MyBaseViewModel {
     //
     setBusy(true);
     try {
+      Map<String, dynamic> queryParams = {
+        "category_id": categoryId,
+        "vendor_type_id": vendorType?.id,
+        "type": type.name.toLowerCase(),
+      };
+
+      if ((byLocation != null && byLocation!) &&
+          deliveryaddress?.latitude != null) {
+        queryParams.addAll({
+          "latitude": deliveryaddress?.latitude,
+          "longitude": deliveryaddress?.longitude,
+        });
+      }
+
       products = await productRequest.getProdcuts(
-        queryParams: {
-          "category_id": categoryId,
-          "vendor_type_id": vendorType.id,
-          "type": type.name.toLowerCase(),
-          "latitude": byLocation ? deliveryaddress?.latitude : null,
-          "longitude": byLocation ? deliveryaddress?.longitude : null,
-        },
+        queryParams: queryParams,
       );
     } catch (error) {
-      print("Error ==> $error");
+      print("fetchProducts Error ==> $error");
     }
     setBusy(false);
   }

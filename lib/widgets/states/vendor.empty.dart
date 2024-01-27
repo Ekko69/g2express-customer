@@ -4,7 +4,7 @@ import 'package:fuodz/widgets/states/empty.state.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class EmptyVendor extends StatelessWidget {
-  const EmptyVendor({this.showDescription = true, Key key}) : super(key: key);
+  const EmptyVendor({this.showDescription = true, Key? key}) : super(key: key);
 
   final bool showDescription;
   @override

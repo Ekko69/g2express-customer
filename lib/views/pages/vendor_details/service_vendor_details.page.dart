@@ -9,8 +9,11 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ServiceVendorDetailsPage extends StatelessWidget {
-  ServiceVendorDetailsPage(this.vendorDetailsViewModel, {this.vendor, Key key})
-      : super(key: key);
+  ServiceVendorDetailsPage(
+    this.vendorDetailsViewModel, {
+    required this.vendor,
+    Key? key,
+  }) : super(key: key);
 
   final Vendor vendor;
   final VendorDetailsViewModel vendorDetailsViewModel;
@@ -19,7 +22,7 @@ class ServiceVendorDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ServiceVendorDetailsViewModel>.reactive(
       viewModelBuilder: () => ServiceVendorDetailsViewModel(context, vendor),
-      onModelReady: (model) => model.getVendorServices(),
+      onViewModelReady: (model) => model.getVendorServices(),
       builder: (context, model, child) {
         return VStack(
           [

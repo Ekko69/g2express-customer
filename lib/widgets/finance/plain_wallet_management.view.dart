@@ -14,9 +14,12 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PlainWalletManagementView extends StatefulWidget {
-  const PlainWalletManagementView({this.viewmodel, Key key}) : super(key: key);
+  const PlainWalletManagementView({
+    this.viewmodel,
+    Key? key,
+  }) : super(key: key);
 
-  final WalletViewModel viewmodel;
+  final WalletViewModel? viewmodel;
 
   @override
   State<PlainWalletManagementView> createState() =>
@@ -25,7 +28,7 @@ class PlainWalletManagementView extends StatefulWidget {
 
 class _PlainWalletManagementViewState extends State<PlainWalletManagementView>
     with WidgetsBindingObserver {
-  WalletViewModel mViewmodel;
+  WalletViewModel? mViewmodel;
   @override
   void initState() {
     super.initState();
@@ -34,8 +37,7 @@ class _PlainWalletManagementViewState extends State<PlainWalletManagementView>
     mViewmodel ??= WalletViewModel(context);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //
-      mViewmodel.initialise();
+      mViewmodel?.initialise();
     });
     WidgetsBinding.instance.addObserver(this);
   }
@@ -43,13 +45,13 @@ class _PlainWalletManagementViewState extends State<PlainWalletManagementView>
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding?.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && mViewmodel != null) {
-      mViewmodel.initialise();
+    if (state == AppLifecycleState.resumed) {
+      mViewmodel?.initialise();
     }
   }
 
@@ -59,7 +61,7 @@ class _PlainWalletManagementViewState extends State<PlainWalletManagementView>
     final textColor = Utils.textColorByColor(bgColor);
     //
     return ViewModelBuilder<WalletViewModel>.reactive(
-      viewModelBuilder: () => mViewmodel,
+      viewModelBuilder: () => mViewmodel!,
       disposeViewModel: widget.viewmodel == null,
       builder: (context, vm, child) {
         return StreamBuilder(
@@ -91,7 +93,7 @@ class _PlainWalletManagementViewState extends State<PlainWalletManagementView>
                             .color(textColor)
                             .make(),
                         UiSpacer.vSpace(3),
-                        "${AppStrings.currencySymbol} ${vm.wallet != null ? vm.wallet.balance : 0.00}"
+                        "${AppStrings.currencySymbol} ${vm.wallet != null ? vm.wallet?.balance : 0.00}"
                             .currencyFormat()
                             .text
                             .color(textColor)

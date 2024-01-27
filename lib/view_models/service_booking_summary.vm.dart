@@ -1,6 +1,5 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/models/checkout.dart';
 import 'package:fuodz/models/coupon.dart';
 import 'package:fuodz/models/payment_method.dart';
@@ -16,19 +15,26 @@ import 'package:velocity_x/velocity_x.dart';
 
 class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
   //
+  List<Map> calFees = [];
+  //
   ServiceBookingSummaryViewModel(BuildContext context, this.service) {
     this.viewContext = context;
-    vendor = service.vendor;
-    AppService().vendorId = vendor.id;
+    vendor = service!.vendor;
+    AppService().vendorId = vendor?.id;
     fetchPaymentOptions();
 
     //prepare checkout
     checkout = CheckOut();
     final subTotal = double.parse(
-        ((service.showDiscount ? service.discountPrice : service.price) *
-                (!(service.isFixed) ? (service.selectedQty ?? 1) : 1))
-            .toString());
-    checkout.subTotal = subTotal;
+      ((service!.showDiscount ? service!.discountPrice! : service!.price) *
+              (!(service!.isFixed) ? (service!.selectedQty ?? 1) : 1))
+          .toString(),
+    );
+    checkout!.subTotal = subTotal;
+    //add price of selected options
+    service!.selectedOptions.forEach((option) {
+      checkout!.subTotal += option.price;
+    });
   }
 //
   CartRequest cartRequest = CartRequest();
@@ -36,18 +42,18 @@ class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
   TextEditingController noteTEC = TextEditingController();
   //coupons
   bool canApplyCoupon = false;
-  Coupon coupon;
+  Coupon? coupon;
   TextEditingController couponTEC = TextEditingController();
 
   //
-  CheckOut checkout = CheckOut();
-  Service service;
+  CheckOut? checkout = CheckOut();
+  Service? service;
   double subTotal = 0.0;
   double total = 0.0;
   final currencySymbol = AppStrings.currencySymbol;
   //
   List<PaymentMethod> paymentMethods = [];
-  PaymentMethod selectedPaymentMethod;
+  PaymentMethod? selectedPaymentMethod;
 
   void initialise() async {
     fetchPaymentOptions();
@@ -55,11 +61,11 @@ class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
   }
 
   //get payment options
-  fetchPaymentOptions({int vendorId}) async {
+  fetchPaymentOptions({int? vendorId}) async {
     setBusyForObject(paymentMethods, true);
     try {
       paymentMethods = await paymentOptionRequest.getPaymentOptions(
-        vendorId: vendorId ?? service.vendor.id,
+        vendorId: vendorId ?? service!.vendor.id,
       );
       //
       clearErrors();
@@ -70,8 +76,17 @@ class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
   }
 
   isSelected(PaymentMethod paymentMethod) {
-    return selectedPaymentMethod != null &&
-        paymentMethod.id == selectedPaymentMethod.id;
+    return paymentMethod.id == selectedPaymentMethod?.id;
+  }
+
+  @override
+  changeSelectedPaymentMethod(
+    PaymentMethod? paymentMethod, {
+    bool callTotal = true,
+  }) {
+    selectedPaymentMethod = paymentMethod;
+    checkout?.paymentMethod = paymentMethod;
+    notifyListeners();
   }
 
   couponCodeChange(String code) {
@@ -82,56 +97,96 @@ class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
   //
   applyCoupon() async {
     //
-    setBusyForObject(coupon, true);
+    setBusyForObject("coupon", true);
     try {
       coupon = await cartRequest.fetchCoupon(
         couponTEC.text,
-        vendorTypeId: vendor?.vendorType?.id,
+        vendorTypeId: vendor!.vendorType.id,
       );
       //
-      if (coupon.useLeft <= 0) {
+      if (coupon == null) {
+        throw "Invalid coupon code".tr();
+      }
+      //
+      if (coupon!.useLeft <= 0) {
         throw "Coupon use limit exceeded".tr();
-      } else if (coupon.expired) {
+      } else if (coupon!.expired) {
         throw "Coupon has expired".tr();
       }
       clearErrors();
       //re-calculate the cart price with coupon
       //
-      if (coupon.percentage == 1) {
-        checkout.discount = (coupon.discount / 100) * checkout.subTotal;
+      if (coupon!.percentage == 1) {
+        checkout!.discount = (coupon!.discount / 100) * checkout!.subTotal;
       } else {
-        checkout.discount = coupon.discount;
+        checkout!.discount = coupon!.discount;
       }
+      //
+      updateTotalOrderSummary();
     } catch (error) {
       print("error ==> $error");
-      setErrorForObject(coupon, error);
+      setErrorForObject("coupon", error);
     }
-    setBusyForObject(coupon, false);
+    setBusyForObject("coupon", false);
   }
 
   //
+  @override
+  updateTotalOrderSummary() async {
+    //
+    Map<String, dynamic> payload = {
+      "delivery_address_id": deliveryAddress?.id,
+      "coupon_code": checkout!.coupon?.code ?? "",
+      "vendor_id": vendor!.id,
+      "service_id": service!.id,
+      "options_ids": service!.selectedOptions.map((e) => e.id).toList(),
+      "qty": service!.selectedQty ?? 1,
+    };
+
+    setBusy(true);
+    try {
+      final mCheckout = await checkoutRequest.serviceOrderSummary(payload);
+      checkout!.copyWith(
+        subTotal: mCheckout.subTotal,
+        discount: mCheckout.discount,
+        deliveryFee: mCheckout.deliveryFee,
+        tax: mCheckout.tax,
+        total: mCheckout.total,
+        totalWithTip: mCheckout.totalWithTip,
+        token: mCheckout.token,
+        fees: mCheckout.fees,
+      );
+    } catch (error) {
+      print("Error getting order summary ==> $error");
+      toastError("$error");
+    }
+    setBusy(false);
+    //
+    notifyListeners();
+  }
+
   //
   placeOrder({bool ignore = false}) async {
     //
-    if (isScheduled && checkout.deliverySlotDate.isEmptyOrNull) {
+    if (isScheduled && checkout!.deliverySlotDate.isEmptyOrNull) {
       //
       AlertService.error(
         title: "Schedule Date".tr(),
         text: "Please select your desire order date".tr(),
       );
-    } else if (isScheduled && checkout.deliverySlotTime.isEmptyOrNull) {
+    } else if (isScheduled && checkout!.deliverySlotTime.isEmptyOrNull) {
       //
       AlertService.error(
         title: "Schedule Time".tr(),
         text: "Please select your desire order time".tr(),
       );
-    } else if (!isPickup && service.location && deliveryAddress == null) {
+    } else if (!isPickup && service!.location && deliveryAddress == null) {
       //
       AlertService.error(
         title: "Booking address".tr(),
         text: "Please select booking address".tr(),
       );
-    } else if (service.location && delievryAddressOutOfRange && !isPickup) {
+    } else if (service!.location && delievryAddressOutOfRange && !isPickup) {
       //
       AlertService.error(
         title: "Booking address".tr(),
@@ -156,12 +211,13 @@ class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
     //process the order placement
     setBusy(true);
     //set the total with discount as the new total
-    checkout.total = checkout.totalWithTip;
+    checkout!.total = checkout!.totalWithTip;
     //
     final apiResponse = await checkoutRequest.newServiceOrder(
-      checkout,
+      checkout!,
       fees: calFees,
-      service: service,
+      service: service!,
+      service_amount: checkout!.subTotal,
       note: noteTEC.text,
     );
     //not error
@@ -171,7 +227,7 @@ class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
       final paymentLink = apiResponse.body["link"].toString();
       if (!paymentLink.isEmptyOrNull) {
         viewContext.pop();
-        showOrdersTab();
+        showOrdersTab(context: viewContext);
         openWebpageLink(paymentLink);
       }
       //cash payment
@@ -183,15 +239,8 @@ class ServiceBookingSummaryViewModel extends CheckoutBaseViewModel {
             text: apiResponse.message,
             barrierDismissible: false,
             onConfirmBtnTap: () {
-              showOrdersTab();
               viewContext.pop(true);
-              if (viewContext.navigator.canPop()) {
-                viewContext.navigator.popUntil(
-                  (route) {
-                    return route == AppRoutes.homeRoute || route.isFirst;
-                  },
-                );
-              }
+              showOrdersTab(context: viewContext);
             });
       }
     } else {

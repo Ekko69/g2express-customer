@@ -1,38 +1,40 @@
 // To parse this JSON data, do
 //
 //     final taxiOrderLocationHistory = taxiOrderLocationHistoryFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
-TaxiOrderLocationHistory taxiOrderLocationHistoryFromJson(String str) => TaxiOrderLocationHistory.fromJson(json.decode(str));
+TaxiOrderLocationHistory taxiOrderLocationHistoryFromJson(String str) =>
+    TaxiOrderLocationHistory.fromJson(json.decode(str));
 
-String taxiOrderLocationHistoryToJson(TaxiOrderLocationHistory data) => json.encode(data.toJson());
+String taxiOrderLocationHistoryToJson(TaxiOrderLocationHistory data) =>
+    json.encode(data.toJson());
 
 class TaxiOrderLocationHistory {
-    TaxiOrderLocationHistory({
-        @required this.latitude,
-        @required this.longitude,
-        @required this.address,
-        @required this.name,
-    });
+  TaxiOrderLocationHistory({
+    required this.latitude,
+    required this.longitude,
+    required this.address,
+    required this.name,
+  });
 
-    double latitude;
-    double longitude;
-    String address;
-    String name;
+  double latitude;
+  double longitude;
+  String address;
+  String name;
 
-    factory TaxiOrderLocationHistory.fromJson(Map<String, dynamic> json) => TaxiOrderLocationHistory(
+  factory TaxiOrderLocationHistory.fromJson(Map<String, dynamic> json) =>
+      TaxiOrderLocationHistory(
         latitude: json["latitude"] == null ? null : json["latitude"].toDouble(),
-        longitude: json["longitude"] == null ? null : json["longitude"].toDouble(),
+        longitude:
+            json["longitude"] == null ? null : json["longitude"].toDouble(),
         address: json["address"] == null ? null : json["address"],
         name: json["name"] == null ? null : json["name"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
-        "latitude": latitude == null ? null : latitude,
-        "longitude": longitude == null ? null : longitude,
-        "address": address == null ? null : address,
-        "name": name == null ? null : name,
-    };
+  Map<String, dynamic> toJson() => {
+        "latitude": latitude,
+        "longitude": longitude,
+        "address": address,
+        "name": name,
+      };
 }

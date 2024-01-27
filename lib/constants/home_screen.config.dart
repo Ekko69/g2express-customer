@@ -26,52 +26,71 @@ class HomeScreenConfig {
   }
 
   static bool get isBannerPositionTop {
-    dynamic uiEnv = AppStrings.env("ui");
-    if (uiEnv == null ||
-        uiEnv["home"] == null ||
-        uiEnv['home']["bannerPosition"] == null) {
+    try {
+      dynamic uiEnv = AppStrings.env("ui");
+      if (uiEnv == null ||
+          uiEnv["home"] == null ||
+          uiEnv['home']["bannerPosition"] == null) {
+        return true;
+      }
+      return (uiEnv['home']["bannerPosition"].toString().toLowerCase() ==
+          "top");
+    } catch (e) {
+      print(e);
       return true;
     }
-    return (uiEnv['home']["bannerPosition"].toString().toLowerCase() ==
-            "top") ??
-        true;
   }
 
   static bool get isVendorTypeListingBoth {
-    dynamic uiEnv = AppStrings.env("ui");
-    if (uiEnv == null ||
-        uiEnv["home"] == null ||
-        uiEnv['home']["vendortypeListStyle"] == null) {
-      return true;
+    try {
+      dynamic uiEnv = AppStrings.env("ui");
+      if (uiEnv == null ||
+          uiEnv["home"] == null ||
+          uiEnv['home']["vendortypeListStyle"] == null) {
+        return true;
+      }
+      return [
+        "both"
+      ].contains(uiEnv['home']["vendortypeListStyle"].toString().toLowerCase());
+    } catch (e) {
+      print(e);
+      return false;
     }
-    return ["both"].contains(
-            uiEnv['home']["vendortypeListStyle"].toString().toLowerCase()) ??
-        false;
   }
 
   static bool get isVendorTypeListingGridView {
-    dynamic uiEnv = AppStrings.env("ui");
-    if (uiEnv == null ||
-        uiEnv["home"] == null ||
-        uiEnv['home']["vendortypeListStyle"] == null) {
-      print("styles ==> ${uiEnv['home']}");
-      return true;
+    try {
+      dynamic uiEnv = AppStrings.env("ui");
+      if (uiEnv == null ||
+          uiEnv["home"] == null ||
+          uiEnv['home']["vendortypeListStyle"] == null) {
+        print("styles ==> ${uiEnv['home']}");
+        return true;
+      }
+      return [
+        "gridview",
+        "both"
+      ].contains(uiEnv['home']["vendortypeListStyle"].toString().toLowerCase());
+    } catch (e) {
+      return false;
     }
-    return ["gridview", "both"].contains(
-            uiEnv['home']["vendortypeListStyle"].toString().toLowerCase()) ??
-        false;
   }
 
   static bool get isVendorTypeListingListView {
-    dynamic uiEnv = AppStrings.env("ui");
-    if (uiEnv == null ||
-        uiEnv["home"] == null ||
-        uiEnv['home']["vendortypeListStyle"] == null) {
-      return true;
+    try {
+      dynamic uiEnv = AppStrings.env("ui");
+      if (uiEnv == null ||
+          uiEnv["home"] == null ||
+          uiEnv['home']["vendortypeListStyle"] == null) {
+        return true;
+      }
+      return [
+        "listview",
+        "both"
+      ].contains(uiEnv['home']["vendortypeListStyle"].toString().toLowerCase());
+    } catch (e) {
+      return false;
     }
-    return ["listview", "both"].contains(
-            uiEnv['home']["vendortypeListStyle"].toString().toLowerCase()) ??
-        false;
   }
 
   static int get vendorTypePerRow {
@@ -101,7 +120,6 @@ class HomeScreenConfig {
       style = 1;
     }
     style = (uiEnv['home']["homeViewStyle"].toString().toInt()) ?? 1;
-
     Widget ui;
     switch (style) {
       case 1:

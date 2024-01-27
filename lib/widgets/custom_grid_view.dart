@@ -7,21 +7,21 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CustomGridView extends StatelessWidget {
   //
-  final Widget title;
-  final Widget loadingWidget;
-  final Widget errorWidget;
-  final Widget emptyWidget;
-  final List<dynamic> dataSet;
-  final List<Widget> items;
+  final Widget? title;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
+  final Widget? emptyWidget;
+  final List<dynamic>? dataSet;
+  final List<Widget>? items;
   final bool isLoading;
   final bool hasError;
   final bool justList;
   final bool reversed;
   final bool noScrollPhysics;
   final Axis scrollDirection;
-  final EdgeInsets padding;
-  final Function(BuildContext, int) itemBuilder;
-  final Function(BuildContext, int) separatorBuilder;
+  final EdgeInsets? padding;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final Widget Function(BuildContext, int)? separatorBuilder;
   final int crossAxisCount;
   final double childAspectRatio;
   final double crossAxisSpacing;
@@ -29,13 +29,13 @@ class CustomGridView extends StatelessWidget {
 
   //
   final bool canRefresh;
-  final RefreshController refreshController;
-  final Function onRefresh;
-  final Function onLoading;
+  final RefreshController? refreshController;
+  final Function? onRefresh;
+  final Function? onLoading;
   final bool canPullUp;
 
   const CustomGridView({
-    @required this.dataSet,
+    required this.dataSet,
     this.items,
     this.title,
     this.loadingWidget,
@@ -47,7 +47,7 @@ class CustomGridView extends StatelessWidget {
     this.reversed = false,
     this.noScrollPhysics = false,
     this.scrollDirection = Axis.vertical,
-    @required this.itemBuilder,
+    required this.itemBuilder,
     this.separatorBuilder,
     this.padding,
     this.crossAxisCount = 2,
@@ -61,7 +61,7 @@ class CustomGridView extends StatelessWidget {
     this.onRefresh,
     this.onLoading,
     this.canPullUp = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -83,7 +83,7 @@ class CustomGridView extends StatelessWidget {
         : this.hasError
             ? this.errorWidget ?? EmptyState()
             : this.justList
-                ? this.dataSet.isEmpty
+                ? (this.dataSet == null || this.dataSet!.isEmpty)
                     ? this.emptyWidget ?? UiSpacer.emptySpace()
                     : _getBodyList()
                 : Expanded(
@@ -98,9 +98,17 @@ class CustomGridView extends StatelessWidget {
             scrollDirection: this.scrollDirection,
             enablePullDown: true,
             enablePullUp: canPullUp,
-            controller: this.refreshController,
-            onRefresh: this.onRefresh,
-            onLoading: this.onLoading,
+            controller: this.refreshController!,
+            onRefresh: this.onRefresh != null
+                ? () {
+                    this.onRefresh!();
+                  }
+                : null,
+            onLoading: this.onLoading != null
+                ? () {
+                    this.onLoading!();
+                  }
+                : null,
             child: _getListView(),
           )
         : _getListView();
@@ -109,10 +117,10 @@ class CustomGridView extends StatelessWidget {
   //get listview
   Widget _getListView() {
     //
-    if (this.items != null && this.items.isNotEmpty) {
+    if (this.items != null && this.items!.isNotEmpty) {
       return GridView.count(
         crossAxisCount: crossAxisCount,
-        children: this.items,
+        children: this.items ?? [],
         padding: this.padding,
         physics: this.noScrollPhysics ? NeverScrollableScrollPhysics() : null,
         shrinkWrap: true,
@@ -131,7 +139,7 @@ class CustomGridView extends StatelessWidget {
       physics: this.noScrollPhysics ? NeverScrollableScrollPhysics() : null,
       shrinkWrap: true,
       itemBuilder: this.itemBuilder,
-      itemCount: this.dataSet.length,
+      itemCount: this.dataSet?.length ?? 0,
       reverse: this.reversed,
       scrollDirection: this.scrollDirection,
     );

@@ -1,11 +1,10 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/models/search.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/requests/vendor.request.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class SectionVendorsViewModel extends MyBaseViewModel {
   SectionVendorsViewModel(
@@ -19,9 +18,9 @@ class SectionVendorsViewModel extends MyBaseViewModel {
 
   //
   List<Vendor> vendors = [];
-  VendorType vendorType;
+  VendorType? vendorType;
   SearchFilterType type;
-  bool byLocation;
+  bool? byLocation;
   VendorRequest _vendorRequest = VendorRequest();
 
   //
@@ -51,7 +50,7 @@ class SectionVendorsViewModel extends MyBaseViewModel {
   }
 
   vendorSelected(Vendor vendor) async {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.vendorDetails,
       arguments: vendor,
     );

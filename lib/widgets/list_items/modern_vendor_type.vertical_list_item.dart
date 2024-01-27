@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/constants/app_ui_styles.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ModernVendorTypeVerticalListItem extends StatelessWidget {
-  const ModernVendorTypeVerticalListItem(this.vendorType,
-      {this.onPressed, Key key})
-      : super(key: key);
+  const ModernVendorTypeVerticalListItem(
+    this.vendorType, {
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   final VendorType vendorType;
   final Function onPressed;
@@ -26,7 +29,7 @@ class ModernVendorTypeVerticalListItem extends StatelessWidget {
         verticalOffset: 50.0,
         child: FadeInAnimation(
           child: InkWell(
-            onTap: onPressed,
+            onTap: () => onPressed(),
             child: VStack(
               [
                 //image + details
@@ -37,9 +40,9 @@ class ModernVendorTypeVerticalListItem extends StatelessWidget {
                       //
                       CustomImage(
                         imageUrl: vendorType.logo,
-                        boxFit: BoxFit.contain,
-                        width: 40,
-                        height: 40,
+                        boxFit: AppUIStyles.vendorTypeImageStyle,
+                        height: AppUIStyles.vendorTypeHeight,
+                        width: AppUIStyles.vendorTypeWidth,
                       ).p8().centered(),
                       //
                       VStack(
@@ -60,9 +63,9 @@ class ModernVendorTypeVerticalListItem extends StatelessWidget {
                   visible: AppStrings.showVendorTypeImageOnly,
                   child: CustomImage(
                     imageUrl: vendorType.logo,
-                    width: 50,
-                    height: 50,
-                    boxFit: BoxFit.contain,
+                    width: AppUIStyles.vendorTypeWidth,
+                    height: AppUIStyles.vendorTypeHeight,
+                    boxFit: AppUIStyles.vendorTypeImageStyle,
                   ).centered(),
                 ),
               ],

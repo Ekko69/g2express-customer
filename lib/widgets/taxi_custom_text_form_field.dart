@@ -5,17 +5,17 @@ import 'package:velocity_x/velocity_x.dart';
 
 class TaxiCustomTextFormField extends StatelessWidget {
   const TaxiCustomTextFormField({
-    this.hintText,
-    this.focusNode,
-    this.controller,
-    this.onChanged,
+    required this.hintText,
+    required this.focusNode,
+    required this.controller,
+    required this.onChanged,
     this.clear = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
   final String hintText;
   final FocusNode focusNode;
   final TextEditingController controller;
-  final Function onChanged;
+  final Function(String)? onChanged;
   final bool clear;
 
   @override
@@ -30,7 +30,7 @@ class TaxiCustomTextFormField extends StatelessWidget {
                 FlutterIcons.close_ant,
                 color: Colors.red.shade300,
               ).onInkTap(() {
-                controller?.clear();
+                controller.clear();
               })
             : null,
       ),

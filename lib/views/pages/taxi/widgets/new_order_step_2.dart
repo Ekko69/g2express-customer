@@ -9,13 +9,13 @@ import 'step_two/new_taxi_order_summary.collapsed.dart';
 import 'step_two/new_taxi_order_summary.panel.dart';
 
 class NewTaxiOrderSummaryView extends StatelessWidget {
-  const NewTaxiOrderSummaryView(this.vm, {Key key}) : super(key: key);
+  const NewTaxiOrderSummaryView(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NewTaxiOrderSummaryViewModel>.reactive(
         viewModelBuilder: () => NewTaxiOrderSummaryViewModel(context, vm),
-        onModelReady: (vm) => WidgetsBinding.instance.addPostFrameCallback(
+        onViewModelReady: (vm) => WidgetsBinding.instance.addPostFrameCallback(
               (_) {
                 vm.initialise();
               },

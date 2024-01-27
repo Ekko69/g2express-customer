@@ -8,7 +8,7 @@ import 'package:measure_size/measure_size.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TripDriverSearch extends StatelessWidget {
-  const TripDriverSearch(this.vm, {Key key}) : super(key: key);
+  const TripDriverSearch(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {

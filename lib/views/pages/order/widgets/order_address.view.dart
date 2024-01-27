@@ -7,7 +7,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderAddressesView extends StatelessWidget {
-  const OrderAddressesView(this.vm, {Key key}) : super(key: key);
+  const OrderAddressesView(this.vm, {Key? key}) : super(key: key);
 
   final OrderDetailsViewModel vm;
   @override
@@ -21,7 +21,7 @@ class OrderAddressesView extends StatelessWidget {
                   //
                   ParcelOrderStopListView(
                     "Pickup Location",
-                    vm.order.orderStops.first,
+                    vm.order.orderStops!.first,
                     canCall: vm.order.canChatVendor,
                   ),
 
@@ -30,7 +30,7 @@ class OrderAddressesView extends StatelessWidget {
                   //
                   ParcelOrderStopListView(
                     "Dropoff Location",
-                    vm.order.orderStops.last,
+                    vm.order.orderStops!.last,
                     canCall: vm.order.canChatVendor,
                   ),
                 ],
@@ -54,13 +54,7 @@ class OrderAddressesView extends StatelessWidget {
                   ),
                   UiSpacer.smHorizontalSpace(),
                   //
-                  VStack(
-                    [
-                      vm.order.vendor.address != null
-                          ? vm.order.vendor.address.text.make()
-                          : UiSpacer.emptySpace(),
-                    ],
-                  ).expand(),
+                  "${vm.order.vendor?.address}".text.make().expand(),
                 ],
                 crossAlignment: CrossAxisAlignment.start,
               ).py12(),
@@ -80,10 +74,11 @@ class OrderAddressesView extends StatelessWidget {
                     VStack(
                       [
                         vm.order.deliveryAddress != null
-                            ? vm.order.deliveryAddress.address.text.make()
+                            ? "${vm.order.deliveryAddress!.address}".text.make()
                             : UiSpacer.emptySpace(),
                         vm.order.deliveryAddress != null
-                            ? vm.order.deliveryAddress.name.text
+                            ? "${vm.order.deliveryAddress!.name}"
+                                .text
                                 .color(Vx.gray400)
                                 .sm
                                 .light
@@ -105,9 +100,9 @@ class OrderAddressesView extends StatelessWidget {
   //
   List<Widget> stopsList() {
     List<Widget> stopViews = [];
-    if (vm.order.orderStops.length > 2) {
-      stopViews = vm.order.orderStops
-          .sublist(1, vm.order.orderStops.length - 1)
+    if (vm.order.orderStops != null && vm.order.orderStops!.length > 2) {
+      stopViews = vm.order.orderStops!
+          .sublist(1, vm.order.orderStops!.length - 1)
           .mapIndexed((stop, index) {
         return VStack(
           [

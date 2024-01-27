@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/enums/product_fetch_data_type.enum.dart';
 import 'package:fuodz/models/category.dart';
 import 'package:fuodz/models/search.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
-import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/view_models/products.vm.dart';
 import 'package:fuodz/views/pages/search/search.page.dart';
 import 'package:fuodz/widgets/cards/custom.visibility.dart';
@@ -25,14 +24,22 @@ class ProductsSectionView extends StatelessWidget {
     this.category,
     this.type = ProductFetchDataType.RANDOM,
     this.showGrid = true,
-    Key key,
+    this.crossAxisCount,
+    this.scrollDirection,
+    this.itemBottomPadding,
+    this.itemHeight,
+    Key? key,
   }) : super(key: key);
 
   final String title;
-  final VendorType vendorType;
+  final VendorType? vendorType;
   final ProductFetchDataType type;
-  final Category category;
+  final Category? category;
   final bool showGrid;
+  final int? crossAxisCount;
+  final Axis? scrollDirection;
+  final double? itemBottomPadding;
+  final double? itemHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +50,7 @@ class ProductsSectionView extends StatelessWidget {
         type,
         categoryId: category?.id,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return CustomVisibilty(
           visible: !model.isBusy && model.products.isNotEmpty,
@@ -52,58 +59,71 @@ class ProductsSectionView extends StatelessWidget {
               //
               HStack(
                 [
-                  "$title".text.semiBold.lg.make().expand(),
+                  "$title".toUpperCase().text.semiBold.xl.make().expand(),
                   UiSpacer.horizontalSpace(),
                   HStack(
                     [
-                      "See all".tr().text.make(),
-                      UiSpacer.smHorizontalSpace(),
-                      Icon(
-                        Utils.isArabic
-                            ? FlutterIcons.arrow_left_evi
-                            : FlutterIcons.arrow_right_evi,
-                      ),
+                      "See all"
+                          .tr()
+                          .text
+                          .lg
+                          .medium
+                          .color(AppColor.primaryColor)
+                          .make(),
+                      // UiSpacer.smHorizontalSpace(),
+                      // Icon(
+                      //   Utils.isArabic
+                      //       ? FlutterIcons.arrow_left_evi
+                      //       : FlutterIcons.arrow_right_evi,
+                      // ),
                     ],
                   ).onInkTap(() => openSearchPage(context)),
                 ],
               )
-                  .box
-                  .p12
-                  .color(context.theme.colorScheme.background)
-                  .outerShadowSm
-                  .roundedSM
-                  .make()
+                  // .box
+                  // .p12
+                  // .color(context.theme.colorScheme.background)
+                  // .outerShadowSm
+                  // .roundedSM
+                  // .make()
                   .wFull(context),
-              UiSpacer.verticalSpace(space: 5),
+              UiSpacer.vSpace(10),
               CustomVisibilty(
                 visible: !showGrid,
                 child: CustomListView(
                   isLoading: model.isBusy,
                   dataSet: model.products,
-                  scrollDirection: Axis.horizontal,
+                  scrollDirection: scrollDirection ?? Axis.horizontal,
                   itemBuilder: (context, index) {
                     final product = model.products[index];
                     return FittedBox(
                       child: CommerceProductListItem(
                         product,
                         height: 80,
-                      ).w(context.percentWidth * 30),
+                      )
+                          .w(context.percentWidth * 30)
+                          .pOnly(bottom: itemBottomPadding ?? 0),
                     );
                   },
-                ).h(Platform.isAndroid ? 160 : 190),
+                ).h(itemHeight ?? (Platform.isAndroid ? 160 : 190)),
               ),
               CustomVisibilty(
                 visible: showGrid,
                 child: CustomMasonryGridView(
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
+                  crossAxisCount: crossAxisCount ?? 2,
                   isLoading: model.isBusy,
                   items: List.generate(
-                    model.products.length ?? 0,
+                    model.products.length,
                     (index) {
                       //
                       final product = model.products[index];
-                      return CommerceProductListItem(product);
+                      return CommerceProductListItem(
+                        product,
+                        height: 120,
+                        boxFit: BoxFit.cover,
+                      );
                     },
                   ),
                 ),
@@ -119,7 +139,7 @@ class ProductsSectionView extends StatelessWidget {
   openSearchPage(BuildContext context) {
     //
     final search = Search(
-      type: type?.name,
+      type: type.name,
       category: category,
       vendorType: vendorType,
       showType: 2,

@@ -11,14 +11,14 @@ class OPSMapViewModel extends MyBaseViewModel {
     this.viewContext = context;
   }
 
-  Address selectedAddress;
+  Address? selectedAddress;
   GeocoderService geocoderService = GeocoderService();
   TextEditingController searchTEC = TextEditingController();
   EdgeInsets googleMapPadding = EdgeInsets.all(10);
-  GoogleMapController gMapController;
-  Timer _debounce;
+  GoogleMapController? gMapController;
+  Timer? _debounce;
   Map<MarkerId, Marker> gMarkers = <MarkerId, Marker>{};
-  Marker centerMarker;
+  Marker? centerMarker;
   MarkerId centerMarkerId = MarkerId('center_loc_marker');
 
   @override
@@ -40,7 +40,7 @@ class OPSMapViewModel extends MyBaseViewModel {
     notifyListeners();
   }
 
-  addressSelected(Address address) async {
+  addressSelected(Address address, {bool moveCamera = true}) async {
     setBusyForObject(selectedAddress, true);
     selectedAddress = address;
     //fecth place details from google if its google map
@@ -50,18 +50,26 @@ class OPSMapViewModel extends MyBaseViewModel {
 
     //
     searchTEC.clear();
-    if (gMapController != null && address.coordinates != null) {
-      gMapController.moveCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            zoom: 16,
-            target: LatLng(
-              address.coordinates.latitude,
-              address.coordinates.longitude,
+    if (moveCamera) {
+      if (address.coordinates != null || selectedAddress?.coordinates != null) {
+        double lat = address.coordinates?.latitude ??
+            selectedAddress?.coordinates?.latitude ??
+            0.0;
+        double lng = address.coordinates?.longitude ??
+            selectedAddress?.coordinates?.longitude ??
+            0.0;
+        gMapController?.moveCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              zoom: 16,
+              target: LatLng(
+                lat,
+                lng,
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
     }
     setBusyForObject(selectedAddress, false);
   }
@@ -78,20 +86,19 @@ class OPSMapViewModel extends MyBaseViewModel {
         draggable: true,
       );
     } else {
-      centerMarker = centerMarker.copyWith(
+      centerMarker = centerMarker?.copyWith(
         positionParam: position.target,
       );
     }
 
     //
-    gMarkers[centerMarkerId] = centerMarker;
+    gMarkers[centerMarkerId] = centerMarker!;
     notifyListeners();
 
     //
-    if (_debounce?.isActive ?? false) _debounce.cancel();
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 800), () async {
       // do something with query
-      print("called");
       selectedAddress = null;
       setBusyForObject(selectedAddress, true);
       try {
@@ -103,11 +110,12 @@ class OPSMapViewModel extends MyBaseViewModel {
         ))
             .first;
 
-        addressSelected(address);
+        addressSelected(address, moveCamera: false);
       } catch (error) {
         toastError("$error");
       }
       setBusyForObject(selectedAddress, false);
+      _debounce?.cancel();
     });
   }
 

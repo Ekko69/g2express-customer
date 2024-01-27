@@ -5,7 +5,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiOrderTripVerificationView extends StatelessWidget {
-  TaxiOrderTripVerificationView(this.order, {Key key}) : super(key: key);
+  TaxiOrderTripVerificationView(this.order, {Key? key}) : super(key: key);
 
   final Order order;
 

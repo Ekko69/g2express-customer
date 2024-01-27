@@ -19,17 +19,25 @@ class OPSMapPage extends StatelessWidget {
     this.useCurrentLocation,
     this.region,
     this.initialPosition,
-    Key key,
+    this.initialZoom = 10,
+    Key? key,
   }) : super(key: key);
 
-  final bool useCurrentLocation;
-  final String region;
-  final LatLng initialPosition;
+  final bool? useCurrentLocation;
+  final String? region;
+  final LatLng? initialPosition;
+  final double initialZoom;
   @override
   Widget build(BuildContext context) {
     return BasePage(
       body: ViewModelBuilder<OPSMapViewModel>.reactive(
         viewModelBuilder: () => OPSMapViewModel(context),
+        onViewModelReady: (viewModel) => viewModel.mapCameraMove(
+          CameraPosition(
+            target: initialPosition ?? LatLng(0.00, 0.00),
+            zoom: initialZoom,
+          ),
+        ),
         builder: (ctx, vm, child) {
           return SafeArea(
             child: VStack(
@@ -61,9 +69,12 @@ class OPSMapPage extends StatelessWidget {
                       },
                       itemBuilder: (context, suggestion) {
                         return ListTile(
-                          title:
-                              suggestion.featureName.text.base.semiBold.make(),
-                          subtitle: suggestion.addressLine.text.sm.make(),
+                          title: "${suggestion.featureName}"
+                              .text
+                              .base
+                              .semiBold
+                              .make(),
+                          subtitle: "${suggestion.addressLine}".text.sm.make(),
                         );
                       },
 
@@ -77,30 +88,17 @@ class OPSMapPage extends StatelessWidget {
                   children: [
                     //
                     GoogleMap(
-                      myLocationEnabled: useCurrentLocation,
-                      myLocationButtonEnabled: useCurrentLocation,
+                      myLocationEnabled: useCurrentLocation ?? true,
+                      myLocationButtonEnabled: useCurrentLocation ?? true,
                       initialCameraPosition: CameraPosition(
                         target: initialPosition ?? LatLng(0.00, 0.00),
-                        zoom: initialPosition != null ? 16 : 10,
+                        zoom: initialZoom,
                       ),
                       padding: vm.googleMapPadding,
                       onMapCreated: vm.onMapCreated,
                       onCameraMove: vm.mapCameraMove,
                       markers: Set<Marker>.of(vm.gMarkers.values),
                     ),
-
-                    // //center marker
-                    // Padding(
-                    //   padding: vm.googleMapPadding,
-                    //   child: Align(
-                    //     alignment: Alignment.center,
-                    //     child: new Icon(
-                    //       Icons.location_on,
-                    //       size: 50.0,
-                    //       color: AppColor.primaryColor,
-                    //     ),
-                    //   ),
-                    // ),
 
                     //loading indicator
                     Positioned(
@@ -124,17 +122,23 @@ class OPSMapPage extends StatelessWidget {
                           child: VStack(
                             [
                               //address full
-                              vm.selectedAddress?.featureName?.text?.semiBold
-                                  ?.center?.xl
-                                  ?.maxLines(3)
-                                  ?.overflow(TextOverflow.ellipsis)
-                                  ?.make(),
+                              "${vm.selectedAddress?.featureName}"
+                                  .text
+                                  .semiBold
+                                  .center
+                                  .xl
+                                  .maxLines(3)
+                                  .overflow(TextOverflow.ellipsis)
+                                  .make(),
                               UiSpacer.verticalSpace(space: 5),
-                              vm.selectedAddress?.addressLine?.text?.light
-                                  ?.center?.sm
-                                  ?.maxLines(2)
-                                  ?.overflow(TextOverflow.ellipsis)
-                                  ?.make(),
+                              "${vm.selectedAddress?.addressLine}"
+                                  .text
+                                  .light
+                                  .center
+                                  .sm
+                                  .maxLines(2)
+                                  .overflow(TextOverflow.ellipsis)
+                                  .make(),
                               UiSpacer.verticalSpace(),
                               //submit
                               CustomButton(

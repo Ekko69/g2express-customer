@@ -13,17 +13,14 @@ String vendorTypeToJson(VendorType data) => json.encode(data.toJson());
 
 class VendorType {
   VendorType({
-    this.id,
-    this.name,
-    this.description,
-    this.slug,
-    this.color,
-    this.isActive,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
-    this.logo,
-    this.hasBanners,
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.slug,
+    required this.color,
+    required this.isActive,
+    required this.logo,
+    required this.hasBanners,
   });
 
   int id;
@@ -32,9 +29,6 @@ class VendorType {
   String slug;
   String color;
   int isActive;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String formattedDate;
   String logo;
   bool hasBanners;
 
@@ -49,14 +43,6 @@ class VendorType {
                 ? json["color"]
                 : AppColor.colorEnv("primaryColor")),
         isActive: json["is_active"] == null ? null : json["is_active"],
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null
-            ? null
-            : DateTime.parse(json["updated_at"]),
-        formattedDate:
-            json["formatted_date"] == null ? null : json["formatted_date"],
         logo: json["logo"] == null ? null : json["logo"],
         hasBanners: json["has_banners"] == null
             ? false
@@ -71,6 +57,7 @@ class VendorType {
   }
 
   bool get isService => ["service", "services"].contains(slug.toLowerCase());
+  bool get isBooking => ["booking", "bookings"].contains(slug.toLowerCase());
 
   bool get isGrocery => slug == "grocery";
 
@@ -80,15 +67,12 @@ class VendorType {
       ["commerce", "e-commerce"].contains(slug.toLowerCase());
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "description": description == null ? null : description,
-        "slug": slug == null ? null : slug,
-        "is_active": isActive == null ? null : isActive,
-        "created_at": createdAt == null ? null : createdAt.toIso8601String(),
-        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
-        "formatted_date": formattedDate == null ? null : formattedDate,
-        "logo": logo == null ? null : logo,
+        "id": id,
+        "name": name,
+        "description": description,
+        "slug": slug,
+        "is_active": isActive,
+        "logo": logo,
         "has_banners": hasBanners ? 1 : 0,
       };
 

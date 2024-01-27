@@ -13,14 +13,14 @@ import 'package:velocity_x/velocity_x.dart';
 
 class SearchFilterBottomSheet extends StatelessWidget {
   const SearchFilterBottomSheet({
-    Key key,
-    this.onSubmitted,
-    this.vm,
-    this.search,
+    Key? key,
+    required this.onSubmitted,
+    required this.vm,
+    required this.search,
   }) : super(key: key);
 
   //
-  final Search search;
+  final Search? search;
   final SearchFilterViewModel vm;
   final Function(Search) onSubmitted;
 
@@ -28,7 +28,7 @@ class SearchFilterBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SearchFilterViewModel>.reactive(
       viewModelBuilder: () => vm,
-      onModelReady: (vm) => vm.fetchSearchData(),
+      onViewModelReady: (vm) => vm.fetchSearchData(),
       disposeViewModel: false,
       builder: (context, vm, child) {
         return VStack(
@@ -37,8 +37,8 @@ class SearchFilterBottomSheet extends StatelessWidget {
             UiSpacer.vSpace(),
             //
 
-            (vm.busy(vm.searchData) || vm.searchData == null)
-                ? BusyIndicator()
+            (vm.busy(vm.searchData))
+                ? BusyIndicator().centered().p20()
                 : VStack(
                     [
                       //Layout type
@@ -57,8 +57,8 @@ class SearchFilterBottomSheet extends StatelessWidget {
                             child: "ListView".tr().text.make(),
                           )
                         ],
-                        onChanged: (value) {
-                          search.layoutType = value;
+                        onChanged: (String? value) {
+                          search?.layoutType = value;
                         },
                       ),
                       UiSpacer.divider().py(6),
@@ -78,8 +78,8 @@ class SearchFilterBottomSheet extends StatelessWidget {
                             child: "Descending (Z-A)".tr().text.make(),
                           )
                         ],
-                        onChanged: (value) {
-                          search.sort = value;
+                        onChanged: (String? value) {
+                          search?.sort = value;
                         },
                       ),
 
@@ -92,14 +92,14 @@ class SearchFilterBottomSheet extends StatelessWidget {
                         name: "price",
                         decoration: InputDecoration(border: InputBorder.none),
                         initialValue: RangeValues(
-                          vm.searchData.priceRange[0] ?? 0,
-                          vm.searchData.priceRange[1] ?? 100,
+                          vm.searchData?.priceRange?[0] ?? 0,
+                          vm.searchData?.priceRange?[1] ?? 100,
                         ),
-                        min: vm.searchData.priceRange[0] ?? 0,
-                        max: vm.searchData.priceRange[1] ?? 100,
+                        min: vm.searchData?.priceRange?[0] ?? 0,
+                        max: vm.searchData?.priceRange?[1] ?? 100,
                         onChanged: (values) {
-                          search.minPrice = values.start.toString();
-                          search.maxPrice = values.end.toString();
+                          search?.minPrice = values?.start.toString();
+                          search?.maxPrice = values?.end.toString();
                         },
                       ).wFull(context),
 
@@ -108,7 +108,7 @@ class SearchFilterBottomSheet extends StatelessWidget {
                       UiSpacer.vSpace(10),
                       //tags
                       CustomVisibilty(
-                        visible: (vm.searchData.tags ?? []).isNotEmpty,
+                        visible: (vm.searchData?.tags ?? []).isNotEmpty,
                         child: VStack(
                           [
                             "Filter by".tr().text.semiBold.lg.make(),
@@ -118,7 +118,7 @@ class SearchFilterBottomSheet extends StatelessWidget {
                               wrapDirection: Axis.vertical,
                               decoration:
                                   InputDecoration(border: InputBorder.none),
-                              options: vm.searchData.tags.map(
+                              options: (vm.searchData?.tags ?? []).map(
                                 (e) {
                                   return FormBuilderFieldOption<Tag>(
                                     value: e,
@@ -126,8 +126,8 @@ class SearchFilterBottomSheet extends StatelessWidget {
                                   );
                                 },
                               ).toList(),
-                              onChanged: (values) {
-                                search.tags = values;
+                              onChanged: (List<Tag>? values) {
+                                search?.tags = values;
                               },
                             ),
                             UiSpacer.vSpace(10),
@@ -141,9 +141,9 @@ class SearchFilterBottomSheet extends StatelessWidget {
                       HStack(
                         [
                           Checkbox(
-                            value: search.byLocation,
+                            value: search?.byLocation,
                             onChanged: (value) {
-                              search.byLocation = value;
+                              search?.byLocation = value;
                               vm.notifyListeners();
                             },
                           ),
@@ -151,7 +151,7 @@ class SearchFilterBottomSheet extends StatelessWidget {
                           "Filter by location".tr().text.make().expand(),
                         ],
                       ).onInkTap(() {
-                        search.byLocation = !search.byLocation;
+                        search?.byLocation = !(search?.byLocation ?? true);
                         vm.notifyListeners();
                       }),
                       //tags
@@ -160,7 +160,7 @@ class SearchFilterBottomSheet extends StatelessWidget {
                       CustomButton(
                         title: "Submit".tr(),
                         onPressed: () {
-                          onSubmitted(search);
+                          onSubmitted(search!);
                           context.pop();
                         },
                       ).centered().py16(),

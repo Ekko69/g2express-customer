@@ -77,7 +77,7 @@ class FavouritesViewModel extends MyBaseViewModel {
   }
 
   openProductDetails(Product product) {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.product,
       arguments: product,
     );

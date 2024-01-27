@@ -10,7 +10,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LocationPermissionDialog extends StatelessWidget {
-  const LocationPermissionDialog({Key key, this.onResult}) : super(key: key);
+  const LocationPermissionDialog({
+    Key? key,
+    required this.onResult,
+  }) : super(key: key);
 
   //
   final Function(bool) onResult;
@@ -19,6 +22,9 @@ class LocationPermissionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: VStack(
         [
           //title
@@ -33,7 +39,7 @@ class LocationPermissionDialog extends StatelessWidget {
             title: "Next".tr(),
             onPressed: () {
               onResult(true);
-              AppService().navigatorKey.currentContext.pop();
+              AppService().navigatorKey.currentContext?.pop();
             },
           ).py12(),
           Visibility(
@@ -43,7 +49,7 @@ class LocationPermissionDialog extends StatelessWidget {
               color: Colors.grey[400],
               onPressed: () {
                 onResult(false);
-                AppService().navigatorKey.currentContext.pop();
+                AppService().navigatorKey.currentContext?.pop();
               },
             ),
           ),

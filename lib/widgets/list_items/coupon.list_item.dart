@@ -12,15 +12,17 @@ class CouponListItem extends StatelessWidget {
     this.coupon, {
     this.onPressed,
     this.radius = 4,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Coupon coupon;
   final double radius;
-  final Function onPressed;
+  final Function? onPressed;
   @override
   Widget build(BuildContext context) {
-    Color fromColor = Vx.hexToColor(coupon.color) ?? AppColor.primaryColor;
+    Color fromColor = coupon.color != null
+        ? Vx.hexToColor(coupon.color!)
+        : AppColor.primaryColor;
     if (fromColor == Colors.black) {
       fromColor = AppColor.primaryColor;
     }
@@ -44,9 +46,10 @@ class CouponListItem extends StatelessWidget {
             coupon.code.text.xl2.extraBold
                 .color(Utils.textColorByColor(fromColor))
                 .make(),
-            "${coupon.description ?? ''}"
+            "${coupon.description}"
                 .text
-                .sm.medium
+                .sm
+                .medium
                 .maxLines(2)
                 .ellipsis
                 .color(Utils.textColorByColor(fromColor))
@@ -62,6 +65,6 @@ class CouponListItem extends StatelessWidget {
         .outerShadowXl
         .gradientFromTo(from: fromColor, to: toColor)
         .make()
-        .onTap(onPressed != null ? () => onPressed(coupon) : null);
+        .onTap(onPressed != null ? () => onPressed!(coupon) : null);
   }
 }

@@ -15,17 +15,16 @@ class HorizontalVehicleTypeListItem extends StatelessWidget {
   const HorizontalVehicleTypeListItem(
     this.vm,
     this.vehicleType, {
-    Key key,
+    Key? key,
   }) : super(key: key);
   final VehicleType vehicleType;
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {
     //
-    final selected = vm.selectedVehicleType != null &&
-        vm.selectedVehicleType.id == vehicleType.id;
+    final selected = vm.selectedVehicleType?.id == vehicleType.id;
     final currencySymbol = vehicleType.currency != null
-        ? vehicleType.currency.symbol
+        ? vehicleType.currency?.symbol
         : AppStrings.currencySymbol;
     //
     return HStack(

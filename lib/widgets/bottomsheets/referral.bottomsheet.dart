@@ -13,7 +13,7 @@ import 'package:velocity_x/velocity_x.dart';
 class ReferralBottomsheet extends StatelessWidget {
   const ReferralBottomsheet(
     this.profileViewModel, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
@@ -47,7 +47,9 @@ class ReferralBottomsheet extends StatelessWidget {
         HStack(
           [
             //code
-            profileViewModel.currentUser.code.text.semiBold
+            "${profileViewModel.currentUser?.code}"
+                .text
+                .semiBold
                 .make()
                 .px32()
                 .py12()

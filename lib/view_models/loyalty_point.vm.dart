@@ -18,7 +18,7 @@ class LoyaltyPointViewModel extends PaymentViewModel {
 
   //
   LoyaltyPointRequest loyaltyPointRequest = LoyaltyPointRequest();
-  LoyaltyPoint loyaltyPoint;
+  LoyaltyPoint? loyaltyPoint;
   double amountRate = 0;
   double estimatedAmount = 0;
   RefreshController refreshController = RefreshController();
@@ -51,8 +51,14 @@ class LoyaltyPointViewModel extends PaymentViewModel {
   }
 
   calculateExchangeRates() {
-    estimatedAmount = loyaltyPoint.points *
-        (double.parse(AppFinanceSettings.loyaltyPointsToAmount) ?? 0);
+    if (loyaltyPoint == null) {
+      estimatedAmount = 0;
+      notifyListeners();
+      return;
+    }
+
+    estimatedAmount = loyaltyPoint!.points *
+        (double.parse(AppFinanceSettings.loyaltyPointsToAmount));
     notifyListeners();
   }
 

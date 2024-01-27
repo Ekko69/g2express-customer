@@ -18,7 +18,7 @@ import 'constants/app_languages.dart';
 //ssll handshake error
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
@@ -29,6 +29,8 @@ void main() async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      //setting up firebase notifications
+      await Firebase.initializeApp();
 
       await translator.init(
         localeType: LocalizationDefaultType.asDefined,
@@ -39,8 +41,6 @@ void main() async {
       //
       await LocalStorageService.getPrefs();
       await CartServices.getCartItems();
-      //setting up firebase notifications
-      await Firebase.initializeApp();
       await NotificationService.clearIrrelevantNotificationChannels();
       await NotificationService.initializeAwesomeNotification();
       await NotificationService.listenToActions();
@@ -50,7 +50,9 @@ void main() async {
 
       //prevent ssl error
       HttpOverrides.global = new MyHttpOverrides();
+      //setting up crashlytics only for production
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
       // Run app!
       runApp(
         LocalizedApp(

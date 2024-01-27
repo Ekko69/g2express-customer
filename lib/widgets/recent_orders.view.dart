@@ -10,9 +10,14 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class RecentOrdersView extends StatelessWidget {
-  const RecentOrdersView({Key key, this.vendorType}) : super(key: key);
+  const RecentOrdersView({
+    Key? key,
+    this.vendorType,
+    this.emptyView,
+  }) : super(key: key);
 
-  final VendorType vendorType;
+  final VendorType? vendorType;
+  final Widget? emptyView;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<RecentOrderViewModel>.reactive(
@@ -20,7 +25,7 @@ class RecentOrdersView extends StatelessWidget {
         context,
         vendorType: vendorType,
       ),
-      onModelReady: (vm) => vm.fetchMyOrders(),
+      onViewModelReady: (vm) => vm.fetchMyOrders(),
       builder: (context, vm, child) {
         return VStack(
           [
@@ -33,6 +38,7 @@ class RecentOrdersView extends StatelessWidget {
                     isLoading: vm.isBusy,
                     noScrollPhysics: true,
                     dataSet: vm.orders,
+                    emptyWidget: emptyView,
                     itemBuilder: (context, index) {
                       //
                       final order = vm.orders[index];

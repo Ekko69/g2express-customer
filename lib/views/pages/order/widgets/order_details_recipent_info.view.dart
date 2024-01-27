@@ -8,24 +8,21 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderDetailsRecipentInfoView extends StatelessWidget {
-  const OrderDetailsRecipentInfoView(this.vm, {Key key}) : super(key: key);
+  const OrderDetailsRecipentInfoView(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
 
   @override
   Widget build(BuildContext context) {
     return VStack(
       [
-        vm.order.recipientName != null && vm.order.recipientName.isNotBlank
+        vm.order.recipientName != null && vm.order.recipientName!.isNotBlank
             ? HStack(
                 [
                   //
                   VStack(
                     [
                       "Recipient Name".tr().text.gray500.medium.sm.make(),
-                      vm.order.recipientName
-                          .text
-                          .medium
-                          .xl
+                      vm.order.recipientName!.text.medium.xl
                           .make()
                           .pOnly(bottom: Vx.dp20),
                     ],

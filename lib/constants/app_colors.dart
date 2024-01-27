@@ -44,9 +44,9 @@ class AppColor {
           900: Vx.hexToColor(colorEnv('primaryColor')),
         },
       );
-  static MaterialColor get primaryMaterialColorDark =>
+  static Color get primaryMaterialColorDark =>
       Vx.hexToColor(colorEnv('primaryColorDark'));
-  static MaterialColor get cursorMaterialColor => accentColor;
+  static Color get cursorMaterialColor => accentColor;
 
   //onboarding colors
   static Color get onboarding1Color =>
@@ -62,12 +62,12 @@ class AppColor {
       Vx.hexToColor(colorEnv('onboardingIndicatorActiveDotColor'));
 
   //Shimmer Colors
-  static Color shimmerBaseColor = Colors.grey[300];
-  static Color shimmerHighlightColor = Colors.grey[200];
+  static Color shimmerBaseColor = Colors.grey.shade300;
+  static Color shimmerHighlightColor = Colors.grey.shade200;
 
   //inputs
-  static Color get inputFillColor => Colors.grey[200];
-  static Color get iconHintColor => Colors.grey[500];
+  static Color get inputFillColor => Colors.grey[200]!;
+  static Color get iconHintColor => Colors.grey[500]!;
 
   static Color get openColor => Vx.hexToColor(colorEnv('openColor'));
   static Color get closeColor => Vx.hexToColor(colorEnv('closeColor'));
@@ -78,8 +78,9 @@ class AppColor {
   //
   static Color get faintBgColor {
     try {
-      final isLightMode = AppService().navigatorKey.currentContext.brightness ==
-          Brightness.light;
+      final isLightMode =
+          AppService().navigatorKey.currentContext?.brightness ==
+              Brightness.light;
       return isLightMode ? Vx.hexToColor("#FDFAF6") : Vx.hexToColor("#212121");
     } catch (error) {
       return Colors.white;
@@ -98,13 +99,14 @@ class AppColor {
 
   //saving
   static Future<bool> saveColorsToLocalStorage(String colorsMap) async {
-    return await LocalStorageService.prefs
+    return await LocalStorageService.prefs!
         .setString(AppStrings.appColors, colorsMap);
   }
 
   static dynamic appColorsObject;
   static Future<void> getColorsFromLocalStorage() async {
-    appColorsObject = LocalStorageService.prefs.getString(AppStrings.appColors);
+    appColorsObject =
+        LocalStorageService.prefs!.getString(AppStrings.appColors);
     if (appColorsObject != null) {
       appColorsObject = jsonDecode(appColorsObject);
     }
@@ -114,8 +116,11 @@ class AppColor {
     //
     getColorsFromLocalStorage();
     //
-    final selectedColor =
+    String? selectedColor =
         appColorsObject != null ? appColorsObject[colorRef] : "#000000";
+    if (selectedColor == null) {
+      selectedColor = "#000000";
+    }
     return selectedColor;
   }
 }

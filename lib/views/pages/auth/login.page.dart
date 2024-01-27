@@ -7,6 +7,7 @@ import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/view_models/login.view_model.dart';
 import 'package:fuodz/views/pages/auth/login/compain_login_type.view.dart';
 import 'package:fuodz/views/pages/auth/login/email_login.view.dart';
+import 'package:fuodz/views/pages/auth/login/otp_login.view.dart';
 import 'package:fuodz/views/pages/auth/login/social_media.view.dart';
 import 'package:fuodz/widgets/base.page.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
@@ -17,7 +18,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'login/scan_login.view.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({this.required = false, Key key}) : super(key: key);
+  LoginPage({this.required = false, Key? key}) : super(key: key);
 
   final bool required;
   @override
@@ -29,15 +30,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<LoginViewModel>.reactive(
       viewModelBuilder: () => LoginViewModel(context),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
-        return WillPopScope(
-          onWillPop: () async {
-            if (widget.required) {
-              context.pop();
-            }
-            return true;
-          },
+        return PopScope(
+          // canPop: !widget.required,
+          // onPopInvoked: (value) async {
+          //   if (widget.required) {
+          //     context.pop();
+          //   }
+          //   return true;
+          // },
           child: BasePage(
             showLeadingAction: !widget.required,
             showAppBar: !widget.required,
@@ -83,9 +85,18 @@ class _LoginPageState extends State<LoginPage> {
                         ),
 
                         //LOGIN Section
-                        AppStrings.enableOTPLogin
-                            ? CombinedLoginTypeView(model)
-                            : EmailLoginView(model),
+                        //both login type
+                        if (AppStrings.enableOTPLogin &&
+                            AppStrings.enableEmailLogin)
+                          CombinedLoginTypeView(model),
+                        //only email login
+                        if (AppStrings.enableEmailLogin &&
+                            !AppStrings.enableOTPLogin)
+                          EmailLoginView(model),
+                        //only otp login
+                        if (AppStrings.enableOTPLogin &&
+                            !AppStrings.enableEmailLogin)
+                          OTPLoginView(model),
                       ],
                     ).wFull(context).px20().pOnly(top: Vx.dp20),
                     //

@@ -15,16 +15,18 @@ class SearchBarInput extends StatelessWidget {
     this.readOnly = true,
     this.showFilter = false,
     this.search,
-    Key key,
+    this.searchTEC,
+    Key? key,
   }) : super(key: key);
 
-  final String hintText;
-  final Function onTap;
-  final Function onFilterPressed;
-  final Function(String) onSubmitted;
+  final String? hintText;
+  final Function? onTap;
+  final Function? onFilterPressed;
+  final Function(String)? onSubmitted;
   final bool readOnly;
-  final Search search;
-  final bool showFilter;
+  final Search? search;
+  final bool? showFilter;
+  final TextEditingController? searchTEC;
   @override
   Widget build(BuildContext context) {
     return HStack(
@@ -32,17 +34,20 @@ class SearchBarInput extends StatelessWidget {
         //
         TextFormField(
           readOnly: readOnly,
-          onTap: search != null
-              ? () {
-                  //pages
-                  final page = NavigationService().searchPageWidget(search);
-                  context.nextPage(page);
-                }
-              : onTap,
+          onTap: () {
+            if (search != null) {
+              //pages
+              final page = NavigationService().searchPageWidget(search!);
+              context.nextPage(page);
+            } else if (onTap != null) {
+              onTap!();
+            }
+          },
+          controller: searchTEC,
           onFieldSubmitted: onSubmitted,
           decoration: InputDecoration(
             hintText: hintText ?? "Search".tr(),
-            hintStyle: context.textTheme.bodyMedium.copyWith(
+            hintStyle: context.textTheme.bodyMedium!.copyWith(
               fontSize: 15,
               fontWeight: FontWeight.w100,
               color: Colors.grey.shade400,
@@ -79,7 +84,9 @@ class SearchBarInput extends StatelessWidget {
                   size: 20,
                 ),
               )
-                  .onInkTap(onFilterPressed)
+                  .onInkTap(
+                    onFilterPressed != null ? () => onFilterPressed!() : () {},
+                  )
                   .material(color: context.theme.colorScheme.background)
                   .box
                   .color(context.theme.colorScheme.background)

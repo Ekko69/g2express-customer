@@ -38,7 +38,7 @@ class DeliveryAddressesViewModel extends MyBaseViewModel {
 
   //
   newDeliveryAddressPressed() async {
-    await viewContext.navigator.pushNamed(
+    await Navigator.of(viewContext).pushNamed(
       AppRoutes.newDeliveryAddressesRoute,
     );
     fetchDeliveryAddresses();
@@ -46,7 +46,7 @@ class DeliveryAddressesViewModel extends MyBaseViewModel {
 
   //
   editDeliveryAddress(DeliveryAddress deliveryAddress) async {
-    await viewContext.navigator.pushNamed(
+    await Navigator.of(viewContext).pushNamed(
       AppRoutes.editDeliveryAddressesRoute,
       arguments: deliveryAddress,
     );

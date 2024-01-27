@@ -6,7 +6,7 @@ import 'package:fuodz/services/http.service.dart';
 class CategoryRequest extends HttpService {
   //
   Future<List<Category>> categories({
-    int vendorTypeId,
+    int? vendorTypeId,
     int page = 0,
     int full = 0,
   }) async {
@@ -27,11 +27,11 @@ class CategoryRequest extends HttpService {
           .map((jsonObject) => Category.fromJson(jsonObject))
           .toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 
-  Future<List<Category>> subcategories({int categoryId, int page}) async {
+  Future<List<Category>> subcategories({int? categoryId, int? page}) async {
     final apiResult = await get(
       //
       Api.categories,
@@ -49,7 +49,7 @@ class CategoryRequest extends HttpService {
           .map((jsonObject) => Category.fromJson(jsonObject))
           .toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 }

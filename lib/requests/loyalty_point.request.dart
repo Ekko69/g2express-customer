@@ -13,7 +13,7 @@ class LoyaltyPointRequest extends HttpService {
       return LoyaltyPoint.fromJson(apiResponse.body);
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   Future<List<LoyaltyPointReport>> loyaltyPointReports({int page = 1}) async {
@@ -31,7 +31,7 @@ class LoyaltyPointRequest extends HttpService {
           .toList();
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   Future<ApiResponse> withdrawPoints(

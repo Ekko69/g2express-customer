@@ -8,8 +8,8 @@ import 'package:fuodz/services/http.service.dart';
 class DeliveryAddressRequest extends HttpService {
   //
   Future<List<DeliveryAddress>> getDeliveryAddresses({
-    int vendorId,
-    List<int> vendorIds,
+    int? vendorId,
+    List<int>? vendorIds,
   }) async {
     //
 
@@ -35,12 +35,12 @@ class DeliveryAddressRequest extends HttpService {
         return DeliveryAddress.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 
   //
-  Future<DeliveryAddress> preselectedDeliveryAddress({int vendorId}) async {
+  Future<DeliveryAddress?> preselectedDeliveryAddress({int? vendorId}) async {
     final apiResult = await get(
       Api.deliveryAddresses,
       queryParameters: {
@@ -56,7 +56,7 @@ class DeliveryAddressRequest extends HttpService {
           ? DeliveryAddress.fromJson(apiResponse.body)
           : null;
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 

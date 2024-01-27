@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cool_alert/cool_alert.dart';
+import 'package:dartx/dartx.dart' hide IterableForEachIndexed;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
@@ -40,25 +42,25 @@ class NewParcelViewModel extends PaymentViewModel {
   VendorRequest vendorRequest = VendorRequest();
   PaymentMethodRequest paymentOptionRequest = PaymentMethodRequest();
   CheckoutRequest checkoutRequest = CheckoutRequest();
-  Function onFinish;
-  VendorType vendorType;
+  Function? onFinish;
+  VendorType? vendorType;
 
   //Step 1
   List<PackageType> packageTypes = [];
-  PackageType selectedPackgeType;
+  PackageType? selectedPackgeType;
 
   //Step 2
   List<Vendor> vendors = [];
-  Vendor selectedVendor;
+  Vendor? selectedVendor;
   bool requireParcelInfo = true;
 
   //Step 3
-  DeliveryAddress pickupLocation;
-  DeliveryAddress dropoffLocation;
-  DateTime selectedPickupDate;
-  String pickupDate;
-  TimeOfDay selectedPickupTime;
-  String pickupTime;
+  DeliveryAddress? pickupLocation;
+  DeliveryAddress? dropoffLocation;
+  DateTime? selectedPickupDate;
+  String? pickupDate;
+  TimeOfDay? selectedPickupTime;
+  String? pickupTime;
 
   final deliveryInfoFormKey = GlobalKey<FormState>();
   TextEditingController fromTEC = TextEditingController();
@@ -88,16 +90,16 @@ class NewParcelViewModel extends PaymentViewModel {
   //packageCheckout
   PackageCheckout packageCheckout = PackageCheckout();
   List<PaymentMethod> paymentMethods = [];
-  PaymentMethod selectedPaymentMethod;
+  PaymentMethod? selectedPaymentMethod;
   //
   bool canApplyCoupon = false;
-  Coupon coupon;
+  Coupon? coupon;
   TextEditingController couponTEC = TextEditingController();
 
   //
   int activeStep = 0;
   PageController pageController = PageController();
-  StreamSubscription currentLocationChangeStream;
+  StreamSubscription? currentLocationChangeStream;
 
   //
   NewParcelViewModel(BuildContext context, this.onFinish, this.vendorType) {
@@ -112,12 +114,12 @@ class NewParcelViewModel extends PaymentViewModel {
         LocationService.currenctAddressSubject.stream.listen(
       (location) async {
         //
-
-        deliveryaddress.address = location.addressLine;
-        deliveryaddress.latitude = location.coordinates.latitude;
-        deliveryaddress.longitude = location.coordinates.longitude;
+        deliveryaddress ??= DeliveryAddress();
+        deliveryaddress?.address = location.addressLine;
+        deliveryaddress?.latitude = location.coordinates?.latitude;
+        deliveryaddress?.longitude = location.coordinates?.longitude;
         //get city, state & country
-        deliveryaddress = await getLocationCityName(deliveryaddress);
+        deliveryaddress = await getLocationCityName(deliveryaddress!);
         notifyListeners();
       },
     );
@@ -133,7 +135,7 @@ class NewParcelViewModel extends PaymentViewModel {
   //
   dispose() {
     super.dispose();
-    currentLocationChangeStream.cancel();
+    currentLocationChangeStream?.cancel();
   }
 
   //
@@ -158,19 +160,18 @@ class NewParcelViewModel extends PaymentViewModel {
       //
       List<OrderStop> allStops = getAllStops();
       vendors = await vendorRequest.fetchParcelVendors(
-        vendorTypeId: vendorType.id,
-        packageTypeId: selectedPackgeType.id,
+        vendorTypeId: vendorType?.id,
+        packageTypeId: selectedPackgeType!.id,
         stops: allStops,
       );
 
       //
-      if (AppStrings.enableSingleVendor &&
-          vendors != null &&
-          vendors.length > 0) {
+      if (AppStrings.enableSingleVendor && vendors.length > 0) {
         changeSelectedVendor(vendors.first);
       }
       clearErrors();
     } catch (error) {
+      print("error >> $error");
       setErrorForObject(vendors, error);
     }
     setBusyForObject(vendors, false);
@@ -215,14 +216,12 @@ class NewParcelViewModel extends PaymentViewModel {
   changeSelectedVendor(Vendor vendor) {
     selectedVendor = vendor;
     packageCheckout.vendor = selectedVendor;
-    final vendorPackagePricing = selectedVendor.packageTypesPricing.firstWhere(
-      (e) => e.packageTypeId == selectedPackgeType.id,
-      orElse: () => null,
+    final vendorPackagePricing =
+        selectedVendor?.packageTypesPricing.firstOrNullWhere(
+      (e) => e.packageTypeId == selectedPackgeType?.id,
     );
 
-    if (vendorPackagePricing != null) {
-      requireParcelInfo = vendorPackagePricing.fieldRequired ?? true;
-    }
+    requireParcelInfo = vendorPackagePricing?.fieldRequired ?? true;
     notifyListeners();
   }
 
@@ -231,21 +230,19 @@ class NewParcelViewModel extends PaymentViewModel {
     //check that user is logged in to countinue else go to login page
     if (!AuthServices.authenticated()) {
       final result =
-          await viewContext.navigator.pushNamed(AppRoutes.loginRoute);
+          await Navigator.of(viewContext).pushNamed(AppRoutes.loginRoute);
       paymentOptionRequest = PaymentMethodRequest();
-      if (result == null || !result) {
+      if (result == null || (result is bool && !result)) {
         return;
       }
     }
 
     final result = await showDeliveryAddressPicker();
-    if (result != null) {
-      pickupLocation = result;
-      fromTEC.text = pickupLocation.address;
-      //
-      packageCheckout.pickupLocation = pickupLocation;
-      notifyListeners();
-    }
+    pickupLocation = result;
+    fromTEC.text = pickupLocation?.address ?? "";
+    //
+    packageCheckout.pickupLocation = pickupLocation;
+    notifyListeners();
   }
 
   //
@@ -253,21 +250,19 @@ class NewParcelViewModel extends PaymentViewModel {
     //check that user is logged in to countinue else go to login page
     if (!AuthServices.authenticated()) {
       final result =
-          await viewContext.navigator.pushNamed(AppRoutes.loginRoute);
+          await Navigator.of(viewContext).pushNamed(AppRoutes.loginRoute);
       paymentOptionRequest = PaymentMethodRequest();
-      if (result == null || !result) {
+      if (result == null || (result is bool && !result)) {
         return;
       }
     }
 
     final result = await showDeliveryAddressPicker();
-    if (result != null) {
-      dropoffLocation = result;
-      toTEC.text = dropoffLocation.address;
-      //
-      packageCheckout.dropoffLocation = dropoffLocation;
-      notifyListeners();
-    }
+    dropoffLocation = result;
+    toTEC.text = dropoffLocation?.address ?? "";
+    //
+    packageCheckout.dropoffLocation = dropoffLocation;
+    notifyListeners();
   }
 
   //
@@ -275,22 +270,20 @@ class NewParcelViewModel extends PaymentViewModel {
     //check that user is logged in to countinue else go to login page
     if (!AuthServices.authenticated()) {
       final result =
-          await viewContext.navigator.pushNamed(AppRoutes.loginRoute);
+          await Navigator.of(viewContext).pushNamed(AppRoutes.loginRoute);
       paymentOptionRequest = PaymentMethodRequest();
-      if (result == null || !result) {
+      if (result == null || (result is bool && !result)) {
         return;
       }
     }
 
     final result = await showDeliveryAddressPicker();
-    if (result != null) {
-      dropoffLocation = result;
-      toTECs[index].text = dropoffLocation.address;
-      //
-      packageCheckout.stopsLocation[index] = new OrderStop();
-      packageCheckout.stopsLocation[index].deliveryAddress = dropoffLocation;
-      notifyListeners();
-    }
+    dropoffLocation = result;
+    toTECs[index].text = dropoffLocation?.address ?? "";
+    //
+    packageCheckout.stopsLocation?[index] = new OrderStop();
+    packageCheckout.stopsLocation?[index].deliveryAddress = dropoffLocation;
+    notifyListeners();
   }
 
   manualChangeStopDeliveryAddress(
@@ -300,18 +293,18 @@ class NewParcelViewModel extends PaymentViewModel {
     //check that user is logged in to countinue else go to login page
     if (!AuthServices.authenticated()) {
       final result =
-          await viewContext.navigator.pushNamed(AppRoutes.loginRoute);
+          await Navigator.of(viewContext).pushNamed(AppRoutes.loginRoute);
       paymentOptionRequest = PaymentMethodRequest();
-      if (result == null || !result) {
+      if (result == null || (result is bool && !result)) {
         return;
       }
     }
 
     dropoffLocation = deliveryAddress;
-    toTECs[index].text = dropoffLocation.address;
+    toTECs[index].text = dropoffLocation?.address ?? "";
     //
-    packageCheckout.stopsLocation[index] = new OrderStop();
-    packageCheckout.stopsLocation[index].deliveryAddress = dropoffLocation;
+    packageCheckout.stopsLocation?[index] = new OrderStop();
+    packageCheckout.stopsLocation?[index].deliveryAddress = dropoffLocation;
     notifyListeners();
   }
 
@@ -322,8 +315,8 @@ class NewParcelViewModel extends PaymentViewModel {
       changePickupAddress();
     } else if (result is DeliveryAddress) {
       pickupLocation = result;
-      pickupLocation.name = pickupLocation.address;
-      fromTEC.text = pickupLocation.address;
+      pickupLocation?.name = pickupLocation?.address;
+      fromTEC.text = pickupLocation?.address ?? "";
       //
       packageCheckout.pickupLocation = pickupLocation;
       notifyListeners();
@@ -331,12 +324,18 @@ class NewParcelViewModel extends PaymentViewModel {
   }
 
   handleDropoffStop() async {
+    if (recipientNamesTEC.length < 2) {
+      recipientNamesTEC.add(TextEditingController());
+      recipientPhonesTEC.add(TextEditingController());
+      recipientNotesTEC.add(TextEditingController());
+    }
+
     final result = await showLocationPickerOptionBottomsheet();
     if (result is bool) {
       changeDropOffAddress();
     } else if (result is DeliveryAddress) {
       dropoffLocation = result;
-      toTEC.text = dropoffLocation.address;
+      toTEC.text = dropoffLocation?.address ?? "";
       //
       packageCheckout.dropoffLocation = dropoffLocation;
       notifyListeners();
@@ -375,7 +374,7 @@ class NewParcelViewModel extends PaymentViewModel {
     return false;
   }
 
-  Future<DeliveryAddress> pickFromMap() async {
+  Future<DeliveryAddress?> pickFromMap() async {
     //
     dynamic result = await newPlacePicker();
 
@@ -384,35 +383,26 @@ class NewParcelViewModel extends PaymentViewModel {
       DeliveryAddress deliveryAddress = DeliveryAddress();
       deliveryAddress.name = locationResult.formattedAddress;
       deliveryAddress.address = locationResult.formattedAddress;
-      deliveryAddress.latitude = locationResult.geometry.location.lat;
-      deliveryAddress.longitude = locationResult.geometry.location.lng;
-      // From coordinates
+      deliveryAddress.latitude = locationResult.geometry?.location.lat;
+      deliveryAddress.longitude = locationResult.geometry?.location.lng;
       setBusy(true);
-      final coordinates = new Coordinates(
-        deliveryAddress.latitude,
-        deliveryAddress.longitude,
-      );
-      //
-      final addresses = await GeocoderService().findAddressesFromCoordinates(
-        coordinates,
-      );
-      deliveryAddress.city = addresses.first.locality;
-      deliveryAddress.state = addresses.first.adminArea;
-      deliveryAddress.country = addresses.first.countryName;
+      deliveryaddress = await getLocationCityName(deliveryAddress);
       setBusy(false);
-      //
       return deliveryAddress;
     } else if (result is Address) {
       Address locationResult = result;
       DeliveryAddress deliveryAddress = DeliveryAddress();
       deliveryAddress.name = locationResult.addressLine;
       deliveryAddress.address = locationResult.addressLine;
-      deliveryAddress.latitude = locationResult.coordinates.latitude;
-      deliveryAddress.longitude = locationResult.coordinates.longitude;
+      deliveryAddress.latitude = locationResult.coordinates?.latitude;
+      deliveryAddress.longitude = locationResult.coordinates?.longitude;
       deliveryAddress.city = locationResult.locality;
       deliveryAddress.state = locationResult.adminArea;
       deliveryAddress.country = locationResult.countryName;
       //
+      setBusy(true);
+      deliveryaddress = await getLocationCityName(deliveryAddress);
+      setBusy(false);
       return deliveryAddress;
     }
 
@@ -422,8 +412,8 @@ class NewParcelViewModel extends PaymentViewModel {
   //
 
   //
-  toggleScheduledOrder(bool value) {
-    isScheduled = value;
+  toggleScheduledOrder(bool? value) {
+    isScheduled = value ?? false;
     packageCheckout.isScheduled = isScheduled;
     //remove delivery address if pickup
     packageCheckout.date = null;
@@ -438,7 +428,7 @@ class NewParcelViewModel extends PaymentViewModel {
     packageCheckout.deliverySlotDate = string;
     packageCheckout.date = string;
     pickupDate = string;
-    availableTimeSlots = selectedVendor.deliverySlots[index].times;
+    availableTimeSlots = selectedVendor?.deliverySlots[index].times ?? [];
     notifyListeners();
   }
 
@@ -456,7 +446,7 @@ class NewParcelViewModel extends PaymentViewModel {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(
         Duration(
-          days: selectedVendor.packageTypesPricing.first.maxBookingDays ?? 7,
+          days: selectedVendor?.packageTypesPricing.first.maxBookingDays ?? 7,
         ),
       ),
       initialDate: selectedPickupDate ?? DateTime.now(),
@@ -486,7 +476,7 @@ class NewParcelViewModel extends PaymentViewModel {
     if (result != null) {
       selectedPickupTime = result;
       pickupTime = result.format(viewContext);
-      timeTEC.text = pickupTime;
+      timeTEC.text = pickupTime ?? "";
 
       try {
         packageCheckout.time = "${result.hour}:${result.minute}";
@@ -505,7 +495,7 @@ class NewParcelViewModel extends PaymentViewModel {
 
   //Form validationns
   validateDeliveryInfo() async {
-    if (deliveryInfoFormKey.currentState.validate()) {
+    if (deliveryInfoFormKey.currentState!.validate()) {
       //
       //
       if (AppStrings.enableSingleVendor) {
@@ -528,7 +518,7 @@ class NewParcelViewModel extends PaymentViewModel {
   // Recipient
   validateRecipientInfo() {
     //
-    recipientInfoFormKey.currentState.validate();
+    recipientInfoFormKey.currentState?.validate();
     bool dataRequired = false;
     //loop throug the recipents
     recipientNamesTEC.forEachIndexed((index, element) {
@@ -565,7 +555,7 @@ class NewParcelViewModel extends PaymentViewModel {
     }
 
     //
-    if (recipientInfoFormKey.currentState.validate()) {
+    if (recipientInfoFormKey.currentState!.validate()) {
       //loop through recipients
       // recipientNamesTEC
 
@@ -576,7 +566,7 @@ class NewParcelViewModel extends PaymentViewModel {
   }
 
   validateDeliveryParcelInfo() {
-    if (packageInfoFormKey.currentState.validate()) {
+    if (packageInfoFormKey.currentState!.validate()) {
       //
       packageCheckout.weight = packageWeightTEC.text;
       packageCheckout.width = packageWidthTEC.text;
@@ -592,12 +582,12 @@ class NewParcelViewModel extends PaymentViewModel {
     print("Date: ${packageCheckout.deliverySlotDate}");
     print("Time: ${packageCheckout.deliverySlotTime}");
     //
-    if (!selectedVendor.isOpen &&
+    if (!selectedVendor!.isOpen &&
         (packageCheckout.deliverySlotDate == null ||
             packageCheckout.deliverySlotTime == null ||
-            packageCheckout.deliverySlotDate.isEmpty ||
-            packageCheckout.deliverySlotTime.isEmpty)) {
-      if (selectedVendor.allowScheduleOrder) {
+            packageCheckout.deliverySlotDate.isEmptyOrNull ||
+            packageCheckout.deliverySlotTime.isEmptyOrNull)) {
+      if (selectedVendor!.allowScheduleOrder) {
         AlertService.error(
             text: "Vendor is not open. Please schedule order".tr());
       } else {
@@ -622,10 +612,10 @@ class NewParcelViewModel extends PaymentViewModel {
       for (var i = 0; i < allStops.length; i++) {
         final stop = allStops[i];
         //
-        if (stop.deliveryAddress.id == null) {
+        if (stop.deliveryAddress?.id == null) {
           DeliveryAddressRequest dARequest = DeliveryAddressRequest();
           final apiResposne =
-              await dARequest.saveDeliveryAddress(stop.deliveryAddress);
+              await dARequest.saveDeliveryAddress(stop.deliveryAddress!);
           //
           if (apiResposne.allGood) {
             allStops[i].deliveryAddress = DeliveryAddress.fromJson(
@@ -639,7 +629,7 @@ class NewParcelViewModel extends PaymentViewModel {
 
       //
       recipientNamesTEC.forEachIndexed((index, element) {
-        allStops[index].stopId = allStops[index].deliveryAddress.id;
+        allStops[index].stopId = allStops[index].deliveryAddress?.id;
         allStops[index].name = element.text;
         allStops[index].phone = recipientPhonesTEC[index].text;
         allStops[index].note = recipientNotesTEC[index].text;
@@ -650,8 +640,8 @@ class NewParcelViewModel extends PaymentViewModel {
 
       //
       final mPackageCheckout = await packageRequest.parcelSummary(
-        vendorId: selectedVendor.id,
-        packageTypeId: selectedPackgeType.id,
+        vendorId: selectedVendor?.id,
+        packageTypeId: selectedPackgeType?.id,
         stops: allStops,
         packageWeight: packageWeightTEC.text,
         couponCode: couponTEC.text,
@@ -662,27 +652,30 @@ class NewParcelViewModel extends PaymentViewModel {
       //
     } catch (error) {
       print("Package error ==> $error");
-      toastError("$error");
+      AlertService.error(
+        title: "Checkout".tr(),
+        text: "$error",
+      );
     }
     setBusyForObject(packageCheckout, false);
   }
 
   couponCodeChange(String code) {
-    canApplyCoupon = code.isNotBlank;
+    canApplyCoupon = code.isNotEmpty;
     notifyListeners();
   }
 
   //
   applyCoupon() async {
     //
-    setBusyForObject(coupon, true);
+    setBusyForObject("coupon", true);
     try {
       await prepareOrderSummary();
     } catch (error) {
       print("error ==> $error");
       toastError("$error");
     }
-    setBusyForObject(coupon, false);
+    setBusyForObject("coupon", false);
   }
 
   clearCoupon() {
@@ -704,8 +697,6 @@ class NewParcelViewModel extends PaymentViewModel {
     );
 
     try {
-      //coupon
-      packageCheckout.coupon = coupon;
       //
       final apiResponse = await checkoutRequest.newPackageOrder(
         packageCheckout,
@@ -746,7 +737,14 @@ class NewParcelViewModel extends PaymentViewModel {
         );
       }
     } catch (error) {
-      print("Error ==> $error");
+      log("Error ==> $error");
+      viewContext.pop();
+      CoolAlert.show(
+        context: viewContext,
+        type: CoolAlertType.error,
+        title: "Checkout".tr(),
+        text: "$error",
+      );
     }
   }
 
@@ -767,7 +765,9 @@ class NewParcelViewModel extends PaymentViewModel {
       recipientPhonesTEC.add(TextEditingController());
       recipientNotesTEC.add(TextEditingController());
       //
-      packageCheckout.stopsLocation.add(null);
+      packageCheckout.stopsLocation?.add(
+        OrderStop(),
+      );
       notifyListeners();
     }
   }
@@ -777,7 +777,7 @@ class NewParcelViewModel extends PaymentViewModel {
     recipientNamesTEC.removeAt(index);
     recipientPhonesTEC.removeAt(index);
     recipientNotesTEC.removeAt(index);
-    packageCheckout.stopsLocation.removeAt(index);
+    packageCheckout.stopsLocation?.removeAt(index);
     notifyListeners();
   }
 
@@ -788,13 +788,28 @@ class NewParcelViewModel extends PaymentViewModel {
     }
 
     if (packageCheckout.stopsLocation != null &&
-        packageCheckout.stopsLocation.isNotEmpty) {
-      allStops.addAll(packageCheckout.stopsLocation);
+        packageCheckout.stopsLocation!.isNotEmpty) {
+      allStops.addAll(
+        packageCheckout.stopsLocation!,
+      );
     }
     if (packageCheckout.dropoffLocation != null) {
       allStops.add(OrderStop(deliveryAddress: packageCheckout.dropoffLocation));
     }
 
     return allStops;
+  }
+
+  //
+  void setupReceiverPaymentMethod() {
+    //get the cash payment method, from the list of payment methods
+    PaymentMethod? cashPaymentMethod = paymentMethods.firstOrNullWhere(
+      (element) => element.isCash == 1,
+    );
+
+    //
+    if (cashPaymentMethod != null) {
+      changeSelectedPaymentMethod(cashPaymentMethod);
+    }
   }
 }

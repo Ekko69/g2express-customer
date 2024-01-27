@@ -7,9 +7,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ContactPermissionDialog extends StatelessWidget {
-  const ContactPermissionDialog({Key key}) : super(key: key);
-
-
+  const ContactPermissionDialog({Key? key}) : super(key: key);
 
   //
   @override
@@ -28,14 +26,14 @@ class ContactPermissionDialog extends StatelessWidget {
           CustomButton(
             title: "Next".tr(),
             onPressed: () {
-              AppService().navigatorKey.currentContext.pop(true);
+              AppService().navigatorKey.currentContext?.pop(true);
             },
           ).py12(),
           CustomButton(
             title: "Cancel".tr(),
             color: Colors.grey[400],
             onPressed: () {
-              AppService().navigatorKey.currentContext.pop(false);
+              AppService().navigatorKey.currentContext?.pop(false);
             },
           ),
         ],

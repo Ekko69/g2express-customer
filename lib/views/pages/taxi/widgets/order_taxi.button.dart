@@ -9,16 +9,15 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderTaxiButton extends StatelessWidget {
-  const OrderTaxiButton(this.vm, {Key key}) : super(key: key);
+  const OrderTaxiButton(this.vm, {Key? key}) : super(key: key);
 
   final TaxiViewModel vm;
 
   @override
   Widget build(BuildContext context) {
     //
-    final currencySymbol = (vm.selectedVehicleType != null &&
-            vm.selectedVehicleType.currency != null
-        ? vm.selectedVehicleType.currency.symbol
+    final currencySymbol = (vm.selectedVehicleType?.currency != null
+        ? vm.selectedVehicleType?.currency?.symbol
         : AppStrings.currencySymbol);
     //
     return Visibility(

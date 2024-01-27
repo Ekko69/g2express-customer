@@ -9,7 +9,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductReviewListItem extends StatelessWidget {
-  const ProductReviewListItem(this.productReview, {Key key}) : super(key: key);
+  const ProductReviewListItem(this.productReview, {Key? key}) : super(key: key);
 
   final ProductReview productReview;
 
@@ -36,7 +36,7 @@ class ProductReviewListItem extends StatelessWidget {
           maxRating: 5.0,
           value: productReview.rating.toDouble(),
           isSelectable: false,
-          onRatingUpdate: null,
+          onRatingUpdate: (value) {},
           selectionColor: AppColor.ratingColor,
         ),
         UiSpacer.vSpace(5),

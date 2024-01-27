@@ -6,12 +6,16 @@ import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/widgets/cards/custom.visibility.dart';
 import 'package:fuodz/widgets/currency_hstack.dart';
+import 'package:fuodz/widgets/tags/product_tags.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ProductDetailsHeader extends StatelessWidget {
-  const ProductDetailsHeader({this.product, this.showVendor = true, Key key})
-      : super(key: key);
+  const ProductDetailsHeader({
+    required this.product,
+    this.showVendor = true,
+    Key? key,
+  }) : super(key: key);
 
   final Product product;
   final bool showVendor;
@@ -137,6 +141,10 @@ class ProductDetailsHeader extends StatelessWidget {
             ),
           ],
         ).pOnly(top: Vx.dp10),
+
+        //
+        10.heightBox,
+        ProductTags(product),
       ],
     ).px20().py12();
   }

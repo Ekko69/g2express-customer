@@ -6,9 +6,12 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiPaymentItemView extends StatelessWidget {
-  const TaxiPaymentItemView(this.paymentMethod,
-      {this.selected, this.onselected, Key key})
-      : super(key: key);
+  const TaxiPaymentItemView(
+    this.paymentMethod, {
+    this.selected = false,
+    required this.onselected,
+    Key? key,
+  }) : super(key: key);
 
   final PaymentMethod paymentMethod;
   final bool selected;
@@ -36,6 +39,7 @@ class TaxiPaymentItemView extends StatelessWidget {
         .border(
           color: selected ? AppColor.primaryColor : context.theme.dividerColor,
         )
-        .make().onInkTap(onselected);
+        .make()
+        .onInkTap(() => onselected(paymentMethod));
   }
 }

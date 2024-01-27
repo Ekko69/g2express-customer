@@ -12,7 +12,7 @@ import 'package:velocity_x/velocity_x.dart';
 class TopServiceVendors extends StatelessWidget {
   const TopServiceVendors(
     this.vendorType, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
@@ -26,7 +26,7 @@ class TopServiceVendors extends StatelessWidget {
         params: {"type": "rated"},
         enableFilter: false,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [
@@ -36,7 +36,7 @@ class TopServiceVendors extends StatelessWidget {
             ),
             //
             Visibility(
-              visible: model.vendors != null && model.vendors.isNotEmpty,
+              visible: model.vendors.isNotEmpty,
               child: VStack(
                 [
                   //

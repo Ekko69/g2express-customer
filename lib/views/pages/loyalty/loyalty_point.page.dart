@@ -11,13 +11,14 @@ import 'package:fuodz/widgets/buttons/custom_button.dart';
 import 'package:fuodz/widgets/custom_list_view.dart';
 import 'package:fuodz/widgets/list_items/loyalty_point_report.list_item.dart';
 import 'package:fuodz/widgets/states/loading_indicator.dart';
+import 'package:fuodz/widgets/states/loyalty_point.empty.dart';
 import 'package:glass_kit/glass_kit.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class LoyaltyPointPage extends StatelessWidget {
-  const LoyaltyPointPage({Key key}) : super(key: key);
+  const LoyaltyPointPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class LoyaltyPointPage extends StatelessWidget {
       showAppBar: true,
       body: ViewModelBuilder<LoyaltyPointViewModel>.reactive(
         viewModelBuilder: () => LoyaltyPointViewModel(context),
-        onModelReady: (vm) => vm.initialise(),
+        onViewModelReady: (vm) => vm.initialise(),
         builder: (context, vm, child) {
           return VStack(
             [
@@ -62,7 +63,7 @@ class LoyaltyPointPage extends StatelessWidget {
                     [
                       HStack(
                         [
-                          "${vm?.loyaltyPoint?.points}"
+                          "${vm.loyaltyPoint?.points}"
                               .text
                               .xl6
                               .semiBold
@@ -96,13 +97,14 @@ class LoyaltyPointPage extends StatelessWidget {
                               .make(),
                           //~ exchange rate
                           "Exchange Rate"
+                              .tr()
                               .text
                               .sm
                               .color(Utils.textColorByTheme())
                               .make(),
                           ("1 point".tr() +
                                   " = " +
-                                  "${AppStrings.currencySymbol} ${AppFinanceSettings.loyaltyPointsToAmount ?? 0}"
+                                  "${AppStrings.currencySymbol} ${AppFinanceSettings.loyaltyPointsToAmount}"
                                       .currencyFormat())
                               .text
                               .medium
@@ -136,7 +138,8 @@ class LoyaltyPointPage extends StatelessWidget {
                   final loyaltyPointReport = vm.loyaltyPointReports[index];
                   return LoyaltyPointReportListItem(loyaltyPointReport);
                 },
-                separatorBuilder: (ctx,index) => UiSpacer.vSpace(10),
+                separatorBuilder: (ctx, index) => UiSpacer.vSpace(10),
+                emptyWidget: EmptyLoyaltyPointReport(),
               ).px20(),
               UiSpacer.vSpace(),
             ],

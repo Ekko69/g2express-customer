@@ -13,17 +13,35 @@ class WalletRequest extends HttpService {
       return Wallet.fromJson(apiResponse.body);
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
-  Future<String> walletTopup(String amount) async {
-    final apiResult = await post(Api.walletTopUp, {"amount": amount});
+  Future<dynamic> walletTopup(String amount, {int? paymentMethodId}) async {
+    Map<String, dynamic> params = {
+      "amount": amount,
+    };
+
+    if (paymentMethodId != null) {
+      params.addAll({
+        "payment_method_id": paymentMethodId,
+      });
+    }
+
+    final apiResult = await post(
+      Api.walletTopUp,
+      params,
+    );
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
+      //
+      if (paymentMethodId != null) {
+        return apiResponse;
+      }
+      //
       return apiResponse.body["link"];
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   Future<List<WalletTransaction>> walletTransactions({int page = 1}) async {
@@ -37,7 +55,7 @@ class WalletRequest extends HttpService {
           .toList();
     }
 
-    throw apiResponse.message;
+    throw "${apiResponse.message}";
   }
 
   Future<ApiResponse> myWalletAddress() async {

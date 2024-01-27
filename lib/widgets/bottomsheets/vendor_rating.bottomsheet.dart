@@ -13,9 +13,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class VendorRatingBottomSheet extends StatelessWidget {
   const VendorRatingBottomSheet({
-    Key key,
-    this.onSubmitted,
-    this.order,
+    Key? key,
+    required this.onSubmitted,
+    required this.order,
   }) : super(key: key);
 
   //
@@ -39,7 +39,7 @@ class VendorRatingBottomSheet extends StatelessWidget {
               //
               "Did you like provided service by %s ?"
                   .tr()
-                  .fill([order.vendor.name])
+                  .fill([order.vendor!.name])
                   .text
                   .center
                   .xl

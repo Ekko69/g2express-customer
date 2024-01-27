@@ -9,12 +9,20 @@ class FavouriteRequest extends HttpService {
     final apiResult = await get(Api.favourites);
     final apiResponse = ApiResponse.fromResponse(apiResult);
     if (apiResponse.allGood) {
-      return (apiResponse.body as List)
-          .map((jsonObject) => Product.fromJson(jsonObject["product"]))
-          .toList();
+      List<Product> products = [];
+      (apiResponse.body as List).forEach(
+        (jsonObject) {
+          try {
+            products.add(Product.fromJson(jsonObject["product"]));
+          } catch (error) {
+            print("error: $error");
+          }
+        },
+      );
+      return products;
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 
   //

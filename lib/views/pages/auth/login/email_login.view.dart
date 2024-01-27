@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fuodz/services/validator.service.dart';
 import 'package:fuodz/view_models/login.view_model.dart';
 import 'package:fuodz/widgets/buttons/custom_button.dart';
@@ -7,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EmailLoginView extends StatelessWidget {
-  const EmailLoginView(this.model, {Key key}) : super(key: key);
+  const EmailLoginView(this.model, {Key? key}) : super(key: key);
 
   final LoginViewModel model;
   @override
@@ -22,6 +23,11 @@ class EmailLoginView extends StatelessWidget {
             keyboardType: TextInputType.emailAddress,
             textEditingController: model.emailTEC,
             validator: FormValidator.validateEmail,
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(
+                RegExp(' '),
+              ),
+            ],
           ).py12(),
           CustomTextFormField(
             labelText: "Password".tr(),

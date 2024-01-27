@@ -6,7 +6,10 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class WalletAmountEntryBottomSheet extends StatefulWidget {
-  WalletAmountEntryBottomSheet({this.onSubmit, Key key}) : super(key: key);
+  WalletAmountEntryBottomSheet({
+    required this.onSubmit,
+    Key? key,
+  }) : super(key: key);
 
   final Function(String) onSubmit;
   @override
@@ -22,9 +25,11 @@ class _WalletAmountEntryBottomSheetState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: context.mq.viewPadding.bottom),
+      padding: EdgeInsets.only(bottom: context.mq.viewInsets.bottom),
       child: VStack(
         [
+          //
+          20.heightBox,
           //
           "Top-Up Wallet".tr().text.xl2.semiBold.make(),
           "Enter amount to top-up wallet with".tr().text.make(),
@@ -45,13 +50,22 @@ class _WalletAmountEntryBottomSheetState
             title: "TOP-UP".tr(),
             onPressed: () {
               //
-              if (formKey.currentState.validate()) {
+              if (formKey.currentState!.validate()) {
                 widget.onSubmit(amountTEC.text);
               }
             },
           ),
+          //
+          20.heightBox,
         ],
-      ).p20().scrollVertical().hOneThird(context).pOnly(bottom: context.mq.viewInsets.bottom)
+      )
+          .p20()
+          .scrollVertical()
+          .hOneThird(context)
+          .box
+          .color(context.theme.colorScheme.background)
+          .topRounded()
+          .make(),
     );
   }
 }

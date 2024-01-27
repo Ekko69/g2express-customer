@@ -1,13 +1,15 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
-import 'package:fuodz/utils/ui_spacer.dart';
+import 'package:fuodz/constants/app_text_styles.dart';
 import 'package:fuodz/view_models/service_details.vm.dart';
 import 'package:fuodz/widgets/buttons/custom_button.dart';
+import 'package:fuodz/widgets/buttons/qty_stepper.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ServiceDetailsBottomSheet extends StatelessWidget {
-  const ServiceDetailsBottomSheet(this.vm, {Key key}) : super(key: key);
+  const ServiceDetailsBottomSheet(this.vm, {Key? key}) : super(key: key);
   final ServiceDetailsViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -19,14 +21,14 @@ class ServiceDetailsBottomSheet extends StatelessWidget {
           child: HStack(
             [
               //
-              "${vm.service.duration.allWordsCapitilize() ?? vm.service.duration ?? ''}"
+              "${vm.service.duration.capitalize()}"
                   .tr()
                   .text
                   .medium
                   .xl
                   .make()
                   .expand(),
-              VxStepper(
+              QtyStepper(
                 defaultValue: 1,
                 min: 1,
                 max: 24,
@@ -43,22 +45,24 @@ class ServiceDetailsBottomSheet extends StatelessWidget {
 
         Visibility(
           visible: !vm.service.isFixed,
-          child: UiSpacer.verticalSpace(),
+          child: 2.heightBox,
         ),
 
         //
         CustomButton(
           title: "Continue".tr(),
+          titleStyle: AppTextStyle.h4TitleTextStyle(
+            color: Colors.white,
+          ),
           onPressed: vm.bookService,
-        ),
-        UiSpacer.verticalSpace(),
+        ).h(35),
       ],
     )
-        .p20()
+        .px(12)
+        .py(8)
         .box
         .shadowSm
         .color(context.theme.colorScheme.background)
-        .topRounded(value: 20)
         .make();
   }
 }

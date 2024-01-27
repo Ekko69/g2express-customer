@@ -10,13 +10,13 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ParcelScheduleView extends StatelessWidget {
-  const ParcelScheduleView(this.vm, {Key key}) : super(key: key);
+  const ParcelScheduleView(this.vm, {Key? key}) : super(key: key);
   final NewParcelViewModel vm;
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: vm?.selectedVendor != null &&
-          (vm?.selectedVendor?.allowScheduleOrder ?? false),
+      visible:
+          vm.selectedVendor != null && (vm.selectedVendor!.allowScheduleOrder),
       child: VStack(
         [
           HStack(
@@ -53,10 +53,10 @@ class ParcelScheduleView extends StatelessWidget {
                 "Date slot".tr().text.lg.make(),
                 CustomListView(
                   scrollDirection: Axis.horizontal,
-                  dataSet: vm.selectedVendor.deliverySlots ?? [],
+                  dataSet: vm.selectedVendor!.deliverySlots,
                   itemBuilder: (context, index) {
                     final dateDeliverySlot =
-                        vm.selectedVendor.deliverySlots[index];
+                        vm.selectedVendor!.deliverySlots[index];
 
                     final formmatedDeliverySlot =
                         DateFormat("yyyy-MM-dd", "en").format(
@@ -102,13 +102,20 @@ class ParcelScheduleView extends StatelessWidget {
                   crossAxisCount: 3,
                   itemBuilder: (context, index) {
                     //
+                    final today = DateFormat("yyyy-MM-dd", "en").format(
+                      DateTime.now(),
+                    );
                     final availableTimeSlot = vm.availableTimeSlots[index];
                     final formmatedDeliveryTimeSlot =
-                        Jiffy(availableTimeSlot, "HH:mm:ss").format("HH:mm:ss");
+                        DateFormat("HH:mm:ss", "en").format(
+                      DateTime.parse("$today $availableTimeSlot"),
+                    );
+
                     bool selected = formmatedDeliveryTimeSlot ==
                         vm.packageCheckout.deliverySlotTime;
+
                     //
-                    return Jiffy(availableTimeSlot, "HH:mm:ss")
+                    return Jiffy("$today $availableTimeSlot")
                         .format("hh:mm a")
                         .text
                         .color(
@@ -134,8 +141,7 @@ class ParcelScheduleView extends StatelessWidget {
             ),
           ),
         ],
-      ).p12().box.roundedSM.border(color: Colors.grey[300]).make().pOnly(
-          ),
+      ).p12().box.roundedSM.border(color: Colors.grey.shade300).make().pOnly(),
     );
   }
 }

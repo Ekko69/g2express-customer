@@ -6,7 +6,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class AddToCartButton extends StatelessWidget {
-  const AddToCartButton(this.model, {Key key}) : super(key: key);
+  const AddToCartButton(this.model, {Key? key}) : super(key: key);
 
   final ProductDetailsViewModel model;
 

@@ -3,9 +3,9 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fuodz/utils/utils.dart';
 
 class ArrowIndicator extends StatelessWidget {
-  const ArrowIndicator(this.size, {Key key}) : super(key: key);
+  const ArrowIndicator(this.size, {Key? key}) : super(key: key);
 
-  final double size;
+  final double? size;
   @override
   Widget build(BuildContext context) {
     return Icon(

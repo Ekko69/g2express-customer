@@ -3,11 +3,15 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomStepper extends StatefulWidget {
-  CustomStepper({Key key, this.defaultValue, this.max, this.onChange})
-      : super(key: key);
+  CustomStepper({
+    Key? key,
+    this.defaultValue,
+    this.max,
+    required this.onChange,
+  }) : super(key: key);
 
-  final int defaultValue;
-  final int max;
+  final int? defaultValue;
+  final int? max;
   final Function(int) onChange;
   @override
   _CustomStepperState createState() => _CustomStepperState();
@@ -22,7 +26,7 @@ class _CustomStepperState extends State<CustomStepper> {
 
     //
     setState(() {
-      qty = widget.defaultValue;
+      qty = widget.defaultValue ?? 0;
     });
   }
 
@@ -50,7 +54,7 @@ class _CustomStepperState extends State<CustomStepper> {
           FlutterIcons.plus_ant,
           size: 16,
         ).p4().onInkTap(() {
-          if (widget.max == null || widget.max > qty) {
+          if (widget.max != null && widget.max! > qty) {
             setState(() {
               qty += 1;
             });

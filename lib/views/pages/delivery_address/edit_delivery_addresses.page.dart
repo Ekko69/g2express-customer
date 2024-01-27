@@ -14,17 +14,17 @@ import 'package:velocity_x/velocity_x.dart';
 class EditDeliveryAddressesPage extends StatelessWidget {
   const EditDeliveryAddressesPage({
     this.deliveryAddress,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final DeliveryAddress deliveryAddress;
+  final DeliveryAddress? deliveryAddress;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<EditDeliveryAddressesViewModel>.reactive(
       viewModelBuilder: () =>
           EditDeliveryAddressesViewModel(context, deliveryAddress),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,

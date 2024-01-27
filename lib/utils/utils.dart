@@ -5,6 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/constants/app_strings.dart';
+import 'package:fuodz/models/vendor.dart';
+import 'package:fuodz/services/http.service.dart';
+import 'package:fuodz/services/location.service.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -32,7 +36,7 @@ class Utils {
         0.5;
   }
 
-  static bool isPrimaryColorDark([Color mColor]) {
+  static bool isPrimaryColorDark([Color? mColor]) {
     final color = mColor ?? AppColor.primaryColor;
     return ColorUtils.calculateRelativeLuminance(
             color.red, color.green, color.blue) <
@@ -68,9 +72,9 @@ class Utils {
     }
   }
 
-  static Future<File> compressFile({
-    File file,
-    String targetPath,
+  static Future<File?> compressFile({
+    required File file,
+    String? targetPath,
     int quality = 40,
     CompressFormat format = CompressFormat.jpeg,
   }) async {
@@ -100,5 +104,64 @@ class Utils {
     }
 
     return result;
+  }
+
+  static bool isDefaultImg(String? url) {
+    return url == null ||
+        url.isEmpty ||
+        url == "default.png" ||
+        url == "default.jpg" ||
+        url == "default.jpeg" ||
+        url.contains("default.png");
+  }
+
+  //get vendor distance to current location
+  static double vendorDistance(Vendor vendor) {
+    if (vendor.latitude.isEmptyOrNull || vendor.longitude.isEmptyOrNull) {
+      return 0;
+    }
+
+    //if location service current location is not available
+    if (LocationService.currenctAddress == null) {
+      return 0;
+    }
+
+    //get distance
+    double distance = Geolocator.distanceBetween(
+      LocationService.currenctAddress?.coordinates?.latitude ?? 0,
+      LocationService.currenctAddress?.coordinates?.longitude ?? 0,
+      double.parse(vendor.latitude),
+      double.parse(vendor.longitude),
+    );
+
+    //convert distance to km
+    distance = distance / 1000;
+    return distance;
+  }
+
+  //
+  //get country code
+  static Future<String> getCurrentCountryCode() async {
+    String countryCode = "US";
+    try {
+      //make request to get country code
+      final response = await HttpService().dio!.get(
+            "http://ip-api.com/json/?fields=countryCode",
+          );
+      //get the country code
+      countryCode = response.data["countryCode"];
+    } catch (e) {
+      try {
+        countryCode = AppStrings.countryCode
+            .toUpperCase()
+            .replaceAll("AUTO", "")
+            .replaceAll("INTERNATIONAL", "")
+            .split(",")[0];
+      } catch (e) {
+        countryCode = "us";
+      }
+    }
+
+    return countryCode.toUpperCase();
   }
 }

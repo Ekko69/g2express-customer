@@ -13,7 +13,7 @@ class VendorReviewsViewModel extends MyBaseViewModel {
   }
 
   //
-  Vendor vendor;
+  Vendor? vendor;
   int queryPage = 1;
   List<Review> reviews = [];
   VendorRequest _vendorRequest = VendorRequest();
@@ -38,7 +38,7 @@ class VendorReviewsViewModel extends MyBaseViewModel {
     try {
       final mReviews = await _vendorRequest.getReviews(
         page: queryPage,
-        vendorId: vendor.id,
+        vendorId: vendor!.id,
       );
       if (!initialLoading) {
         reviews.addAll(mReviews);

@@ -19,7 +19,8 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class VendorDetailsHeader extends StatelessWidget {
-  const VendorDetailsHeader(this.model, {this.showFeatureImage = true, Key key})
+  const VendorDetailsHeader(this.model,
+      {this.showFeatureImage = true, Key? key})
       : super(key: key);
 
   final VendorDetailsViewModel model;
@@ -32,9 +33,9 @@ class VendorDetailsHeader extends StatelessWidget {
           [
             //vendor image
             CustomVisibilty(
-              visible: showFeatureImage && model.vendor.featureImage != null,
+              visible: showFeatureImage,
               child: CustomImage(
-                imageUrl: model.vendor.featureImage,
+                imageUrl: model.vendor!.featureImage,
                 height: 220,
                 canZoom: true,
               ).wFull(context),
@@ -48,7 +49,7 @@ class VendorDetailsHeader extends StatelessWidget {
                   [
                     //logo
                     CustomImage(
-                      imageUrl: model.vendor.logo,
+                      imageUrl: model.vendor!.logo,
                       width: Vx.dp56,
                       height: Vx.dp56,
                       canZoom: true,
@@ -56,10 +57,10 @@ class VendorDetailsHeader extends StatelessWidget {
                     //
                     VStack(
                       [
-                        model.vendor.name.text.semiBold.lg.make(),
+                        model.vendor!.name.text.semiBold.lg.make(),
                         CustomVisibilty(
-                          visible: model.vendor.address != null,
-                          child: "${model.vendor.address ?? ''}"
+                          visible: model.vendor!.address.isNotEmptyAndNotNull,
+                          child: "${model.vendor!.address}"
                               .text
                               .light
                               .sm
@@ -68,7 +69,7 @@ class VendorDetailsHeader extends StatelessWidget {
                         ),
                         Visibility(
                           visible: AppUISettings.showVendorPhone,
-                          child: model.vendor.phone.text.light.sm.make(),
+                          child: model.vendor!.phone.text.light.sm.make(),
                         ),
 
                         //rating
@@ -76,8 +77,7 @@ class VendorDetailsHeader extends StatelessWidget {
                           [
                             RatingBar(
                               itemSize: 12,
-                              initialRating:
-                                  model.vendor.rating.toDouble() ?? 0.0,
+                              initialRating: model.vendor!.rating.toDouble(),
                               ignoreGestures: true,
                               ratingWidget: RatingWidget(
                                 full: Icon(
@@ -98,7 +98,7 @@ class VendorDetailsHeader extends StatelessWidget {
                               ),
                               onRatingUpdate: (value) {},
                             ).pOnly(right: 2),
-                            "(${model.vendor.reviews_count ?? 0} ${'Reviews'.tr()})"
+                            "(${model.vendor!.reviews_count} ${'Reviews'.tr()})"
                                 .text
                                 .sm
                                 .thin
@@ -107,7 +107,7 @@ class VendorDetailsHeader extends StatelessWidget {
                         ).py2().onTap(
                           () {
                             context.nextPage(
-                              VendorReviewsPage(model.vendor),
+                              VendorReviewsPage(model.vendor!),
                             );
                           },
                         ),
@@ -117,15 +117,14 @@ class VendorDetailsHeader extends StatelessWidget {
                     VStack(
                       [
                         CustomVisibilty(
-                          visible: model.vendor.address != null &&
-                              (model.vendor.latitude != null &&
-                                  model.vendor.longitude != null),
+                          visible:
+                              (model.vendor!.longitude.isNotEmptyAndNotNull),
                           //location routing
-                          child: RouteButton(model.vendor, size: 10),
+                          child: RouteButton(model.vendor!, size: 10),
                         ),
                         UiSpacer.verticalSpace(space: 5),
                         //call button
-                        if (model.vendor.phone != null)
+                        if (model.vendor!.phone.isNotEmptyAndNotNull)
                           Visibility(
                             visible: AppUISettings.showVendorPhone,
                             child: CallButton(model.vendor, size: 10),
@@ -149,24 +148,24 @@ class VendorDetailsHeader extends StatelessWidget {
             Wrap(
               children: [
                 //is open
-                model.vendor.isOpen ? OpenTag() : CloseTag(),
+                model.vendor!.isOpen ? OpenTag() : CloseTag(),
 
                 //can deliveree
-                model.vendor.delivery == 1
+                model.vendor!.delivery == 1
                     ? DeliveryTag()
                     : UiSpacer.emptySpace(),
 
                 //can pickup
-                model.vendor.pickup == 1 ? PickupTag() : UiSpacer.emptySpace(),
+                model.vendor!.pickup == 1 ? PickupTag() : UiSpacer.emptySpace(),
 
                 //prepare time
                 TimeTag(
-                  model.vendor.prepareTime,
+                  model.vendor!.prepareTime,
                   iconData: FlutterIcons.clock_outline_mco,
                 ),
                 //delivery time
                 TimeTag(
-                  model.vendor.deliveryTime,
+                  model.vendor!.deliveryTime,
                   iconData: FlutterIcons.ios_bicycle_ion,
                 ),
               ],
@@ -178,7 +177,7 @@ class VendorDetailsHeader extends StatelessWidget {
 
             //description
             "Description".tr().text.sm.bold.uppercase.make(),
-            model.vendor.description.text.sm.make(),
+            model.vendor!.description.text.sm.make(),
             UiSpacer.verticalSpace(space: 10),
           ],
         ).px20().py12(),

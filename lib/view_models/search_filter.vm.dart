@@ -7,9 +7,9 @@ import 'package:fuodz/view_models/base.view_model.dart';
 class SearchFilterViewModel extends MyBaseViewModel {
   //
   SearchRequest _searchRequest = SearchRequest();
-  SearchData searchData;
+  SearchData? searchData;
   String keyword = "";
-  Search search;
+  Search? search;
   int selectTagId = 2;
   bool filterByProducts = true;
 
@@ -25,7 +25,6 @@ class SearchFilterViewModel extends MyBaseViewModel {
     if (searchData != null) {
       return;
     }
-
     //
     try {
       setBusyForObject(searchData, true);

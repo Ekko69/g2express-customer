@@ -94,7 +94,7 @@ class OnboardingViewModel extends MyBaseViewModel {
           },
         ).toList();
         //
-        if (mOnBoardDatas != null && mOnBoardDatas.isNotEmpty) {
+        if (mOnBoardDatas.isNotEmpty) {
           onBoardData = mOnBoardDatas;
         }
       } else {
@@ -110,7 +110,7 @@ class OnboardingViewModel extends MyBaseViewModel {
   void onDonePressed() async {
     //
     await AuthServices.firstTimeCompleted();
-    viewContext.navigator.pushNamedAndRemoveUntil(
+    Navigator.of(viewContext).pushNamedAndRemoveUntil(
       AppRoutes.homeRoute,
       (route) => false,
     );

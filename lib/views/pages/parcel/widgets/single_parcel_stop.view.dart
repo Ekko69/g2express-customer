@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SingleParcelDeliveryStopsView extends StatelessWidget {
-  const SingleParcelDeliveryStopsView(this.vm, {Key key}) : super(key: key);
+  const SingleParcelDeliveryStopsView(this.vm, {Key? key}) : super(key: key);
 
   final NewParcelViewModel vm;
   @override

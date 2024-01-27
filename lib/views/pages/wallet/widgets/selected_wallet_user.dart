@@ -6,9 +6,9 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SelectedWalletUser extends StatelessWidget {
-  const SelectedWalletUser(this.selectedUser, {Key key}) : super(key: key);
+  const SelectedWalletUser(this.selectedUser, {Key? key}) : super(key: key);
 
-  final User selectedUser;
+  final User? selectedUser;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class SelectedWalletUser extends StatelessWidget {
         [
           //profile photo
           CustomImage(
-            imageUrl: selectedUser?.photo,
+            imageUrl: selectedUser?.photo ?? "",
             boxFit: BoxFit.fill,
           ).box.clip(Clip.antiAlias).roundedFull.make().wh(60, 60),
           UiSpacer.horizontalSpace(),
@@ -30,12 +30,12 @@ class SelectedWalletUser extends StatelessWidget {
               "${selectedUser?.phone}"
                   .hidePartial(
                     begin: selectedUser != null
-                        ? ((3 / 10) * selectedUser.phone.length).floor()
+                        ? ((3 / 10) * selectedUser!.phone.length).floor()
                         : 4,
                     end: selectedUser != null
-                        ? ((8 / 10) * selectedUser.phone.length).floor()
+                        ? ((8 / 10) * selectedUser!.phone.length).floor()
                         : 9,
-                  )
+                  )!
                   .text
                   .light
                   .sm

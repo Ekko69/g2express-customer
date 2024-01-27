@@ -10,13 +10,13 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ScheduleOrderView extends StatelessWidget {
-  const ScheduleOrderView(this.vm, {Key key}) : super(key: key);
+  const ScheduleOrderView(this.vm, {Key? key}) : super(key: key);
   final CheckoutBaseViewModel vm;
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: vm.vendor.allowScheduleOrder,
+      visible: vm.vendor!.allowScheduleOrder,
       child: VStack(
         [
           HStack(
@@ -52,16 +52,16 @@ class ScheduleOrderView extends StatelessWidget {
                 "Date slot".tr().text.lg.make(),
                 CustomListView(
                   scrollDirection: Axis.horizontal,
-                  dataSet: vm.vendor.deliverySlots,
+                  dataSet: vm.vendor!.deliverySlots,
                   itemBuilder: (context, index) {
-                    final dateDeliverySlot = vm.vendor.deliverySlots[index];
+                    final dateDeliverySlot = vm.vendor!.deliverySlots[index];
 
                     final formmatedDeliverySlot =
                         DateFormat("yyyy-MM-dd", "en").format(
                       dateDeliverySlot.date,
                     );
-                    bool selected =
-                        (formmatedDeliverySlot == vm.checkout.deliverySlotDate);
+                    bool selected = (formmatedDeliverySlot ==
+                        vm.checkout?.deliverySlotDate);
                     //
 
                     return Jiffy(dateDeliverySlot.date)
@@ -114,7 +114,7 @@ class ScheduleOrderView extends StatelessWidget {
 
                     //check if selected
                     bool selected = formmatedDeliveryTimeSlot ==
-                        vm.checkout.deliverySlotTime;
+                        vm.checkout?.deliverySlotTime;
                     //
                     return Jiffy("$today $availableTimeSlot")
                         .format("hh:mm a")

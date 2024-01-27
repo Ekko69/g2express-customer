@@ -15,7 +15,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewTaxiOrderEntryPanel extends StatelessWidget {
-  const NewTaxiOrderEntryPanel(this.taxiNewOrderViewModel, {Key key})
+  const NewTaxiOrderEntryPanel(this.taxiNewOrderViewModel, {Key? key})
       : super(key: key);
 
   final NewTaxiOrderLocationEntryViewModel taxiNewOrderViewModel;
@@ -85,10 +85,10 @@ class NewTaxiOrderEntryPanel extends StatelessWidget {
                   isLoading:
                       taxiNewOrderViewModel.busy(taxiNewOrderViewModel.places),
                   dataSet: taxiNewOrderViewModel.places != null
-                      ? taxiNewOrderViewModel.places
+                      ? taxiNewOrderViewModel.places!
                       : [],
                   itemBuilder: (contex, index) {
-                    final place = taxiNewOrderViewModel.places[index];
+                    final place = taxiNewOrderViewModel.places![index];
                     return AddressListItem(
                       place,
                       onAddressSelected:
@@ -112,7 +112,9 @@ class NewTaxiOrderEntryPanel extends StatelessWidget {
               ],
             ),
     )
-        .color(context.theme.colorScheme.background)
+        .color(vm.isBusy
+            ? context.theme.colorScheme.background.withOpacity(0.5)
+            : context.theme.colorScheme.background)
         .make()
         .pOnly(bottom: context.mq.viewInsets.bottom);
   }

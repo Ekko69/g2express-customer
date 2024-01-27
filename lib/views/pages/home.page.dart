@@ -1,14 +1,16 @@
 import 'dart:io';
 
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fuodz/constants/app_colors.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/constants/app_upgrade_settings.dart';
 import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/views/pages/profile/profile.page.dart';
 import 'package:fuodz/view_models/home.vm.dart';
 import 'package:fuodz/widgets/base.page.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:upgrader/upgrader.dart';
@@ -20,7 +22,7 @@ import 'welcome/widgets/cart.fab.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -28,15 +30,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeViewModel vm;
+  late HomeViewModel vm;
   @override
   void initState() {
     super.initState();
     vm = HomeViewModel(context);
-    WidgetsBinding.instance?.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         LocationService.prepareLocationListener();
-        vm?.initialise();
+        vm.initialise();
       },
     );
   }
@@ -68,44 +70,98 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            fab: CartHomeFab(model),
-            bottomNavigationBar: VxBox(
-              child: SafeArea(
-                child: GNav(
-                  gap: 8,
-                  activeColor: Colors.white,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                  iconSize: 20,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  duration: Duration(milliseconds: 250),
-                  tabBackgroundColor: Theme.of(context).colorScheme.secondary,
-                  tabs: [
-                    GButton(
-                      icon: FlutterIcons.home_ant,
-                      text: 'Home'.tr(),
+            fab: AppUISettings.showCart ? CartHomeFab(model) : null,
+            fabLocation: AppUISettings.showCart
+                ? FloatingActionButtonLocation.centerDocked
+                : null,
+            bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+              itemCount: 4,
+              backgroundColor: Theme.of(context).colorScheme.background,
+              blurEffect: true,
+              shadow: BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                blurRadius: 10,
+              ),
+              activeIndex: model.currentIndex,
+              onTap: model.onTabChange,
+              gapLocation: GapLocation.center,
+              notchSmoothness: NotchSmoothness.softEdge,
+              leftCornerRadius: 14,
+              rightCornerRadius: 14,
+              tabBuilder: (int index, bool isActive) {
+                final color = isActive
+                    ? AppColor.primaryColor
+                    : Theme.of(context).textTheme.bodyLarge?.color;
+                List<String> titles = [
+                  "Home".tr(),
+                  "Orders".tr(),
+                  "Search".tr(),
+                  "More".tr(),
+                ];
+                List<IconData> icons = [
+                  FlutterIcons.home_ant,
+                  FlutterIcons.inbox_ant,
+                  FlutterIcons.search_fea,
+                  FlutterIcons.menu_fea,
+                ];
+
+                Widget tab = Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      icons[index],
+                      size: 20,
+                      color: color,
                     ),
-                    GButton(
-                      icon: FlutterIcons.inbox_ant,
-                      text: 'Orders'.tr(),
-                    ),
-                    GButton(
-                      icon: FlutterIcons.search_fea,
-                      text: 'Search'.tr(),
-                    ),
-                    GButton(
-                      icon: FlutterIcons.menu_fea,
-                      text: 'More'.tr(),
+                    Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: titles[index]
+                          .text
+                          .fontWeight(
+                            isActive ? FontWeight.bold : FontWeight.normal,
+                          )
+                          .color(color)
+                          .make(),
                     ),
                   ],
-                  selectedIndex: model.currentIndex,
-                  onTabChange: model.onTabChange,
-                ),
-              ),
-            )
-                .p16
-                .shadow
-                .color(Theme.of(context).bottomSheetTheme.backgroundColor)
-                .make(),
+                );
+
+                //
+                return tab;
+              },
+            ),
+            // child: SafeArea(
+            //   child: GNav(
+            //     gap: 8,
+            //     activeColor: Colors.white,
+            //     color: Theme.of(context).textTheme.bodyLarge?.color,
+            //     iconSize: 20,
+            //     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            //     duration: Duration(milliseconds: 250),
+            //     tabBackgroundColor: Theme.of(context).colorScheme.secondary,
+            //     tabs: [
+            //       GButton(
+            //         icon: FlutterIcons.home_ant,
+            //         text: 'Home'.tr(),
+            //       ),
+            //       GButton(
+            //         icon: FlutterIcons.inbox_ant,
+            //         text: 'Orders'.tr(),
+            //       ),
+            //       GButton(
+            //         icon: FlutterIcons.search_fea,
+            //         text: 'Search'.tr(),
+            //       ),
+            //       GButton(
+            //         icon: FlutterIcons.menu_fea,
+            //         text: 'More'.tr(),
+            //       ),
+            //     ],
+            //     selectedIndex: model.currentIndex,
+            //     onTabChange: model.onTabChange,
+            //   ),
+            // ),
           );
         },
       ),

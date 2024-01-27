@@ -21,7 +21,10 @@ import 'package:velocity_x/velocity_x.dart';
 import 'plain_welcome_header.section.dart';
 
 class PlainEmptyWelcome extends StatefulWidget {
-  const PlainEmptyWelcome({this.vm, Key key}) : super(key: key);
+  const PlainEmptyWelcome({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final WelcomeViewModel vm;
 
@@ -77,11 +80,11 @@ class _PlainEmptyWelcomeState extends State<PlainEmptyWelcome> {
                       !widget.vm.isBusy,
                   child: AnimationLimiter(
                     child: MasonryGrid(
-                      column: HomeScreenConfig.vendorTypePerRow ?? 3,
+                      column: HomeScreenConfig.vendorTypePerRow,
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 15,
                       children: List.generate(
-                        widget.vm.vendorTypes.length ?? 0,
+                        widget.vm.vendorTypes.length,
                         (index) {
                           final vendorType = widget.vm.vendorTypes[index];
                           return PlainVendorTypeVerticalListItem(
@@ -108,7 +111,7 @@ class _PlainEmptyWelcomeState extends State<PlainEmptyWelcome> {
               child: Banners(
                 null,
                 featured: true,
-              ).py12().pOnly(bottom: context.percentHeight * 10),
+              ).py12(),
             ),
 
             //coupons
@@ -129,6 +132,9 @@ class _PlainEmptyWelcomeState extends State<PlainEmptyWelcome> {
               type: SearchFilterType.featured,
               itemWidth: context.percentWidth * 48,
               byLocation: AppStrings.enableFatchByLocation,
+              hideEmpty: true,
+              titlePadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              itemsPadding: EdgeInsets.symmetric(horizontal: 20),
             ),
             //spacing
             UiSpacer.vSpace(100),

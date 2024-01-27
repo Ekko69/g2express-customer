@@ -4,25 +4,29 @@ import 'package:fuodz/models/vendor_type.dart';
 class Category {
   int id;
   String name;
-  String imageUrl;
+  String? imageUrl;
   List<Product> products;
   List<Category> subcategories;
-  VendorType vendorType;
-  String color;
+  VendorType? vendorType;
+  String? color;
   bool hasSubcategories;
 
   Category({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
     this.imageUrl,
-    this.products,
+    this.products = const [],
+    this.subcategories = const [],
     this.vendorType,
     this.color = "#eeeeee",
     this.hasSubcategories = false,
   });
 
   factory Category.fromJson(dynamic jsonObject) {
-    final category = Category();
+    final category = Category(
+      id: jsonObject["id"],
+      name: jsonObject["name"],
+    );
     category.id = jsonObject["id"];
     category.name = jsonObject["name"];
     category.imageUrl = jsonObject["photo"];
@@ -31,7 +35,7 @@ class Category {
         ? (jsonObject["has_subcategories"] as bool)
         : false;
     category.products = jsonObject["products"] == null
-        ? null
+        ? []
         : List<Product>.from(
             jsonObject["products"].map(
               (x) => Product.fromJson(x),
@@ -54,14 +58,13 @@ class Category {
   }
 
   Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "photo": imageUrl == null ? null : imageUrl,
+        "id": id,
+        "name": name,
+        "photo": imageUrl,
         "color": color,
-        "products": products == null
-            ? null
-            : List<dynamic>.from(products.map((x) => x.toJson())),
-        "subcategories": List<dynamic>.from(products.map((x) => x.toJson())),
+        "products": List<dynamic>.from(products.map((x) => x.toJson())),
+        "subcategories":
+            List<dynamic>.from(subcategories.map((x) => x.toJson())),
         "has_subcategories": hasSubcategories,
       };
 }

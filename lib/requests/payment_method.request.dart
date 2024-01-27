@@ -5,10 +5,19 @@ import 'package:fuodz/services/http.service.dart';
 
 class PaymentMethodRequest extends HttpService {
   //
-  Future<List<PaymentMethod>> getPaymentOptions({int vendorId}) async {
+  Future<List<PaymentMethod>> getPaymentOptions({
+    int? vendorId,
+    Map<String, dynamic>? params,
+  }) async {
+    //
+    Map<String, dynamic> queryParameters = {
+      ...(params != null ? params : {}),
+      "vendor_id": vendorId,
+    };
+
     final apiResult = await get(
       Api.paymentMethods,
-      queryParameters: {"vendor_id": vendorId},
+      queryParameters: queryParameters,
     );
 
     //
@@ -18,7 +27,7 @@ class PaymentMethodRequest extends HttpService {
         return PaymentMethod.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 
@@ -37,7 +46,7 @@ class PaymentMethodRequest extends HttpService {
         return PaymentMethod.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 }

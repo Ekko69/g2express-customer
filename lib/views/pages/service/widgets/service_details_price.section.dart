@@ -10,12 +10,16 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ServiceDetailsPriceSectionView extends StatelessWidget {
-  const ServiceDetailsPriceSectionView(this.service,
-      {this.onlyPrice = false, Key key})
-      : super(key: key);
+  const ServiceDetailsPriceSectionView(
+    this.service, {
+    this.onlyPrice = false,
+    this.showDiscount = false,
+    Key? key,
+  }) : super(key: key);
 
   final Service service;
   final bool onlyPrice;
+  final bool showDiscount;
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +29,15 @@ class ServiceDetailsPriceSectionView extends StatelessWidget {
           [
             "${AppStrings.currencySymbol}"
                 .text
-                .xl
                 .medium
                 .color(AppColor.primaryColor)
                 .make(),
-            service.price
+            service.sellPrice
                 .currencyValueFormat()
                 .text
                 .semiBold
                 .color(AppColor.primaryColor)
-                .xl2
+                .lg
                 .make(),
           ],
         ),
@@ -43,13 +46,14 @@ class ServiceDetailsPriceSectionView extends StatelessWidget {
         UiSpacer.horizontalSpace(space: 5),
         //discount
         Visibility(
-          visible: !onlyPrice,
+          visible: !onlyPrice || showDiscount,
           child: service.showDiscount
               ? "%s Off"
                   .tr()
                   .fill(["${service.discountPercentage}%"])
                   .text
                   .white
+                  .xs
                   .semiBold
                   .make()
                   .p2()
@@ -66,10 +70,10 @@ class ServiceDetailsPriceSectionView extends StatelessWidget {
         Visibility(
           visible: !onlyPrice,
           child: VxRating(
-            value: double.parse((service?.vendor?.rating ?? 5.0).toString()),
+            value: double.parse((service.vendor.rating).toString()),
             count: 5,
             isSelectable: false,
-            onRatingUpdate: null,
+            onRatingUpdate: (value) {},
             selectionColor: AppColor.ratingColor,
             normalColor: Colors.grey,
             size: 18,

@@ -22,7 +22,7 @@ class PharmacyUploadPrescriptionViewModel extends CheckoutBaseViewModel {
 
   //
   VendorRequest vendorRequest = VendorRequest();
-  Vendor vendor;
+  Vendor? vendor;
   final picker = ImagePicker();
   List<File> prescriptionPhotos = [];
 
@@ -36,7 +36,7 @@ class PharmacyUploadPrescriptionViewModel extends CheckoutBaseViewModel {
     //
     setBusyForObject(vendor, true);
     try {
-      vendor = await vendorRequest.vendorDetails(vendor.id);
+      vendor = await vendorRequest.vendorDetails(vendor!.id);
     } catch (error) {
       print("Error ==> $error");
     }
@@ -47,32 +47,29 @@ class PharmacyUploadPrescriptionViewModel extends CheckoutBaseViewModel {
   void changePhoto() async {
     //
     final pickedFiles = await picker.pickMultiImage();
-    if (pickedFiles != null) {
-      //append to the list if not empty
-      if (prescriptionPhotos != null && prescriptionPhotos.isNotEmpty) {
-        prescriptionPhotos.addAll(
-          pickedFiles.map((e) => File(e.path)).toList(),
-        );
-      } else {
-        prescriptionPhotos = pickedFiles.map((e) => File(e.path)).toList();
-      }
+    if (prescriptionPhotos.isNotEmpty) {
+      prescriptionPhotos.addAll(
+        pickedFiles.map((e) => File(e.path)).toList(),
+      );
+    } else {
+      prescriptionPhotos = pickedFiles.map((e) => File(e.path)).toList();
+    }
 
+    //
+    if (prescriptionPhotos.length > AppFileLimit.prescriptionFileLimit) {
+      prescriptionPhotos = prescriptionPhotos.sublist(
+        0,
+        AppFileLimit.prescriptionFileLimit,
+      );
       //
-      if (prescriptionPhotos.length > AppFileLimit.prescriptionFileLimit) {
-        prescriptionPhotos = prescriptionPhotos.sublist(
-          0,
-          AppFileLimit.prescriptionFileLimit,
-        );
-        //
-        CoolAlert.show(
-          context: viewContext,
-          type: CoolAlertType.warning,
-          title: "Prescription".tr(),
-          text: "You can only upload %s prescription at a time"
-              .tr()
-              .fill([AppFileLimit.prescriptionFileLimit]),
-        );
-      }
+      CoolAlert.show(
+        context: viewContext,
+        type: CoolAlertType.warning,
+        title: "Prescription".tr(),
+        text: "You can only upload %s prescription at a time"
+            .tr()
+            .fill([AppFileLimit.prescriptionFileLimit]),
+      );
     }
     //
     notifyListeners();
@@ -104,7 +101,7 @@ class PharmacyUploadPrescriptionViewModel extends CheckoutBaseViewModel {
         title: "Delivery address".tr(),
         text: "Delivery address is out of vendor delivery range".tr(),
       );
-    } else if (prescriptionPhotos == null || prescriptionPhotos.isEmpty) {
+    } else if (prescriptionPhotos.isEmpty) {
       //
       CoolAlert.show(
         context: viewContext,
@@ -125,11 +122,11 @@ class PharmacyUploadPrescriptionViewModel extends CheckoutBaseViewModel {
 
     try {
       //set the total with discount as the new total
-      checkout.total = checkout.totalWithTip;
+      checkout!.total = checkout!.totalWithTip;
       //
       final apiResponse = await checkoutRequest.newPrescriptionOrder(
-        checkout,
-        vendor,
+        checkout!,
+        vendor!,
         photos: prescriptionPhotos,
         note: noteTEC.text,
       );
@@ -154,7 +151,7 @@ class PharmacyUploadPrescriptionViewModel extends CheckoutBaseViewModel {
             barrierDismissible: false,
             onConfirmBtnTap: () {
               showOrdersTab(context: viewContext);
-              if (viewContext.navigator.canPop()) {
+              if (Navigator.of(viewContext).canPop()) {
                 viewContext.pop();
               }
             },

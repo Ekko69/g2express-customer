@@ -15,7 +15,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PharmacyUploadPrescription extends StatelessWidget {
-  const PharmacyUploadPrescription(this.vendor, {Key key}) : super(key: key);
+  const PharmacyUploadPrescription(this.vendor, {Key? key}) : super(key: key);
 
   final Vendor vendor;
 
@@ -26,7 +26,7 @@ class PharmacyUploadPrescription extends StatelessWidget {
         context,
         vendor,
       ),
-      onModelReady: (vm) => vm.initialise(),
+      onViewModelReady: (vm) => vm.initialise(),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,
@@ -44,8 +44,7 @@ class PharmacyUploadPrescription extends StatelessWidget {
                   //
                   CustomGridView(
                     noScrollPhysics: true,
-                    dataSet: (vm.prescriptionPhotos != null &&
-                            vm.prescriptionPhotos.isNotEmpty)
+                    dataSet: (vm.prescriptionPhotos.isNotEmpty)
                         ? vm.prescriptionPhotos
                         : [],
                     separatorBuilder: (p0, p1) => UiSpacer.vSpace(10),
@@ -97,7 +96,7 @@ class PharmacyUploadPrescription extends StatelessWidget {
                     ).centered(),
                     shapeRadius: 30,
                     height: 20,
-                    titleStyle: context.textTheme.bodyLarge.copyWith(
+                    titleStyle: context.textTheme.bodyLarge!.copyWith(
                       fontSize: 11,
                     ),
                     onPressed: vm.changePhoto,
@@ -122,8 +121,7 @@ class PharmacyUploadPrescription extends StatelessWidget {
               CustomButton(
                 title: "PLACE ORDER REQUEST".tr(),
                 loading: vm.isBusy,
-                onPressed: (vm.prescriptionPhotos != null &&
-                        vm.prescriptionPhotos.isNotEmpty)
+                onPressed: (vm.prescriptionPhotos.isNotEmpty)
                     ? () => vm.placeOrder(ignore: true)
                     : null,
               ).wFull(context),

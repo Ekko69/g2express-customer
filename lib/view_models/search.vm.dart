@@ -18,24 +18,28 @@ class SearchViewModel extends MyBaseViewModel {
   SearchRequest _searchRequest = SearchRequest();
   ScrollController scrollController = ScrollController();
   RefreshController refreshController = RefreshController();
-  SearchData searchData;
+  TextEditingController searchTEC = TextEditingController();
+  SearchData? searchData;
   String keyword = "";
   String type = "";
-  Category category;
-  Search search;
+  Category? category;
+  Search? search;
   int selectTagId = 2;
   bool showGrid = false;
   //
   int queryPage = 1;
   List<dynamic> searchResults = [];
   bool filterByProducts = true;
-  SearchFilterViewModel searchFilterVM;
+  SearchFilterViewModel? searchFilterVM;
+  List<String> searchHistory = [];
 
   SearchViewModel(BuildContext context, this.search) {
     this.viewContext = context;
-    this.vendorType = this.search.vendorType;
+    this.vendorType = this.search?.vendorType;
     //
-    setSlectedTag(search.showType);
+    if (search != null && search!.showType != null) {
+      setSlectedTag(search!.showType!);
+    }
   }
 
   //
@@ -52,8 +56,8 @@ class SearchViewModel extends MyBaseViewModel {
     //
     try {
       final searchResult = await _searchRequest.searchRequest(
-        keyword: keyword ?? "",
-        search: search,
+        keyword: keyword,
+        search: search!,
         page: queryPage,
       );
       clearErrors();
@@ -79,8 +83,12 @@ class SearchViewModel extends MyBaseViewModel {
   //
   void showFilterOptions() async {
     if (searchFilterVM == null) {
-      searchFilterVM = SearchFilterViewModel(viewContext, search);
+      searchFilterVM = SearchFilterViewModel(viewContext, search!);
     }
+
+    //
+    refreshController = refreshController = RefreshController();
+    notifyListeners();
 
     showModalBottomSheet(
       context: viewContext,
@@ -88,11 +96,12 @@ class SearchViewModel extends MyBaseViewModel {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return SearchFilterBottomSheet(
-          search: search,
-          vm: searchFilterVM,
+          search: search!,
+          vm: searchFilterVM!,
           onSubmitted: (mSearch) {
             search = mSearch;
             queryPage = 1;
+
             startSearch();
           },
         );
@@ -108,7 +117,7 @@ class SearchViewModel extends MyBaseViewModel {
 
   //
   vendorSelected(Vendor vendor) async {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.vendorDetails,
       arguments: vendor,
     );
@@ -126,7 +135,7 @@ class SearchViewModel extends MyBaseViewModel {
     selectTagId = tagId;
     refreshController = new RefreshController();
     //
-    search.genApiType(selectTagId);
+    search?.genApiType(selectTagId);
     startSearch();
   }
 

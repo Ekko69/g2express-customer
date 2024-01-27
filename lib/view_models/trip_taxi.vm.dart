@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/models/delivery_address.dart';
 import 'package:fuodz/models/order.dart';
@@ -9,30 +10,30 @@ import 'package:fuodz/requests/payment_method.request.dart';
 import 'package:fuodz/requests/taxi.request.dart';
 import 'package:fuodz/view_models/taxi_google_map.vm.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:supercharged/supercharged.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 
 class TripTaxiViewModel extends TaxiGoogleMapViewModel {
 //requests
   TaxiRequest taxiRequest = TaxiRequest();
   PaymentMethodRequest paymentOptionRequest = PaymentMethodRequest();
 //
-  Order onGoingOrderTrip;
+  Order? onGoingOrderTrip;
   double newTripRating = 3.0;
   TextEditingController tripReviewTEC = TextEditingController();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  StreamSubscription tripUpdateStream;
-  StreamSubscription driverLocationStream;
+  StreamSubscription? tripUpdateStream;
+  StreamSubscription? driverLocationStream;
 
-  LatLng driverPosition;
+  LatLng? driverPosition;
   double driverPositionRotation = 0;
 
   //
   List<PaymentMethod> paymentMethods = [];
-  PaymentMethod selectedPaymentMethod;
+  PaymentMethod? selectedPaymentMethod;
 
   //vheicle types
   List<VehicleType> vehicleTypes = [];
-  VehicleType selectedVehicleType;
+  VehicleType? selectedVehicleType;
 
 //get current on going trip
   void getOnGoingTrip() async {
@@ -52,14 +53,15 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
     //
     setBusyForObject(onGoingOrderTrip, true);
     try {
-      final apiResponse = await taxiRequest.cancelTrip(onGoingOrderTrip.id);
+      final apiResponse = await taxiRequest.cancelTrip(onGoingOrderTrip!.id);
       //
       if (apiResponse.allGood) {
-        toastSuccessful(apiResponse.message);
+        toastSuccessful(
+            apiResponse.message ?? "Trip cancelled successfully".tr());
         setCurrentStep(1);
         clearMapData();
       } else {
-        toastError(apiResponse.message);
+        toastError(apiResponse.message ?? "Failed to cancel trip".tr());
       }
     } catch (error) {
       print("trip ongoing error ==> $error");
@@ -71,24 +73,26 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
   loadTripUIByOrderStatus({bool initial = false}) {
     //
     //
-    if (onGoingOrderTrip != null && (initial || pickupLocation == null)) {
+    if ((initial)) {
       //
       pickupLocation = DeliveryAddress(
-        latitude: onGoingOrderTrip.taxiOrder.pickupLatitude.toDouble(),
-        longitude: onGoingOrderTrip.taxiOrder.pickupLongitude.toDouble(),
-        address: onGoingOrderTrip.taxiOrder.pickupAddress,
+        latitude: onGoingOrderTrip?.taxiOrder?.pickupLatitude.toDoubleOrNull(),
+        longitude:
+            onGoingOrderTrip?.taxiOrder?.pickupLongitude.toDoubleOrNull(),
+        address: onGoingOrderTrip?.taxiOrder?.pickupAddress,
       );
       //
       dropoffLocation = DeliveryAddress(
-        latitude: onGoingOrderTrip.taxiOrder.dropoffLatitude.toDouble(),
-        longitude: onGoingOrderTrip.taxiOrder.dropoffLongitude.toDouble(),
-        address: onGoingOrderTrip.taxiOrder.dropoffAddress,
+        latitude: onGoingOrderTrip?.taxiOrder?.dropoffLatitude.toDoubleOrNull(),
+        longitude:
+            onGoingOrderTrip?.taxiOrder?.dropoffLongitude.toDoubleOrNull(),
+        address: onGoingOrderTrip?.taxiOrder?.dropoffAddress,
       );
       //set the pickup and drop off locations
       drawTripPolyLines();
       startHandlingOnGoingTrip();
     } else if (onGoingOrderTrip != null) {
-      switch (onGoingOrderTrip.status) {
+      switch (onGoingOrderTrip?.status) {
         case "pending":
           setCurrentStep(3);
           break;
@@ -109,8 +113,10 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
           clearMapData();
           zoomToLocation(
             LatLng(
-              onGoingOrderTrip.taxiOrder.dropoffLatitude.toDouble(),
-              onGoingOrderTrip.taxiOrder.dropoffLongitude.toDouble(),
+              onGoingOrderTrip?.taxiOrder?.dropoffLatitude.toDoubleOrNull() ??
+                  0.0,
+              onGoingOrderTrip?.taxiOrder?.dropoffLongitude.toDoubleOrNull() ??
+                  0.0,
             ),
           );
           stopAllListeners();
@@ -139,6 +145,10 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
 
 //
   void startHandlingOnGoingTrip() async {
+    //
+    if (onGoingOrderTrip == null) {
+      return;
+    }
     //clear current UI step
     setCurrentStep(3);
 
@@ -146,28 +156,28 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
     //set new on trip step
     tripUpdateStream = firebaseFirestore
         .collection("orders")
-        .doc("${onGoingOrderTrip.code}")
+        .doc("${onGoingOrderTrip?.code}")
         .snapshots()
         .listen(
       (event) async {
         //once driver is assigned
 
         final driverId =
-            event.data() != null ? event.data()["driver_id"] ?? null : null;
-        if (driverId != null && onGoingOrderTrip.driverId == null) {
-          onGoingOrderTrip.driverId = event.data()["driver_id"];
-          onGoingOrderTrip.driver = event.data()["driver"] ?? null;
+            event.data() != null ? event.data()!["driver_id"] ?? null : null;
+        if (driverId != null && onGoingOrderTrip?.driverId == null) {
+          onGoingOrderTrip?.driverId = event.data()!["driver_id"];
+          onGoingOrderTrip?.driver = event.data()!["driver"] ?? null;
         }
 
         //
-        if (onGoingOrderTrip.driver == null) {
+        if (onGoingOrderTrip?.driver == null) {
           await loadDriverDetails();
         }
         startDriverDetailsListener();
 
         //update the rest onGoingTrip details
         if (event.exists) {
-          onGoingOrderTrip?.status = event.data()["status"] ?? "failed";
+          onGoingOrderTrip?.status = event.data()?["status"] ?? "failed";
         }
         //
         notifyListeners();
@@ -180,14 +190,14 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
   //DRIVER SECTION
   loadDriverDetails() async {
     try {
-      final mDriverId = onGoingOrderTrip.driverId;
+      final mDriverId = onGoingOrderTrip?.driverId;
       // onGoingOrderTrip.driver =
       //     await taxiRequest.getDriverInfo(onGoingOrderTrip.driverId);
       onGoingOrderTrip = await taxiRequest.getOnGoingTrip();
       //loop until driver data is gotten
-      if (onGoingOrderTrip.driver == null) {
-        onGoingOrderTrip.driver = await taxiRequest.getDriverInfo(mDriverId);
-        if (onGoingOrderTrip.driver == null) {
+      if (onGoingOrderTrip?.driver == null) {
+        onGoingOrderTrip?.driver = await taxiRequest.getDriverInfo(mDriverId!);
+        if (onGoingOrderTrip?.driver == null) {
           await Future.delayed(Duration(seconds: 5));
           loadDriverDetails();
         }
@@ -211,8 +221,8 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
         return;
       }
       //
-      driverPosition = LatLng(event.data()["lat"], event.data()["long"]);
-      driverPositionRotation = event.data()["rotation"] ?? 0;
+      driverPosition = LatLng(event.data()?["lat"], event.data()?["long"]);
+      driverPositionRotation = event.data()?["rotation"] ?? 0;
       updateDriverMarkerPosition();
       startZoomFocusDriver();
     });
@@ -221,17 +231,16 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
   //
   updateDriverMarkerPosition() {
     //
-    Marker driverMarker = gMapMarkers.firstWhere(
+    Marker? driverMarker = gMapMarkers.firstOrNullWhere(
       (e) => e.markerId.value == "driverMarker",
-      orElse: () => null,
     );
     //
     if (driverMarker == null) {
       driverMarker = Marker(
         markerId: MarkerId('driverMarker'),
-        position: driverPosition,
+        position: driverPosition!,
         rotation: driverPositionRotation,
-        icon: driverIcon,
+        icon: driverIcon!,
         anchor: Offset(0.5, 0.5),
       );
       gMapMarkers.add(driverMarker);
@@ -253,23 +262,27 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
     if (driverPosition == null) {
       return;
     }
+
+    if (onGoingOrderTrip == null) {
+      return;
+    }
     //check status to determine the latlng bound
-    if (onGoingOrderTrip.canZoomOnPickupLocation) {
+    if (onGoingOrderTrip!.canZoomOnPickupLocation) {
       //zoom to driver and pickup latbound
       updateCameraLocation(
-          driverPosition,
+          driverPosition!,
           LatLng(
-            pickupLocation.latitude,
-            pickupLocation.longitude,
+            pickupLocation!.latitude!,
+            pickupLocation!.longitude!,
           ),
           googleMapController);
-    } else if (onGoingOrderTrip.canZoomOnDropoffLocation) {
+    } else if (onGoingOrderTrip!.canZoomOnDropoffLocation) {
       //zoom to driver and dropoff latbound
       updateCameraLocation(
-          driverPosition,
+          driverPosition!,
           LatLng(
-            dropoffLocation.latitude,
-            dropoffLocation.longitude,
+            dropoffLocation!.latitude!,
+            dropoffLocation!.longitude!,
           ),
           googleMapController);
     }
@@ -293,17 +306,17 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
     setBusyForObject(newTripRating, true);
     //
     final apiResponse = await taxiRequest.rateDriver(
-      onGoingOrderTrip.id,
-      onGoingOrderTrip.driverId,
+      onGoingOrderTrip!.id,
+      onGoingOrderTrip!.driverId!,
       newTripRating,
       tripReviewTEC.text,
     );
     //
     if (apiResponse.allGood) {
-      toastSuccessful(apiResponse.message);
+      toastSuccessful(apiResponse.message ?? "Trip rated successfully".tr());
       dismissTripRating();
     } else {
-      toastError(apiResponse.message);
+      toastError(apiResponse.message ?? "Failed to rate trip".tr());
     }
     setBusyForObject(newTripRating, false);
   }
@@ -315,7 +328,7 @@ class TripTaxiViewModel extends TaxiGoogleMapViewModel {
       pickupLocationTEC.clear();
       dropoffLocationTEC.clear();
       selectedVehicleType = null;
-      selectedPaymentMethod = paymentMethods?.first ?? null;
+      selectedPaymentMethod = paymentMethods.firstOrNull;
       notifyListeners();
     }
     //

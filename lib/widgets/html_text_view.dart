@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class HtmlTextView extends StatelessWidget {
-  const HtmlTextView(this.htmlContent, {Key key}) : super(key: key);
+  const HtmlTextView(this.htmlContent, {Key? key}) : super(key: key);
 
   final String htmlContent;
 
@@ -13,7 +13,11 @@ class HtmlTextView extends StatelessWidget {
     return HtmlWidget(
       htmlContent,
       onTapImage: (ImageMetadata imageMetadata) {
-        return launchUrlString(imageMetadata.sources.first.url);
+        try {
+          launchUrlString(imageMetadata.sources.first.url);
+        } catch (e) {
+          print(e);
+        }
       },
       onTapUrl: (url) {
         return launchUrlString(url);

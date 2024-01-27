@@ -34,7 +34,7 @@ class ProductReviewViewModel extends MyBaseViewModel {
   //post rating
   double rating = 1;
   TextEditingController reviewTEC = TextEditingController();
-  int orderId;
+  int? orderId;
 
   @override
   void initialise() async {
@@ -67,7 +67,7 @@ class ProductReviewViewModel extends MyBaseViewModel {
   }
 
   //
-  void getProductReviews([bool initialLoading = true]) async {
+  Future<void> getProductReviews([bool initialLoading = true]) async {
     //
     if (initialLoading) {
       page = 1;
@@ -102,7 +102,7 @@ class ProductReviewViewModel extends MyBaseViewModel {
     }
   }
 
-  void getProductReviewSummary() async {
+  Future<void> getProductReviewSummary() async {
     //
     setBusyForObject(productReviews, true);
 

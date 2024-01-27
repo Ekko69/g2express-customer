@@ -4,20 +4,21 @@ import 'package:fuodz/extensions/string.dart';
 import 'package:fuodz/models/cart.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
+import 'package:fuodz/widgets/buttons/qty_stepper.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CartListItem extends StatelessWidget {
   const CartListItem(
     this.cart, {
-    this.onQuantityChange,
+    required this.onQuantityChange,
     this.deleteCartItem,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Cart cart;
   final Function(int) onQuantityChange;
-  final Function deleteCartItem;
+  final Function? deleteCartItem;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class CartListItem extends StatelessWidget {
             //
             //PRODUCT IMAGE
             CustomImage(
-              imageUrl: cart.product.photo,
+              imageUrl: cart.product!.photo,
               width: context.percentWidth * 18,
               height: context.percentWidth * 18,
             ).box.clip(Clip.antiAlias).roundedSM.make(),
@@ -41,7 +42,7 @@ class CartListItem extends StatelessWidget {
             VStack(
               [
                 //product name
-                "${cart.product.name}"
+                "${cart.product?.name}"
                     .text
                     .medium
                     .lg
@@ -50,34 +51,31 @@ class CartListItem extends StatelessWidget {
                     .make(),
                 UiSpacer.vSpace(10),
                 //product options
-                cart.optionsSentence.isNotEmpty
-                    ? cart.optionsSentence.text.base.gray600.make()
-                    : UiSpacer.emptySpace(),
-                cart.optionsSentence.isNotEmpty
-                    ? UiSpacer.verticalSpace(space: 10)
-                    : UiSpacer.verticalSpace(space: 5),
+                if (cart.optionsSentence.isNotEmpty)
+                  cart.optionsSentence.text.sm.gray600.make(),
+                if (cart.optionsSentence.isNotEmpty) UiSpacer.vSpace(5),
 
                 //
                 //price and qty
-                UiSpacer.horizontalSpace(),
                 HStack(
                   [
                     //cart item price
-                    ("$currencySymbol" + "${(cart.selectedQty * cart.price)}")
+                    ("$currencySymbol" +
+                            "${cart.price ?? cart.product!.sellPrice}")
                         .currencyFormat()
                         .text
                         .semiBold
-                        .xl2
+                        .lg
                         .make(),
-                    UiSpacer.hSpace(10).expand(),
+                    10.widthBox.expand(),
                     //qty stepper
                     SizedBox(
-                      height: 30,
+                      height: 35,
                       child: FittedBox(
-                        child: VxStepper(
+                        child: QtyStepper(
                           defaultValue: cart.selectedQty ?? 1,
                           min: 1,
-                          max: cart.product.availableQty ?? 20,
+                          max: cart.product?.availableQty ?? 20,
                           disableInput: true,
                           onChange: onQuantityChange,
                         )
@@ -95,11 +93,13 @@ class CartListItem extends StatelessWidget {
               ],
             ).expand(),
           ],
+          alignment: MainAxisAlignment.start,
+          crossAlignment: CrossAxisAlignment.start,
         )
             .p12()
             .box
-            .rounded
-            .outerShadow
+            .roundedSM
+            .outerShadowSm
             .color(context.theme.colorScheme.background)
             .make(),
 
@@ -110,13 +110,12 @@ class CartListItem extends StatelessWidget {
           size: 16,
           color: Colors.white,
         )
-            .centered()
             .p8()
             .onInkTap(
-              this.deleteCartItem,
+              this.deleteCartItem != null ? () => this.deleteCartItem!() : null,
             )
             .box
-            .roundedFull
+            .roundedSM
             .color(Colors.red)
             .make()
             .positioned(

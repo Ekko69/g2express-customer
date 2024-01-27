@@ -14,22 +14,22 @@ class MenuItem extends StatelessWidget {
     this.suffix,
     this.onPressed,
     this.ic,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
-  final String title;
-  final Widget child;
+  final String? title;
+  final Widget? child;
   final bool divider;
   final bool topDivider;
-  final Widget suffix;
-  final Function onPressed;
-  final String ic;
+  final Widget? suffix;
+  final Function? onPressed;
+  final String? ic;
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: onPressed,
+      onPressed: onPressed != null ? () => onPressed!() : null,
       elevation: 0.6,
       color: context.theme.colorScheme.background,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
@@ -52,7 +52,7 @@ class MenuItem extends StatelessWidget {
             ),
           ),
           //
-          (child ?? title.text.lg.light.make()).expand(),
+          (child ?? "$title".text.lg.light.make()).expand(),
           //
           suffix ??
               Icon(

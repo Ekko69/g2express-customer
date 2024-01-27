@@ -5,7 +5,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 
 class EmptyDeliveryAddress extends StatelessWidget {
   const EmptyDeliveryAddress({
-    Key key,
+    Key? key,
     this.selection = false,
     this.isBooking = false,
   }) : super(key: key);
@@ -20,8 +20,10 @@ class EmptyDeliveryAddress extends StatelessWidget {
           ? "No ${!isBooking ? 'Delivery' : 'Booking'} Address Selected".tr()
           : "No ${!isBooking ? 'Delivery' : 'Booking'} Address Found".tr(),
       description: selection
-          ? "Please select a ${!isBooking ? 'delivery' : 'booking'} address".tr()
-          : "When you add ${!isBooking ? 'delivery' : 'booking'} addresses, they will appear here".tr(),
+          ? "Please select a ${!isBooking ? 'delivery' : 'booking'} address"
+              .tr()
+          : "When you add ${!isBooking ? 'delivery' : 'booking'} addresses, they will appear here"
+              .tr(),
     );
   }
 }

@@ -16,21 +16,21 @@ class PackageRequest extends HttpService {
         return PackageType.fromJson(jsonObject);
       }).toList();
     } else {
-      throw apiResponse.message;
+      throw apiResponse.message!;
     }
   }
 
   //
   Future<PackageCheckout> parcelSummary({
-    int vendorId,
-    int packageTypeId,
-    String packageWeight,
-    List<OrderStop> stops,
-    String couponCode,
+    int? vendorId,
+    int? packageTypeId,
+    String? packageWeight,
+    List<OrderStop>? stops,
+    String? couponCode,
   }) async {
     //
     final locationStops = stops != null
-        ? stops.map((e) => {"id": e.deliveryAddress.id}).toList()
+        ? stops.map((e) => {"id": e.deliveryAddress?.id}).toList()
         : [];
 
     final params = {
@@ -55,6 +55,6 @@ class PackageRequest extends HttpService {
       return PackageCheckout.fromJson(apiResponse.body);
     }
 
-    throw apiResponse.message;
+    throw apiResponse.message!;
   }
 }

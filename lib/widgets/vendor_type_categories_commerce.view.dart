@@ -21,16 +21,16 @@ class CommerceTypeVendorTypeCategories extends StatefulWidget {
     this.crossAxisCount,
     this.childAspectRatio,
     this.lessItemCount = 6,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   //
   final VendorType vendorType;
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   final bool showTitle;
-  final int crossAxisCount;
-  final double childAspectRatio;
+  final int? crossAxisCount;
+  final double? childAspectRatio;
   final int lessItemCount;
   @override
   _CommerceTypeVendorTypeCategoriesState createState() =>
@@ -46,7 +46,7 @@ class _CommerceTypeVendorTypeCategoriesState
     return ViewModelBuilder<CategoriesViewModel>.reactive(
       viewModelBuilder: () =>
           CategoriesViewModel(context, vendorType: widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [
@@ -58,7 +58,7 @@ class _CommerceTypeVendorTypeCategoriesState
                     widget.showTitle
                         ? ((widget.title != null
                                 ? widget.title
-                                : "We are here for you")
+                                : "We are here for you")!
                             .tr()
                             .text
                             .lg
@@ -67,7 +67,7 @@ class _CommerceTypeVendorTypeCategoriesState
                         : UiSpacer.emptySpace(),
                     (widget.description != null
                             ? widget.description
-                            : "How can we help?")
+                            : "How can we help?")!
                         .tr()
                         .text
                         .xl

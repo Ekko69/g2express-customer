@@ -10,15 +10,15 @@ class CurrencyHStack extends StatelessWidget {
     this.axisSize,
     this.textSize,
     this.textColor,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final List<dynamic> children;
-  final MainAxisAlignment alignment;
-  final CrossAxisAlignment crossAlignment;
-  final MainAxisSize axisSize;
-  final double textSize;
-  final Color textColor;
+  final MainAxisAlignment? alignment;
+  final CrossAxisAlignment? crossAlignment;
+  final MainAxisSize? axisSize;
+  final double? textSize;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {

@@ -3,12 +3,13 @@
 //     final product = productFromJson(jsonString);
 
 import 'dart:convert';
-
+import 'package:dartx/dartx.dart';
+import 'package:fuodz/extensions/dynamic.dart';
 import 'package:fuodz/models/digital_file.dart';
 import 'package:fuodz/models/option.dart';
+import 'package:fuodz/models/tag.dart';
 import 'package:fuodz/models/vendor.dart';
 import 'package:fuodz/models/option_group.dart';
-import 'package:random_string/random_string.dart';
 
 Product productFromJson(String str) => Product.fromJson(json.decode(str));
 
@@ -16,50 +17,50 @@ String productToJson(Product data) => json.encode(data.toJson());
 
 class Product {
   Product({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
     this.barcode,
-    this.description,
-    this.price,
-    this.discountPrice,
+    required this.description,
+    required this.price,
+    required this.discountPrice,
     this.capacity,
     this.unit,
     this.packageCount,
-    this.featured,
-    this.plusOption,
-    this.isFavourite,
-    this.deliverable,
-    this.digital,
-    this.digitalFiles,
-    this.isActive,
-    this.vendorId,
+    required this.featured,
+    required this.plusOption,
+    required this.isFavourite,
+    required this.deliverable,
+    required this.digital,
+    required this.digitalFiles,
+    required this.isActive,
+    required this.vendorId,
     this.categoryId,
-    this.createdAt,
-    this.updatedAt,
-    this.formattedDate,
-    this.photo,
-    this.vendor,
-    this.optionGroups,
-    this.availableQty,
-    this.selectedQty,
-    this.photos,
+    required this.photo,
+    required this.vendor,
+    required this.optionGroups,
+    required this.availableQty,
+    this.selectedQty = 1,
+    required this.photos,
     //
-    this.rating,
-    this.reviewsCount,
+    required this.rating,
+    required this.reviewsCount,
+    this.ageRestricted = false,
+    this.tags,
+    this.token,
   }) {
-    this.heroTag = randomAlphaNumeric(15) + "$id";
+    this.heroTag = dynamic.randomAlphaNumeric(15) + "$id";
   }
 
   int id;
-  String heroTag;
+  String? heroTag;
   String name;
-  String barcode;
+  String? barcode;
   String description;
   double price;
   double discountPrice;
-  String capacity;
-  String unit;
-  String packageCount;
+  String? capacity;
+  String? unit;
+  String? packageCount;
   int featured;
   int plusOption;
   bool isFavourite;
@@ -67,23 +68,23 @@ class Product {
   int digital;
   int isActive;
   int vendorId;
-  int categoryId;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String formattedDate;
+  int? categoryId;
   String photo;
   Vendor vendor;
-  List<OptionGroup> optionGroups;
+  List<OptionGroup> optionGroups = [];
   List<String> photos;
-  List<Option> selectedOptions = [];
-  List<DigitalFile> digitalFiles = [];
+  List<Option>? selectedOptions = [];
+  List<DigitalFile>? digitalFiles = [];
+  List<Tag>? tags = [];
 
   //
-  int availableQty;
-  int selectedQty;
+  int? availableQty;
+  int selectedQty = 0;
   //
-  double rating;
+  double? rating;
   int reviewsCount;
+  bool ageRestricted;
+  String? token;
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -91,47 +92,35 @@ class Product {
       name: json["name"],
       barcode: json["barcode"],
       description: json["description"] == null ? "" : json["description"],
-      price:
-          json["price"] == null ? null : double.parse(json["price"].toString()),
+      price: double.parse(json["price"].toString()),
       discountPrice: json["discount_price"] == null
-          ? null
+          ? 0.00
           : double.parse(json["discount_price"].toString()),
       capacity: json["capacity"] == null ? null : json["capacity"].toString(),
       unit: json["unit"] == null ? null : json["unit"],
       packageCount: json["package_count"] == null
           ? null
           : json["package_count"].toString(),
-      featured: json["featured"] == null
-          ? null
-          : int.parse(json["featured"].toString()),
+      featured:
+          json["featured"] == null ? 0 : int.parse(json["featured"].toString()),
       plusOption: json["plus_option"] == null
-          ? null
+          ? 0
           : int.parse(json["plus_option"].toString()),
-      isFavourite: json["is_favourite"],
+      isFavourite: json["is_favourite"] ?? false,
       deliverable: json["deliverable"] == null
-          ? null
+          ? 0
           : int.parse(json["deliverable"].toString()),
-      digital: json["digital"] == null
-          ? null
-          : int.parse(json["digital"].toString()),
+      digital:
+          json["digital"] == null ? 0 : int.parse(json["digital"].toString()),
       isActive: json["is_active"] == null
-          ? null
+          ? 0
           : int.parse(json["is_active"].toString()),
-      vendorId: json["vendor_id"] == null
-          ? null
-          : int.parse(json["vendor_id"].toString()),
+      vendorId: int.parse(json["vendor_id"].toString()),
       categoryId: json["category_id"],
-      createdAt: json["created_at"] == null
-          ? null
-          : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null
-          ? null
-          : DateTime.parse(json["updated_at"]),
-      formattedDate: json["formatted_date"],
       photo: json["photo"],
-      vendor: json["vendor"] != null ? Vendor.fromJson(json["vendor"]) : null,
+      vendor: Vendor.fromJson(json["vendor"]),
       optionGroups: json["option_groups"] == null
-          ? null
+          ? []
           : List<OptionGroup>.from(
               json["option_groups"].map((x) => OptionGroup.fromJson(x)),
             ),
@@ -152,15 +141,22 @@ class Product {
           ? null
           : int.parse(json["available_qty"].toString()),
       selectedQty: json["selected_qty"] == null
-          ? null
+          ? 1
           : int.parse(json["selected_qty"].toString()),
       //
       rating: json["rating"] == null
           ? null
           : double.parse(json["rating"].toString()),
       reviewsCount: json["reviews_count"] == null
-          ? null
+          ? 0
           : int.parse(json["reviews_count"].toString()),
+      ageRestricted:
+          json["age_restricted"] == null ? false : json["age_restricted"],
+      tags: json["tags"] == null
+          ? []
+          : List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
+      //
+      token: json["token"],
     );
   }
 
@@ -181,17 +177,13 @@ class Product {
         "is_active": isActive,
         "vendor_id": vendorId,
         "category_id": categoryId,
-        "created_at": createdAt == null ? null : createdAt.toIso8601String(),
-        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
-        "formatted_date": formattedDate,
         "photo": photo,
-        "vendor": vendor == null ? null : vendor.toJson(),
-        "option_groups": optionGroups == null
-            ? null
-            : List<dynamic>.from(optionGroups.map((x) => x.toJson())),
+        "vendor": vendor.toJson(),
+        "option_groups":
+            List<dynamic>.from(optionGroups.map((x) => x.toJson())),
         "digital_files": digitalFiles == null
             ? null
-            : List<dynamic>.from(optionGroups.map((x) => x.toJson())),
+            : List<dynamic>.from(digitalFiles!.map((x) => x.toJson())),
 
         //
         "available_qty": availableQty,
@@ -199,18 +191,34 @@ class Product {
         //
         "rating": rating,
         "reviews_count": reviewsCount,
+        "age_restricted": ageRestricted,
+        "tags": tags == null
+            ? null
+            : List<dynamic>.from(tags!.map((x) => x.toJson())),
+        "token": token,
+      };
+
+  Map<String, dynamic> toCheckout() => {
+        "id": id,
+        "name": name,
+        "barcode": barcode,
+        "price": price,
+        "discount_price": discountPrice,
+        "vendor_id": vendorId,
+        "selected_qty": selectedQty,
+        "token": token,
       };
 
   //getters
   get showDiscount => (discountPrice > 0.00) && (discountPrice < price);
   get canBeDelivered => deliverable == 1;
-  bool get hasStock => availableQty == null || availableQty > 0;
+  bool get hasStock => availableQty == null || availableQty! > 0;
   double get sellPrice {
     return showDiscount ? discountPrice : price;
   }
 
   double get totalPrice {
-    return sellPrice * (selectedQty ?? 1);
+    return sellPrice * (selectedQty);
   }
 
   bool get isDigital {
@@ -220,7 +228,11 @@ class Product {
   int get discountPercentage {
     if (discountPrice < price) {
       // return 100 - (100 * ((price - discountPrice) / price) ?? 0).floor();
-      return 100 - (100 * (discountPrice / price) ?? 0).floor();
+      try {
+        return 100 - (100 * (discountPrice / price)).floor();
+      } catch (e) {
+        return 0;
+      }
     } else {
       return 0;
     }
@@ -228,14 +240,14 @@ class Product {
 
   //
   bool optionGroupRequirementCheck() {
+    if (this.optionGroups.isEmpty) {
+      return false;
+    }
     //check if the option groups with required setting has an option selected
-    OptionGroup optionGroupRequired = this.optionGroups.firstWhere(
-          (e) => e.required == 1,
-          orElse: () => null,
-        );
+    OptionGroup? optionGroupRequired =
+        this.optionGroups.firstOrNullWhere((e) => e.required == 1);
 
-    if (optionGroupRequired == null ||
-        (optionGroupRequired != null && this.optionGroups.length <= 1)) {
+    if (optionGroupRequired == null || (this.optionGroups.length <= 1)) {
       return false;
     } else {
       return true;

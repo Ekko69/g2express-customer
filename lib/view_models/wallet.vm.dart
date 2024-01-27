@@ -9,6 +9,7 @@ import 'package:fuodz/view_models/payment.view_model.dart';
 import 'package:fuodz/views/pages/wallet/wallet_transfer.page.dart';
 import 'package:fuodz/widgets/bottomsheets/wallet_amount_entry.bottomsheet.dart';
 import 'package:fuodz/widgets/finance/wallet_address.bottom_sheet.dart';
+import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -20,11 +21,11 @@ class WalletViewModel extends PaymentViewModel {
 
   //
   WalletRequest walletRequest = WalletRequest();
-  Wallet wallet;
+  Wallet? wallet;
   RefreshController refreshController = RefreshController();
   List<WalletTransaction> walletTransactions = [];
   int queryPage = 1;
-  StreamSubscription<bool> refreshWalletBalanceSub;
+  StreamSubscription<bool>? refreshWalletBalanceSub;
 
   //
   initialise() async {
@@ -44,7 +45,7 @@ class WalletViewModel extends PaymentViewModel {
 
   //
   loadWalletData() async {
-    if (refreshController != null && refreshController.isRefresh) {
+    if (refreshController.isRefresh) {
       refreshController.refreshCompleted();
     }
 
@@ -95,10 +96,11 @@ class WalletViewModel extends PaymentViewModel {
   }
 
   //
-  showAmountEntry() {
-    showModalBottomSheet(
+  showAmountEntry() async {
+    await showModalBottomSheet(
       context: viewContext,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return WalletAmountEntryBottomSheet(
           onSubmit: (String amount) {
@@ -116,10 +118,13 @@ class WalletViewModel extends PaymentViewModel {
 
     try {
       final link = await walletRequest.walletTopup(amount);
-      await openExternalWebpageLink(link);
+      // await openExternalWebpageLink(link);
+      await openWebpageLink(link, embeded: true);
       clearErrors();
     } catch (error) {
       setError(error);
+      toastError("$error");
+      print("error >> $error");
     }
     setBusy(false);
   }
@@ -127,7 +132,7 @@ class WalletViewModel extends PaymentViewModel {
   //Wallet transfer
   showWalletTransferEntry() async {
     final result = await viewContext.push(
-      (context) => WalletTransferPage(wallet),
+      (context) => WalletTransferPage(wallet!),
     );
 
     //
@@ -152,7 +157,7 @@ class WalletViewModel extends PaymentViewModel {
         builder: (ctx) => WalletAddressBottomSheet(apiResponse),
       );
     } else {
-      toastError(apiResponse.message);
+      toastError(apiResponse.message ?? "Error loading wallet address".tr());
     }
     setBusyForObject(showMyWalletAddress, false);
   }

@@ -6,7 +6,10 @@ import 'package:fuodz/views/pages/vendor_details/vendor_details.page.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CommerceSellerTile extends StatelessWidget {
-  const CommerceSellerTile({this.model, Key key}) : super(key: key);
+  const CommerceSellerTile({
+    required this.model,
+    Key? key,
+  }) : super(key: key);
   final ProductDetailsViewModel model;
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class CommerceSellerTile extends StatelessWidget {
       [
         "Seller:".text.make().expand(flex: 2),
         UiSpacer.smHorizontalSpace(),
-        "${model.product?.vendor?.name}"
+        "${model.product.vendor.name}"
             .text
             .underline
             .color(AppColor.primaryColor)

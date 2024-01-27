@@ -12,21 +12,24 @@ import 'package:velocity_x/velocity_x.dart';
 
 class ParcelViewModel extends MyBaseViewModel {
   //
-  ParcelViewModel(BuildContext context, {this.vendorType}) {
+  ParcelViewModel(
+    BuildContext context, {
+    required this.vendorType,
+  }) {
     this.viewContext = context;
   }
 
   //
-  VendorType vendorType;
+  VendorType? vendorType;
   OrderRequest orderRequest = OrderRequest();
   RefreshController refreshController = RefreshController();
   GlobalKey pageKey = GlobalKey<State>();
-  Order order;
+  Order? order;
 
   //scanning
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode result;
-  QRViewController controller;
+  Barcode? result;
+  QRViewController? controller;
   bool flashEnabled = false;
 
   void reloadPage() {
@@ -43,14 +46,14 @@ class ParcelViewModel extends MyBaseViewModel {
     try {
       order = await orderRequest.trackOrder(
         orderCode,
-        vendorTypeId: vendorType.id,
+        vendorTypeId: vendorType?.id,
       );
       clearErrors();
 
       //open order details
       viewContext.nextPage(
         OrderDetailsPage(
-          order: order,
+          order: order!,
           isOrderTracking: true,
         ),
       );
@@ -90,7 +93,7 @@ class ParcelViewModel extends MyBaseViewModel {
                     value: flashEnabled,
                     onChanged: (value) {
                       flashEnabled = value;
-                      controller.toggleFlash();
+                      controller?.toggleFlash();
                       notifyListeners();
                     },
                   ),
@@ -104,9 +107,7 @@ class ParcelViewModel extends MyBaseViewModel {
 
     //
     print("Results ==> $result");
-    if (controller != null) {
-      controller.stopCamera();
-    }
+    controller?.stopCamera();
     //
     FocusScope.of(viewContext).requestFocus(FocusNode());
   }
@@ -116,10 +117,13 @@ class ParcelViewModel extends MyBaseViewModel {
     this.controller = controller;
     // controller.toggleFlash();
     controller.scannedDataStream.listen((scanData) {
+      if (scanData.code == null) {
+        return;
+      }
       //cloe dialog
       viewContext.pop();
       //start searching
-      trackOrder(scanData.code);
+      trackOrder(scanData.code!);
     });
   }
 }

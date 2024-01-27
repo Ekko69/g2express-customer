@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/view_models/taxi.vm.dart';
 import 'package:fuodz/views/pages/order/widgets/taxi_order_trip_verification.view.dart';
@@ -14,7 +15,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiTripReadyView extends StatelessWidget {
-  const TaxiTripReadyView(this.vm, {Key key}) : super(key: key);
+  const TaxiTripReadyView(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -34,44 +35,48 @@ class TaxiTripReadyView extends StatelessWidget {
           child: VStack(
             [
               //driver info
-              TaxiDriverInfoView(vm.onGoingOrderTrip.driver),
+              TaxiDriverInfoView(vm.onGoingOrderTrip!.driver!),
               //contact info
               HStack(
                 [
                   //message box
-                  CustomTextFormField(
-                    hintText: "Message".tr() +
-                        " ${(vm.onGoingOrderTrip.driver.name)}",
-                    isReadOnly: true,
-                    onTap: vm.openTripChat,
-                  ).expand(),
+                  if (AppUISettings.canDriverChat)
+                    CustomTextFormField(
+                      hintText: "Message".tr() +
+                          " ${(vm.onGoingOrderTrip!.driver!.name)}",
+                      isReadOnly: true,
+                      onTap: vm.openTripChat,
+                    ).expand(),
+
                   UiSpacer.horizontalSpace(),
+                  Spacer(),
                   //call button
-                  CallButton(
-                    null,
-                    phone: vm.onGoingOrderTrip.driver.phone,
-                  ),
+                  if (AppUISettings.canCallDriver)
+                    CallButton(
+                      null,
+                      phone: vm.onGoingOrderTrip?.driver!.phone,
+                    ),
                 ],
               ).py16(),
 
               UiSpacer.divider().py12(),
               //trip location details
               "Pickup Location".tr().text.sm.light.make(),
-              "${vm.onGoingOrderTrip.taxiOrder.pickupAddress}"
+              "${vm.onGoingOrderTrip?.taxiOrder?.pickupAddress}"
                   .text
                   .lg
                   .medium
                   .make(),
               UiSpacer.verticalSpace(),
               "Dropoff Location".tr().text.sm.light.make(),
-              "${vm.onGoingOrderTrip.taxiOrder.dropoffAddress}"
+              "${vm.onGoingOrderTrip?.taxiOrder?.dropoffAddress}"
                   .text
                   .lg
                   .medium
                   .make(),
               UiSpacer.divider().py12(),
               //trip codes
-              TaxiOrderTripVerificationView(vm.onGoingOrderTrip),
+              TaxiOrderTripVerificationView(vm.onGoingOrderTrip!),
               UiSpacer.divider().py12(),
               //emergency
               SafetyView(),
@@ -80,7 +85,7 @@ class TaxiTripReadyView extends StatelessWidget {
               //cancel order button
               //only show if driver is yet to be assigned
               Visibility(
-                visible: vm.onGoingOrderTrip.canCancelTaxi,
+                visible: vm.onGoingOrderTrip?.canCancelTaxi ?? false,
                 child: CustomTextButton(
                   title: "Cancel Booking".tr(),
                   titleColor: AppColor.getStausColor("failed"),

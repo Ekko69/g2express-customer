@@ -12,23 +12,24 @@ import 'package:fuodz/widgets/inputs/drop_down.input.dart';
 import 'package:fuodz/widgets/states/product_stock.dart';
 import 'package:fuodz/widgets/tags/discount.positioned.dart';
 import 'package:fuodz/widgets/tags/fav.positioned.dart';
+import 'package:fuodz/widgets/tags/product_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class GroceryProductListItem extends StatefulWidget {
   const GroceryProductListItem({
-    this.product,
-    this.onPressed,
-    @required this.qtyUpdated,
+    required this.product,
+    required this.onPressed,
+    required this.qtyUpdated,
     this.showStepper = false,
     this.height,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Function(Product) onPressed;
   final Function(Product, int) qtyUpdated;
   final Product product;
   final bool showStepper;
-  final double height;
+  final double? height;
 
   @override
   State<GroceryProductListItem> createState() => _GroceryProductListItemState();
@@ -45,7 +46,7 @@ class _GroceryProductListItemState extends State<GroceryProductListItem> {
           children: [
             //
             Hero(
-              tag: widget.product.heroTag,
+              tag: widget.product.heroTag ?? widget.product.id,
               child: CustomImage(
                 imageUrl: widget.product.photo,
                 boxFit: BoxFit.contain,
@@ -89,8 +90,8 @@ class _GroceryProductListItemState extends State<GroceryProductListItem> {
             ),
             //options
             CustomVisibilty(
-              visible: widget.showStepper &&
-                  widget.product.optionGroups.firstOrNull() != null,
+              visible:
+                  widget.showStepper && widget.product.optionGroups.isNotEmpty,
               child: DropdownInput(
                 options: widget.product.optionGroups.isNotEmpty
                     ? widget.product.optionGroups[0].options
@@ -121,10 +122,9 @@ class _GroceryProductListItemState extends State<GroceryProductListItem> {
                   UiSpacer.smHorizontalSpace(),
                   //counter input
                   CustomVisibilty(
-                    visible: widget.product.selectedQty != null &&
-                        widget.product.selectedQty >= 1,
+                    visible: widget.product.selectedQty >= 1,
                     child: CustomStepper(
-                      defaultValue: widget.product.selectedQty ?? 0,
+                      defaultValue: widget.product.selectedQty,
                       max: widget.product.availableQty ?? 20,
                       onChange: (qty) {
                         //
@@ -135,8 +135,7 @@ class _GroceryProductListItemState extends State<GroceryProductListItem> {
                   //add to cart icon
                   //hide when selected qty is more than 0
                   CustomVisibilty(
-                    visible: widget.product.selectedQty == null ||
-                        widget.product.selectedQty < 1,
+                    visible: widget.product.selectedQty < 1,
                     child: Icon(
                       FlutterIcons.plus_ant,
                       size: 20,
@@ -165,11 +164,14 @@ class _GroceryProductListItemState extends State<GroceryProductListItem> {
             ),
           ],
         ).box.color(AppColor.faintBgColor).make().p2(),
+
+        //
+        ProductTags(widget.product),
       ],
     )
         .h(widget.height != null
-            ? widget.height
-            : widget.product.optionGroups.firstOrNull() != null
+            ? widget.height!
+            : widget.product.optionGroups.isNotEmpty
                 ? 220
                 : 180)
         .onInkTap(

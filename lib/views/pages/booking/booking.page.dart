@@ -8,7 +8,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class BookingPage extends StatefulWidget {
-  const BookingPage(this.vendorType, {Key key}) : super(key: key);
+  const BookingPage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
   @override
@@ -24,7 +24,7 @@ class _BookingPageState extends State<BookingPage>
 
     return ViewModelBuilder<ServiceViewModel>.reactive(
       viewModelBuilder: () => ServiceViewModel(context, widget.vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return BasePage(
           showAppBar: true,

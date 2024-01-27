@@ -1,23 +1,23 @@
 class LoyaltyPointReport {
   LoyaltyPointReport({
-    this.id,
-    this.points,
-    this.amount,
-    this.orderId,
-    this.loyaltyPointId,
-    this.isCredit,
-    this.createdAt,
-    this.updatedAt,
+    required this.id,
+    required this.points,
+    required this.amount,
+    required this.orderId,
+    required this.loyaltyPointId,
+    required this.isCredit,
+    required this.createdAt,
+    required this.updatedAt,
     this.deletedAt,
-    this.formattedDate,
-    this.formattedUpdatedDate,
+    required this.formattedDate,
+    required this.formattedUpdatedDate,
   });
 
   int id;
   double points;
   double amount;
-  int orderId;
-  int loyaltyPointId;
+  int? orderId;
+  int? loyaltyPointId;
   bool isCredit;
   DateTime createdAt;
   DateTime updatedAt;
@@ -25,22 +25,23 @@ class LoyaltyPointReport {
   String formattedDate;
   String formattedUpdatedDate;
 
-  factory LoyaltyPointReport.fromJson(Map<String, dynamic> json) =>
-      LoyaltyPointReport(
-        id: json["id"],
-        points: json["points"].toDouble(),
-        amount: double.parse(json["amount"].toString()),
-        orderId: json["order_id"],
-        loyaltyPointId: json["loyalty_point_id"],
-        isCredit: json["is_credit"] == null
-            ? false
-            : (["1", 1].contains(json["is_credit"])),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        deletedAt: json["deleted_at"],
-        formattedDate: json["formatted_date"],
-        formattedUpdatedDate: json["formatted_updated_date"],
-      );
+  factory LoyaltyPointReport.fromJson(Map<String, dynamic> json) {
+    return LoyaltyPointReport(
+      id: json["id"],
+      points: json["points"].toDouble(),
+      amount: double.parse(json["amount"].toString()),
+      orderId: json["order_id"],
+      loyaltyPointId: json["loyalty_point_id"],
+      isCredit: json["is_credit"] == null
+          ? false
+          : (["1", 1].contains(json["is_credit"])),
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
+      deletedAt: json["deleted_at"],
+      formattedDate: json["formatted_date"],
+      formattedUpdatedDate: json["formatted_updated_date"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,

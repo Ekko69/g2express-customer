@@ -11,7 +11,7 @@ import 'package:velocity_x/velocity_x.dart';
 class ShareButton extends StatelessWidget {
   const ShareButton({
     this.model,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final dynamic model;

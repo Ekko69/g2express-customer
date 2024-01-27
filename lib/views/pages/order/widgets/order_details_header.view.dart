@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderDetailsHeaderView extends StatelessWidget {
-  const OrderDetailsHeaderView(this.vm, {Key key}) : super(key: key);
+  const OrderDetailsHeaderView(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
 
   @override
@@ -29,7 +29,12 @@ class OrderDetailsHeaderView extends StatelessWidget {
             CurrencyHStack(
               [
                 AppStrings.currencySymbol.text.medium.lg.make().px4(),
-                (vm.order.total ?? 0.00).currencyValueFormat().text.medium.xl2.make(),
+                (vm.order.total ?? 0.00)
+                    .currencyValueFormat()
+                    .text
+                    .medium
+                    .xl2
+                    .make(),
               ],
             ),
           ],

@@ -10,6 +10,7 @@ import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/view_models/welcome.vm.dart';
 import 'package:fuodz/views/pages/vendor/widgets/banners.view.dart';
 import 'package:fuodz/views/pages/vendor/widgets/section_vendors.view.dart';
+import 'package:fuodz/views/shared/widgets/section_coupons.view.dart';
 import 'package:fuodz/widgets/cards/custom.visibility.dart';
 import 'package:fuodz/widgets/cards/welcome_intro.view.dart';
 import 'package:fuodz/widgets/custom_list_view.dart';
@@ -22,7 +23,10 @@ import 'package:masonry_grid/masonry_grid.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class EmptyWelcome extends StatelessWidget {
-  const EmptyWelcome({this.vm, Key key}) : super(key: key);
+  const EmptyWelcome({
+    required this.vm,
+    Key? key,
+  }) : super(key: key);
 
   final WelcomeViewModel vm;
   @override
@@ -39,7 +43,7 @@ class EmptyWelcome extends StatelessWidget {
           [
             //finance section
             CustomVisibilty(
-              visible: HomeScreenConfig.showWalletOnHomeScreen ?? true,
+              visible: HomeScreenConfig.showWalletOnHomeScreen,
               child: WalletManagementView().px20().py16(),
             ),
             //
@@ -90,6 +94,7 @@ class EmptyWelcome extends StatelessWidget {
                     dataSet: vm.vendorTypes,
                     isLoading: vm.isBusy,
                     loadingWidget: LoadingShimmer().px20(),
+                    padding: EdgeInsets.zero,
                     itemBuilder: (context, index) {
                       final vendorType = vm.vendorTypes[index];
                       return VendorTypeListItem(
@@ -116,11 +121,11 @@ class EmptyWelcome extends StatelessWidget {
                       !vm.isBusy,
                   child: AnimationLimiter(
                     child: MasonryGrid(
-                      column: HomeScreenConfig.vendorTypePerRow ?? 2,
+                      column: HomeScreenConfig.vendorTypePerRow,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                       children: List.generate(
-                        vm.vendorTypes.length ?? 0,
+                        vm.vendorTypes.length,
                         (index) {
                           final vendorType = vm.vendorTypes[index];
                           return VendorTypeVerticalListItem(
@@ -145,7 +150,18 @@ class EmptyWelcome extends StatelessWidget {
               child: Banners(
                 null,
                 featured: true,
-              ).py12().pOnly(bottom: context.percentHeight * 10),
+              ).py12(),
+            ),
+
+            //coupons
+            SectionCouponsView(
+              null,
+              title: "Promo".tr(),
+              scrollDirection: Axis.horizontal,
+              itemWidth: context.percentWidth * 70,
+              height: 100,
+              itemsPadding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+              bPadding: 10,
             ),
 
             //featured vendors

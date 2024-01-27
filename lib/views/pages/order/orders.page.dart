@@ -14,7 +14,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrdersPage extends StatefulWidget {
-  const OrdersPage({Key key}) : super(key: key);
+  const OrdersPage({Key? key}) : super(key: key);
 
   @override
   _OrdersPageState createState() => _OrdersPageState();
@@ -23,7 +23,7 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPageState extends State<OrdersPage>
     with AutomaticKeepAliveClientMixin<OrdersPage>, WidgetsBindingObserver {
   //
-  OrdersViewModel vm;
+  late OrdersViewModel vm;
   @override
   void initState() {
     super.initState();
@@ -38,7 +38,7 @@ class _OrdersPageState extends State<OrdersPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && vm != null) {
+    if (state == AppLifecycleState.resumed) {
       vm.fetchMyOrders();
     }
   }
@@ -51,7 +51,7 @@ class _OrdersPageState extends State<OrdersPage>
       body: SafeArea(
         child: ViewModelBuilder<OrdersViewModel>.reactive(
           viewModelBuilder: () => vm,
-          onModelReady: (vm) => vm.initialise(),
+          onViewModelReady: (vm) => vm.initialise(),
           builder: (context, vm, child) {
             return VStack(
               [
@@ -93,16 +93,9 @@ class _OrdersPageState extends State<OrdersPage>
                           }
                           return OrderListItem(
                             order: order,
-                            onPayPressed: () => OrderService.openOrderPayment(order, vm),
-                            // {
-                            //   if ((order?.paymentMethod?.slug ?? "offline") !=
-                            //       "offline") {
-                            //     vm.openWebpageLink(order.paymentLink);
-                            //   } else {
-                            //     vm.openExternalWebpageLink(order.paymentLink);
-                            //   }
-                            // },
                             orderPressed: () => vm.openOrderDetails(order),
+                            onPayPressed: () =>
+                                OrderService.openOrderPayment(order, vm),
                           );
                         },
                         separatorBuilder: (context, index) =>

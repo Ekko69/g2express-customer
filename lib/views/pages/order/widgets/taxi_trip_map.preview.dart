@@ -3,9 +3,10 @@ import 'package:fuodz/constants/app_images.dart';
 import 'package:fuodz/models/order.dart';
 import 'package:fuodz/utils/map.utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class TaxiTripMapPreview extends StatefulWidget {
-  TaxiTripMapPreview(this.order, {Key key}) : super(key: key);
+  TaxiTripMapPreview(this.order, {Key? key}) : super(key: key);
 
   final Order order;
   @override
@@ -20,7 +21,7 @@ class _TaxiTripMapPreviewState extends State<TaxiTripMapPreview> {
   Widget build(BuildContext context) {
     return Container(
       height: 200,
-      width: double.infinity,
+      width: context.screenWidth,
       child: AbsorbPointer(
         child: GoogleMap(
           zoomGesturesEnabled: false,
@@ -30,13 +31,13 @@ class _TaxiTripMapPreviewState extends State<TaxiTripMapPreview> {
           padding: EdgeInsets.all(5),
           markers: Set.of(markers),
           initialCameraPosition: CameraPosition(
-            target: widget.order?.taxiOrder?.pickupLatLng,
+            target: widget.order.taxiOrder!.pickupLatLng,
             zoom: 16,
           ),
           cameraTargetBounds: CameraTargetBounds(
             MapUtils.targetBounds(
-              widget.order?.taxiOrder?.pickupLatLng,
-              widget.order?.taxiOrder?.dropoffLatLng,
+              widget.order.taxiOrder!.pickupLatLng,
+              widget.order.taxiOrder!.dropoffLatLng,
             ),
           ),
           onMapCreated: setLocMarkers,
@@ -58,15 +59,15 @@ class _TaxiTripMapPreviewState extends State<TaxiTripMapPreview> {
     gMapController.moveCamera(
       CameraUpdate.newLatLngBounds(
         MapUtils.targetBounds(
-          widget.order?.taxiOrder?.pickupLatLng,
-          widget.order?.taxiOrder?.dropoffLatLng,
+          widget.order.taxiOrder!.pickupLatLng,
+          widget.order.taxiOrder!.dropoffLatLng,
         ),
         40,
       ),
     );
   }
 
-  void setGoogleMapStyle(gMapController) async {
+  Future<void> setGoogleMapStyle(gMapController) async {
     String value = await DefaultAssetBundle.of(context).loadString(
       'assets/json/google_map_style.json',
     );
@@ -88,14 +89,14 @@ class _TaxiTripMapPreviewState extends State<TaxiTripMapPreview> {
     //
     //
     Marker pickupLocMarker = Marker(
-      markerId: MarkerId(widget.order?.taxiOrder?.pickupLatitude),
-      position: widget.order?.taxiOrder?.pickupLatLng,
+      markerId: MarkerId(widget.order.taxiOrder!.pickupLatitude),
+      position: widget.order.taxiOrder!.pickupLatLng,
       icon: sourceIcon,
     );
     //
     Marker dropoffLocMarker = Marker(
-      markerId: MarkerId(widget.order?.taxiOrder?.id.toString()),
-      position: widget.order?.taxiOrder?.dropoffLatLng,
+      markerId: MarkerId(widget.order.taxiOrder!.id.toString()),
+      position: widget.order.taxiOrder!.dropoffLatLng,
       icon: destinationIcon,
     );
     //

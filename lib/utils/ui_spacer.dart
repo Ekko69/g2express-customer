@@ -32,7 +32,10 @@ class UiSpacer {
       ).w(40).box.rounded.clip(Clip.antiAlias).make().centered();
 
   //
-  static Widget cutDivider({Color color}) => ClipPath(
+  static Widget cutDivider({
+    Color? color,
+  }) =>
+      ClipPath(
         clipper: MultiplePointsClipper(Sides.bottom,
             heightOfPoint: 5, numberOfPoints: 40),
         child: SizedBox(

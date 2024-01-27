@@ -1,5 +1,6 @@
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fuodz/constants/app_colors.dart';
 import 'package:fuodz/constants/app_images.dart';
 import 'package:fuodz/constants/app_strings.dart';
@@ -18,12 +19,12 @@ class RegisterPage extends StatefulWidget {
     this.email,
     this.name,
     this.phone,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
-  final String email;
-  final String name;
-  final String phone;
+  final String? email;
+  final String? name;
+  final String? phone;
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -33,10 +34,10 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<RegisterViewModel>.reactive(
       viewModelBuilder: () => RegisterViewModel(context),
-      onModelReady: (model) {
-        model.nameTEC.text = widget.name;
-        model.emailTEC.text = widget.email;
-        model.phoneTEC.text = widget.phone;
+      onViewModelReady: (model) {
+        model.nameTEC.text = widget.name ?? "";
+        model.emailTEC.text = widget.email ?? "";
+        model.phoneTEC.text = widget.phone ?? "";
         model.initialise();
       },
       builder: (context, model, child) {
@@ -77,6 +78,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               keyboardType: TextInputType.emailAddress,
                               textEditingController: model.emailTEC,
                               validator: FormValidator.validateEmail,
+                              //remove space
+                              inputFormatters: [
+                                FilteringTextInputFormatter.deny(
+                                  RegExp(' '),
+                                ), // removes spaces
+                              ],
                             ).py12(),
                             //
                             HStack(
@@ -86,13 +93,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                     [
                                       //icon/flag
                                       Flag.fromString(
-                                        model.selectedCountry.countryCode,
+                                        model.selectedCountry!.countryCode,
                                         width: 20,
                                         height: 20,
                                       ),
                                       UiSpacer.horizontalSpace(space: 5),
                                       //text
-                                      ("+" + model.selectedCountry.phoneCode)
+                                      ("+" + model.selectedCountry!.phoneCode)
                                           .text
                                           .make(),
                                     ],
@@ -102,6 +109,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                   keyboardType: TextInputType.phone,
                                   textEditingController: model.phoneTEC,
                                   validator: FormValidator.validatePhone,
+                                  //remove space
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.deny(
+                                      RegExp(' '),
+                                    ), // removes spaces
+                                  ],
                                 ).expand(),
                               ],
                             ).py12(),
@@ -111,6 +124,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               obscureText: true,
                               textEditingController: model.passwordTEC,
                               validator: FormValidator.validatePassword,
+                              //remove space
+                              inputFormatters: [
+                                FilteringTextInputFormatter.deny(
+                                  RegExp(' '),
+                                ), // removes spaces
+                              ],
                             ).py12(),
                             //
                             AppStrings.enableReferSystem
@@ -127,7 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 Checkbox(
                                   value: model.agreed,
                                   onChanged: (value) {
-                                    model.agreed = value;
+                                    model.agreed = value ?? false;
                                     model.notifyListeners();
                                   },
                                 ),

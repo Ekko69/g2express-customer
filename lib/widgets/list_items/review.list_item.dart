@@ -7,7 +7,7 @@ import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ReviewListItem extends StatelessWidget {
-  const ReviewListItem(this.review, {Key key}) : super(key: key);
+  const ReviewListItem(this.review, {Key? key}) : super(key: key);
   final Review review;
 
   @override

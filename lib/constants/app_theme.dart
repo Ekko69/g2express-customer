@@ -10,8 +10,10 @@ class AppTheme {
       // fontFamily: GoogleFonts.krub().fontFamily,
       // fontFamily: GoogleFonts.montserrat().fontFamily,
       // fontFamily: GoogleFonts.poppins().fontFamily,
+      // fontFamily: GoogleFonts.roboto().fontFamily,
+      fontFamily: GoogleFonts.nunito().fontFamily,
+      // fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
       // backgroundColor: Colors.white,
-      fontFamily: GoogleFonts.roboto().fontFamily,
       primaryColor: AppColor.primaryColor,
       primaryColorDark: AppColor.primaryColorDark,
       textSelectionTheme: TextSelectionThemeData(
@@ -40,7 +42,10 @@ class AppTheme {
         secondary: AppColor.accentColor,
         brightness: Brightness.light,
       ).copyWith(
-          primary: AppColor.primaryMaterialColor, background: Colors.white),
+        primary: AppColor.primaryMaterialColor,
+        background: Colors.white,
+      ),
+      useMaterial3: false,
     );
   }
 
@@ -49,7 +54,9 @@ class AppTheme {
     return ThemeData(
       // fontFamily: GoogleFonts.iBMPlexSerif().fontFamily,
       // fontFamily: GoogleFonts.krub().fontFamily,
-      fontFamily: GoogleFonts.roboto().fontFamily,
+      // fontFamily: GoogleFonts.roboto().fontFamily,
+      fontFamily: GoogleFonts.nunito().fontFamily,
+      // fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
       primaryColor: AppColor.primaryColor,
       primaryColorDark: AppColor.primaryColorDark,
       textSelectionTheme: TextSelectionThemeData(
@@ -79,6 +86,7 @@ class AppTheme {
             primary: AppColor.primaryMaterialColor,
             background: Colors.grey[850],
           ),
+      useMaterial3: false,
     );
   }
 }

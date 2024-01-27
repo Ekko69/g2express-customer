@@ -8,14 +8,20 @@ import 'package:fuodz/widgets/cards/custom.visibility.dart';
 import 'package:fuodz/widgets/currency_hstack.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:fuodz/widgets/tags/fav.positioned.dart';
+import 'package:fuodz/widgets/tags/product_tags.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CommerceProductListItem extends StatelessWidget {
-  const CommerceProductListItem(this.product, {this.height, Key key})
-      : super(key: key);
+  const CommerceProductListItem(
+    this.product, {
+    this.height,
+    this.boxFit,
+    Key? key,
+  }) : super(key: key);
 
   final Product product;
-  final double height;
+  final double? height;
+  final BoxFit? boxFit;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +35,13 @@ class CommerceProductListItem extends StatelessWidget {
               imageUrl: "${product.photo}",
               width: double.infinity,
               height: height,
-              boxFit: BoxFit.contain,
-            ).box.topRounded(value: 5).clip(Clip.antiAlias).make(),
+              boxFit: boxFit ?? BoxFit.contain,
+            ).box.slate100.withRounded(value: 5).clip(Clip.antiAlias).make(),
 
             //fav icon
             FavPositiedView(product),
           ],
-        ).p2(),
+        ),
 
         //details
         VStack(
@@ -46,9 +52,9 @@ class CommerceProductListItem extends StatelessWidget {
                 .medium
                 .size(14)
                 .maxLines(2)
-                .minFontSize(12)
+                .minFontSize(14)
                 .maxFontSize(14)
-                .overflow(TextOverflow.ellipsis)
+                .ellipsis
                 .make(),
 
             // "${product.vendor.name}".text.make(),
@@ -90,6 +96,9 @@ class CommerceProductListItem extends StatelessWidget {
             ),
           ],
         ).p8(),
+
+        //
+        ProductTags(product),
       ],
     )
         .onInkTap(
@@ -98,13 +107,13 @@ class CommerceProductListItem extends StatelessWidget {
         .material(color: context.theme.colorScheme.background)
         .box
         .clip(Clip.antiAlias)
-        .border(
-          color: context.theme.colorScheme.background,
-          width: 2,
-        )
+        // .border(
+        //   color: context.theme.colorScheme.background,
+        //   width: 2,
+        // )
         .color(context.theme.colorScheme.background)
-        .withRounded(value: 8)
-        .outerShadowSm
+        .withRounded(value: 5)
+        .outerShadow
         .make();
   }
 

@@ -34,6 +34,7 @@ class AppImages {
   //
   static const locationGif = "assets/images/location.gif";
   static const noImage = "assets/images/no_image.png";
-
-
+  static const placeholder = "assets/images/placeholder.png";
+  static const emptyLoyaltyPoints = "assets/images/no_loyalty_points.png";
+  static const emptyParcelOrder = "assets/images/no_parcel_order.png";
 }

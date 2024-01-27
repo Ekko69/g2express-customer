@@ -18,7 +18,7 @@ class AppService {
   BehaviorSubject<int> homePageIndex = BehaviorSubject<int>();
   BehaviorSubject<bool> refreshAssignedOrders = BehaviorSubject<bool>();
   BehaviorSubject<bool> refreshWalletBalance = BehaviorSubject<bool>();
-  int vendorId;
+  int? vendorId;
   Lock lock = new Lock();
 
   //

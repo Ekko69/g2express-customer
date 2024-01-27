@@ -1,6 +1,7 @@
 import 'package:firestore_chat/firestore_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
+import 'package:fuodz/constants/app_ui_settings.dart';
 import 'package:fuodz/models/checkout.dart';
 import 'package:fuodz/models/coupon.dart';
 import 'package:fuodz/models/order.dart';
@@ -29,15 +30,15 @@ class TaxiViewModel extends TripTaxiViewModel {
   PaymentMethodRequest paymentOptionRequest = PaymentMethodRequest();
 //
 
-  VendorType vendorType;
+  VendorType? vendorType;
   //coupons
   bool canApplyCoupon = false;
   bool canScheduleTaxiOrder = false;
-  Coupon coupon;
+  Coupon? coupon;
   TextEditingController couponTEC = TextEditingController();
 
   //
-  CheckOut checkout = CheckOut();
+  CheckOut? checkout = CheckOut();
   double subTotal = 0.0;
   double total = 0.0;
   double tip = 0.0;
@@ -58,8 +59,7 @@ class TaxiViewModel extends TripTaxiViewModel {
   }
 
   isSelected(PaymentMethod paymentMethod) {
-    return selectedPaymentMethod != null &&
-        paymentMethod.id == selectedPaymentMethod.id;
+    return paymentMethod.id == selectedPaymentMethod?.id;
   }
 
   couponCodeChange(String code) {
@@ -80,17 +80,20 @@ class TaxiViewModel extends TripTaxiViewModel {
   //
   applyCoupon() async {
     //
-    setBusyForObject(coupon, true);
+    setBusyForObject("coupon", true);
     try {
       coupon = await cartRequest.fetchCoupon(
         couponTEC.text,
         vendorTypeId: vendorType?.id,
       );
+      if (coupon == null) {
+        throw "Coupon not found".tr();
+      }
       //
-      if (coupon.useLeft <= 0) {
+      if (coupon!.useLeft <= 0) {
         coupon = null;
         throw "Coupon use limit exceeded".tr();
-      } else if (coupon.expired) {
+      } else if (coupon!.expired) {
         coupon = null;
         throw "Coupon has expired".tr();
       }
@@ -100,18 +103,18 @@ class TaxiViewModel extends TripTaxiViewModel {
       calculateTotalAmount();
     } catch (error) {
       print("error ==> $error");
-      setErrorForObject(coupon, error);
+      setErrorForObject("coupon", error);
     }
-    setBusyForObject(coupon, false);
+    setBusyForObject("coupon", false);
   }
 
   //after locations has been selected
   proceedToStep2() async {
     //validate user has selected both pickup and drop off location
-    if (pickupLocation == null || dropoffLocation == null) {
+    if (dropoffLocation == null) {
       toastError("Please select pickup and drop-off location".tr());
     } else if (canScheduleTaxiOrder &&
-        (checkout?.pickupDate == null || checkout?.pickupTime == null)) {
+        (checkout!.pickupDate == null || checkout!.pickupTime == null)) {
       toastError("Please select pickup date and pickup time".tr());
     } else {
       checkLocationAvailabilityForStep2();
@@ -122,8 +125,8 @@ class TaxiViewModel extends TripTaxiViewModel {
   checkLocationAvailabilityForStep2() async {
     setBusy(true);
     final apiResponse = await taxiRequest.locationAvailable(
-      pickupLocation.latitude,
-      pickupLocation.longitude,
+      pickupLocation?.latitude ?? 0.00,
+      pickupLocation?.longitude ?? 0.00,
     );
     if (apiResponse.allGood) {
       prepareStep2();
@@ -145,9 +148,9 @@ class TaxiViewModel extends TripTaxiViewModel {
     setBusyForObject(vehicleTypes, true);
     try {
       vehicleTypes = await taxiRequest.getVehicleTypePricing(
-        pickupLocation,
-        dropoffLocation,
-        countryCode: LocationService?.currenctAddress?.countryCode,
+        pickupLocation!,
+        dropoffLocation!,
+        countryCode: LocationService.currenctAddress?.countryCode,
       );
     } catch (error) {
       print("Error getting vehicleTypes ==> $error");
@@ -156,10 +159,8 @@ class TaxiViewModel extends TripTaxiViewModel {
   }
 
   resortVehicleTypes() {
-    if (selectedVehicleType != null) {
-      vehicleTypes.removeWhere((e) => e.id == selectedVehicleType.id);
-      vehicleTypes.insert(0, selectedVehicleType);
-    }
+    vehicleTypes.removeWhere((e) => e.id == selectedVehicleType?.id);
+    vehicleTypes.insert(0, selectedVehicleType!);
   }
 
   //
@@ -172,18 +173,20 @@ class TaxiViewModel extends TripTaxiViewModel {
   //
   calculateTotalAmount() {
     //
-    subTotal = selectedVehicleType.total;
+    subTotal = selectedVehicleType!.total;
     print("subTotal ==> ${subTotal}");
     //
     if (coupon != null) {
-      if (coupon.percentage == 1) {
-        checkout.discount = (coupon.discount / 100) * subTotal;
+      if (coupon!.percentage == 1) {
+        checkout!.discount = (coupon!.discount / 100) * subTotal;
       } else {
-        checkout.discount = coupon.discount;
+        checkout!.discount = coupon!.discount;
       }
+    } else {
+      checkout!.discount = 0;
     }
-    print("discount ==> ${checkout.discount}");
-    total = subTotal - (checkout.discount ?? 0);
+    print("discount ==> ${checkout!.discount}");
+    total = subTotal - (checkout?.discount ?? 0);
     print("total ==> ${total}");
     notifyListeners();
   }
@@ -192,26 +195,26 @@ class TaxiViewModel extends TripTaxiViewModel {
   processNewOrder() async {
     //
     final params = {
-      "payment_method_id": selectedPaymentMethod.id,
-      "vehicle_type_id": selectedVehicleType.id,
+      "payment_method_id": selectedPaymentMethod?.id,
+      "vehicle_type_id": selectedVehicleType?.id,
       "pickup": {
-        "lat": pickupLocation.latitude,
-        "lng": pickupLocation.longitude,
-        "address": pickupLocation.address,
+        "lat": pickupLocation!.latitude,
+        "lng": pickupLocation!.longitude,
+        "address": pickupLocation!.address,
       },
       "dropoff": {
-        "lat": dropoffLocation.latitude,
-        "lng": dropoffLocation.longitude,
-        "address": dropoffLocation.address,
+        "lat": dropoffLocation!.latitude,
+        "lng": dropoffLocation!.longitude,
+        "address": dropoffLocation!.address,
       },
       "sub_total": subTotal,
       "total": total,
-      "discount": checkout.discount,
+      "discount": checkout!.discount,
       "tip": tip,
       "coupon_code": coupon?.code,
-      "vehicle_type": selectedVehicleType.encrypted,
-      "pickup_date": checkout.pickupDate,
-      "pickup_time": checkout.pickupTime,
+      "vehicle_type": selectedVehicleType?.encrypted,
+      "pickup_date": checkout!.pickupDate,
+      "pickup_time": checkout!.pickupTime,
     };
 
     setBusy(true);
@@ -235,7 +238,7 @@ class TaxiViewModel extends TripTaxiViewModel {
         await openWebpageLink(paymentLink);
       }
       //
-      if (checkout.pickupDate == null || !canScheduleTaxiOrder) {
+      if (checkout!.pickupDate == null || !canScheduleTaxiOrder) {
         startHandlingOnGoingTrip();
       } else {
         closeOrderSummary();
@@ -247,27 +250,28 @@ class TaxiViewModel extends TripTaxiViewModel {
   openTripChat() {
     //
     Map<String, PeerUser> peers = {
-      '${onGoingOrderTrip.userId}': PeerUser(
-        id: '${onGoingOrderTrip.userId}',
-        name: onGoingOrderTrip.user.name,
-        image: onGoingOrderTrip.user.photo,
+      '${onGoingOrderTrip!.userId}': PeerUser(
+        id: '${onGoingOrderTrip!.userId}',
+        name: onGoingOrderTrip!.user.name,
+        image: onGoingOrderTrip!.user.photo,
       ),
-      '${onGoingOrderTrip.driver.id}': PeerUser(
-          id: "${onGoingOrderTrip.driver.id}",
-          name: onGoingOrderTrip.driver.name,
-          image: onGoingOrderTrip.driver.photo),
+      '${onGoingOrderTrip?.driver?.id}': PeerUser(
+          id: "${onGoingOrderTrip?.driver?.id}",
+          name: onGoingOrderTrip?.driver?.name ?? "Driver".tr(),
+          image: onGoingOrderTrip?.driver?.photo),
     };
     //
     final chatEntity = ChatEntity(
       onMessageSent: ChatService.sendChatMessage,
-      mainUser: peers['${onGoingOrderTrip.userId}'],
+      mainUser: peers['${onGoingOrderTrip?.userId}']!,
       peers: peers,
       //don't translate this
-      path: 'orders/' + onGoingOrderTrip.code + "/customerDriver/chats",
+      path: 'orders/' + onGoingOrderTrip!.code + "/customerDriver/chats",
       title: "Chat with driver".tr(),
+      supportMedia: AppUISettings.canCustomerChatSupportMedia,
     );
     //
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.chatRoute,
       arguments: chatEntity,
     );

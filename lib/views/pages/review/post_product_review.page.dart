@@ -12,14 +12,14 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class PostProductReviewPage extends StatelessWidget {
-  const PostProductReviewPage(this.orderProduct, {Key key}) : super(key: key);
+  const PostProductReviewPage(this.orderProduct, {Key? key}) : super(key: key);
   final OrderProduct orderProduct;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ProductReviewViewModel>.reactive(
       viewModelBuilder: () => ProductReviewViewModel(
         context,
-        orderProduct.product,
+        orderProduct.product!,
         false,
         orderId: orderProduct.orderId,
       ),
@@ -34,13 +34,13 @@ class PostProductReviewPage extends StatelessWidget {
                 [
                   //
                   CustomImage(
-                    imageUrl: orderProduct.product.photo,
+                    imageUrl: orderProduct.product!.photo,
                     width: 40,
                     height: 40,
                   ),
                   UiSpacer.hSpace(12),
                   //
-                  orderProduct.product.name.text
+                  orderProduct.product!.name.text
                       .maxLines(3)
                       .ellipsis
                       .semiBold

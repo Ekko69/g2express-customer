@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class SimilarCommerceProducts extends StatefulWidget {
-  SimilarCommerceProducts(this.product, {Key key}) : super(key: key);
+  SimilarCommerceProducts(this.product, {Key? key}) : super(key: key);
 
   final Product product;
   @override
@@ -24,11 +24,11 @@ class _SimilarCommerceProductsState extends State<SimilarCommerceProducts> {
     return ViewModelBuilder<ProductsViewModel>.reactive(
       viewModelBuilder: () => ProductsViewModel(
         context,
-        widget.product?.vendor?.vendorType,
+        widget.product.vendor.vendorType,
         ProductFetchDataType.RANDOM,
-        categoryId: widget.product?.categoryId,
+        categoryId: widget.product.categoryId,
       ),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [

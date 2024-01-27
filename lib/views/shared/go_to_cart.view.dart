@@ -8,7 +8,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class GoToCartView extends StatelessWidget {
-  const GoToCartView({Key key}) : super(key: key);
+  const GoToCartView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class GoToCartView extends StatelessWidget {
         stream: CartServices.cartItemsCountStream.stream,
         builder: (context, snapshot) {
           return Visibility(
-            visible: snapshot.hasData && snapshot.data > 0,
+            visible: snapshot.hasData && snapshot.data! > 0,
             child: HStack(
               [
                 //

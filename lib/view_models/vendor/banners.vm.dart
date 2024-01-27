@@ -11,14 +11,14 @@ class BannersViewModel extends MyBaseViewModel {
   BannersViewModel(
     BuildContext context,
     this.vendorType, {
-    this.featured,
+    this.featured = false,
   }) {
     this.viewContext = context;
   }
   //
   BannerRequest _bannerRequest = BannerRequest();
   bool featured;
-  VendorType vendorType;
+  VendorType? vendorType;
   //
   List<Banner> banners = [];
   int currentIndex = 0;
@@ -42,16 +42,15 @@ class BannersViewModel extends MyBaseViewModel {
 
   //
   bannerSelected(Banner banner) {
-    if (banner.link != null && banner.link.isNotEmpty) {
-      //
-      openWebpageLink(banner.link);
+    if (banner.link != null && banner.link.isNotEmptyAndNotNull) {
+      openWebpageLink(banner.link!);
     } else if (banner.vendor != null) {
-      viewContext.navigator.pushNamed(
+      Navigator.of(viewContext).pushNamed(
         AppRoutes.vendorDetails,
         arguments: banner.vendor,
       );
     } else {
-      viewContext.navigator.pushNamed(
+      Navigator.of(viewContext).pushNamed(
         AppRoutes.search,
         arguments: Search(category: banner.category),
       );

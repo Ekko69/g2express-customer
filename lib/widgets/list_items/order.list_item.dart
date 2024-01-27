@@ -13,10 +13,10 @@ import 'package:velocity_x/velocity_x.dart';
 
 class OrderListItem extends StatelessWidget {
   const OrderListItem({
-    this.order,
-    this.onPayPressed,
-    this.orderPressed,
-    Key key,
+    required this.order,
+    required this.onPayPressed,
+    required this.orderPressed,
+    Key? key,
   }) : super(key: key);
 
   final Order order;
@@ -46,23 +46,24 @@ class OrderListItem extends StatelessWidget {
                 Divider(height: 4),
 
                 //
-                "${order.vendor.name}".text.lg.medium.make().py4(),
+                "${order.vendor?.name}".text.lg.medium.make().py4(),
                 //amount and total products
                 HStack(
                   [
                     (order.isPackageDelivery
-                            ? order.packageType.name
+                            ? order.packageType?.name
                             : order.isSerice
-                                ? "${order?.orderService?.service?.category?.name}"
+                                ? "${order.orderService?.service?.category?.name}"
                                 : "%s Product(s)"
                                     .tr()
-                                    .fill([order.orderProducts.length ?? 0]))
+                                    .fill([order.orderProducts?.length ?? 0]))!
                         .text
                         .medium
                         .make()
                         .expand(),
                     "${order.status}"
                         .tr()
+                        .capitalized
                         .text
                         .color(
                           AppColor.getStausColor(order.status),
@@ -95,7 +96,7 @@ class OrderListItem extends StatelessWidget {
         order.isPaymentPending
             ? CustomButton(
                 title: "PAY FOR ORDER".tr(),
-                titleStyle: context.textTheme.bodyLarge.copyWith(
+                titleStyle: context.textTheme.bodyLarge!.copyWith(
                   color: Colors.white,
                 ),
                 icon: FlutterIcons.credit_card_fea,
@@ -107,13 +108,13 @@ class OrderListItem extends StatelessWidget {
       ],
     )
         .box
-        .border(color: Colors.grey[200])
+        .border(color: Colors.grey.shade200)
         .make()
-        .onInkTap(orderPressed)
         .card
         .elevation(0.5)
         .clip(Clip.antiAlias)
         .roundedSM
-        .make();
+        .make()
+        .onInkTap(() => orderPressed());
   }
 }

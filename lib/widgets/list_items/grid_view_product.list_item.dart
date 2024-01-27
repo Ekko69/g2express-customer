@@ -12,11 +12,11 @@ import 'package:velocity_x/velocity_x.dart';
 
 class GridViewProductListItem extends StatelessWidget {
   const GridViewProductListItem({
-    this.product,
-    this.onPressed,
-    @required this.qtyUpdated,
+    required this.product,
+    required this.onPressed,
+    required this.qtyUpdated,
     this.showStepper = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final Function(Product) onPressed;
@@ -33,7 +33,7 @@ class GridViewProductListItem extends StatelessWidget {
           children: [
             //
             Hero(
-              tag: product.heroTag,
+              tag: product.heroTag ?? product.id,
               child: CustomImage(
                 imageUrl: product.photo,
                 boxFit: BoxFit.contain,

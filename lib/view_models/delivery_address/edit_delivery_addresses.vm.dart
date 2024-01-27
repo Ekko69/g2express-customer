@@ -15,7 +15,7 @@ class EditDeliveryAddressesViewModel extends BaseDeliveryAddressesViewModel {
   TextEditingController addressTEC = TextEditingController();
   TextEditingController descriptionTEC = TextEditingController();
   bool isDefault = false;
-  DeliveryAddress deliveryAddress;
+  DeliveryAddress? deliveryAddress;
 
   //
   EditDeliveryAddressesViewModel(BuildContext context, this.deliveryAddress) {
@@ -25,10 +25,10 @@ class EditDeliveryAddressesViewModel extends BaseDeliveryAddressesViewModel {
   //
   void initialise() {
     //
-    nameTEC.text = deliveryAddress.name;
-    addressTEC.text = deliveryAddress.address;
-    descriptionTEC.text = deliveryAddress.description;
-    isDefault = deliveryAddress.isDefault == 1;
+    nameTEC.text = deliveryAddress!.name!;
+    addressTEC.text = deliveryAddress!.address!;
+    descriptionTEC.text = deliveryAddress!.description!;
+    isDefault = deliveryAddress!.isDefault == 1;
     notifyListeners();
   }
 
@@ -38,44 +38,62 @@ class EditDeliveryAddressesViewModel extends BaseDeliveryAddressesViewModel {
 
     if (result is PickResult) {
       PickResult locationResult = result;
-      addressTEC.text = locationResult.formattedAddress;
-      deliveryAddress.address = locationResult.formattedAddress;
-      deliveryAddress.latitude = locationResult.geometry.location.lat;
-      deliveryAddress.longitude = locationResult.geometry.location.lng;
-      // From coordinates
-      setBusy(true);
-      deliveryAddress = await getLocationCityName(deliveryAddress);
-      setBusy(false);
+      addressTEC.text = locationResult.formattedAddress ?? "";
+      deliveryAddress!.address = locationResult.formattedAddress;
+      deliveryAddress!.latitude = locationResult.geometry?.location.lat;
+      deliveryAddress!.longitude = locationResult.geometry?.location.lng;
+
+      //
+      if (locationResult.addressComponents != null &&
+          locationResult.addressComponents!.isNotEmpty) {
+        //fetch city, state and country from address components
+        locationResult.addressComponents!.forEach((addressComponent) {
+          if (addressComponent.types.contains("locality")) {
+            deliveryAddress!.city = addressComponent.longName;
+          }
+          if (addressComponent.types.contains("administrative_area_level_1")) {
+            deliveryAddress!.state = addressComponent.longName;
+          }
+          if (addressComponent.types.contains("country")) {
+            deliveryAddress!.country = addressComponent.longName;
+          }
+        });
+      } else {
+        // From coordinates
+        setBusy(true);
+        deliveryAddress = await getLocationCityName(deliveryAddress!);
+        setBusy(false);
+      }
       notifyListeners();
     } else if (result is Address) {
       Address locationResult = result;
-      addressTEC.text = locationResult.addressLine;
-      deliveryAddress.address = locationResult.addressLine;
-      deliveryAddress.latitude = locationResult.coordinates.latitude;
-      deliveryAddress.longitude = locationResult.coordinates.longitude;
-      deliveryAddress.city = locationResult.locality;
-      deliveryAddress.state = locationResult.adminArea;
-      deliveryAddress.country = locationResult.countryName;
+      addressTEC.text = locationResult.addressLine ?? "";
+      deliveryAddress!.address = locationResult.addressLine;
+      deliveryAddress!.latitude = locationResult.coordinates?.latitude;
+      deliveryAddress!.longitude = locationResult.coordinates?.longitude;
+      deliveryAddress!.city = locationResult.locality;
+      deliveryAddress!.state = locationResult.adminArea;
+      deliveryAddress!.country = locationResult.countryName;
     }
   }
 
-  void toggleDefault(bool value) {
-    isDefault = value;
-    deliveryAddress.isDefault = isDefault ? 1 : 0;
+  void toggleDefault(bool? value) {
+    isDefault = value ?? false;
+    deliveryAddress!.isDefault = isDefault ? 1 : 0;
     notifyListeners();
   }
 
   //
   updateDeliveryAddress() async {
-    if (formKey.currentState.validate()) {
+    if (formKey.currentState!.validate()) {
       //
-      deliveryAddress.name = nameTEC.text;
-      deliveryAddress.description = descriptionTEC.text;
+      deliveryAddress!.name = nameTEC.text;
+      deliveryAddress!.description = descriptionTEC.text;
       //
       setBusy(true);
       //
       final apiRespose = await deliveryAddressRequest.updateDeliveryAddress(
-        deliveryAddress,
+        deliveryAddress!,
       );
 
       //

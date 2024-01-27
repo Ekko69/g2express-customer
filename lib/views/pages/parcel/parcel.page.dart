@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_colors.dart';
+import 'package:fuodz/constants/app_images.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/vendor_type.dart';
 import 'package:fuodz/utils/ui_spacer.dart';
 import 'package:fuodz/view_models/parcel.vm.dart';
 import 'package:fuodz/views/pages/parcel/new_parcel.page.dart';
 import 'package:fuodz/widgets/base.page.dart';
+import 'package:fuodz/widgets/buttons/custom_button.dart';
 import 'package:fuodz/widgets/custom_text_form_field.dart';
-import 'package:fuodz/widgets/list_items/vendor_type.list_item.dart';
 import 'package:fuodz/widgets/recent_orders.view.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -15,7 +16,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ParcelPage extends StatefulWidget {
-  ParcelPage(this.vendorType, {Key key}) : super(key: key);
+  ParcelPage(this.vendorType, {Key? key}) : super(key: key);
 
   final VendorType vendorType;
 
@@ -36,7 +37,7 @@ class _ParcelPageState extends State<ParcelPage> {
           showLeadingAction: !AppStrings.isSingleVendorMode,
           elevation: 0,
           showCart: true,
-          title: "${vm.vendorType.name}",
+          title: "${vm.vendorType?.name}",
           appBarColor: AppColor.primaryColor,
           appBarItemColor: context.theme.colorScheme.background,
           key: vm.pageKey,
@@ -60,24 +61,67 @@ class _ParcelPageState extends State<ParcelPage> {
                       onFieldSubmitted: vm.trackOrder,
                       fillColor: context.brightness != Brightness.dark
                           ? Colors.white
-                          : Colors.grey[600],
+                          : Colors.grey.shade600,
                     ).py12(),
                   ],
                 ).p20().box.color(AppColor.primaryColor).make(),
 
                 //
                 UiSpacer.verticalSpace(),
-                VendorTypeListItem(
-                  vm.vendorType,
+                CustomButton(
+                  child: HStack(
+                    [
+                      Icon(
+                        Icons.add,
+                        color: context.theme.colorScheme.onPrimary,
+                      ),
+                      5.widthBox,
+                      "New Parcel Order".tr().text.xl.make(),
+                    ],
+                  ).p12(),
                   onPressed: () {
                     //open the new parcel page
-                    context.nextPage(NewParcelPage(widget.vendorType));
+                    context.nextPage(
+                      NewParcelPage(
+                        widget.vendorType,
+                      ),
+                    );
                   },
-                ).px20(),
+                ).wFull(context).px20(),
 
                 //recent orders
                 UiSpacer.verticalSpace(),
-                RecentOrdersView(vendorType: widget.vendorType),
+                RecentOrdersView(
+                  vendorType: widget.vendorType,
+                  emptyView: VStack(
+                    [
+                      20.heightBox,
+                      Image.asset(
+                        AppImages.emptyParcelOrder,
+                        height: context.percentHeight * 20,
+                      ),
+                      10.heightBox,
+                      "No Recent Parcel Orders"
+                          .tr()
+                          .text
+                          .semiBold
+                          .xl
+                          .center
+                          .makeCentered(),
+                      5.heightBox,
+                      "There are no recent parcel orders to display at the moment."
+                          .tr()
+                          .text
+                          .lg
+                          .medium
+                          .center
+                          .makeCentered(),
+                      20.heightBox,
+                    ],
+                    crossAlignment: CrossAxisAlignment.center,
+                    alignment: MainAxisAlignment.center,
+                  ),
+                ),
                 UiSpacer.verticalSpace(),
               ],
             ).scrollVertical(),

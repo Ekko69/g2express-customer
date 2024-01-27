@@ -16,7 +16,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class TaxiRateDriverView extends StatelessWidget {
-  const TaxiRateDriverView(this.vm, {Key key}) : super(key: key);
+  const TaxiRateDriverView(this.vm, {Key? key}) : super(key: key);
   final TaxiViewModel vm;
   @override
   Widget build(BuildContext context) {
@@ -32,12 +32,16 @@ class TaxiRateDriverView extends StatelessWidget {
         onChange: (size) {
           vm.updateGoogleMapPadding(height: 320);
         },
-        child: FutureBuilder<Order>(
+        child: FutureBuilder<Order?>(
             future: vm.taxiRequest.getOnGoingTrip(),
             builder: (context, snapshot) {
               //assign the order model from the one fetched from the server on order completed
               if (snapshot.hasData) {
                 vm.onGoingOrderTrip = snapshot.data;
+              }
+
+              if (snapshot.data == null) {
+                return Container();
               }
 
               return LoadingIndicator(
@@ -46,20 +50,24 @@ class TaxiRateDriverView extends StatelessWidget {
                   [
                     //driver details
                     CustomImage(
-                      imageUrl: vm.onGoingOrderTrip.driver.photo,
+                      imageUrl: vm.onGoingOrderTrip!.driver!.photo,
                       width: 80,
                       height: 80,
                     ).box.roundedSM.clip(Clip.antiAlias).makeCentered(),
                     //
-                    "${vm.onGoingOrderTrip.driver.name}".text.xl.medium.make(),
-                    "${vm.onGoingOrderTrip.driver.vehicle.vehicleInfo}"
+                    "${vm.onGoingOrderTrip!.driver!.name}"
+                        .text
+                        .xl
+                        .medium
+                        .make(),
+                    "${vm.onGoingOrderTrip!.driver!.vehicle!.vehicleInfo}"
                         .text
                         .light
                         .make(),
                     //
                     UiSpacer.verticalSpace(),
                     UiSpacer.divider(),
-                    "${vm.onGoingOrderTrip.taxiOrder.currency != null ? vm.onGoingOrderTrip.taxiOrder.currency.symbol : AppStrings.currencySymbol} ${vm.onGoingOrderTrip.total}"
+                    "${vm.onGoingOrderTrip!.taxiOrder!.currency != null ? vm.onGoingOrderTrip?.taxiOrder?.currency?.symbol : AppStrings.currencySymbol} ${vm.onGoingOrderTrip?.total}"
                         .text
                         .medium
                         .xl3

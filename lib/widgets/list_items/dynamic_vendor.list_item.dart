@@ -16,12 +16,12 @@ import 'package:velocity_x/velocity_x.dart';
 class DynamicVendorListItem extends StatelessWidget {
   const DynamicVendorListItem(
     this.vendor, {
-    this.onPressed,
-    Key key,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
 
   final Vendor vendor;
-  final Function(Vendor) onPressed;
+  final Function(Vendor)? onPressed;
   @override
   Widget build(BuildContext context) {
     return VStack(
@@ -31,7 +31,7 @@ class DynamicVendorListItem extends StatelessWidget {
           children: [
             //
             Hero(
-              tag: vendor.heroTag,
+              tag: vendor.heroTag ?? vendor.id,
               child: CustomImage(
                 imageUrl: vendor.featureImage,
                 height: 80,
@@ -138,7 +138,7 @@ class DynamicVendorListItem extends StatelessWidget {
                     color: AppColor.primaryColor,
                     size: 10,
                   ),
-                  " ${vendor?.distance?.numCurrency}km"
+                  " ${vendor.distance?.numCurrency}km"
                       .text
                       .minFontSize(6)
                       .size(10)
@@ -226,7 +226,7 @@ class DynamicVendorListItem extends StatelessWidget {
       ],
     )
         .onInkTap(
-          () => this.onPressed(this.vendor),
+          () => this.onPressed!(this.vendor),
         )
         .w(175)
         .box

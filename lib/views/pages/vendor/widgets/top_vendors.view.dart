@@ -16,7 +16,7 @@ class TopVendors extends StatelessWidget {
     this.vendorType, {
     this.scrollDirection = Axis.horizontal,
     this.noScrollPhysics = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final VendorType vendorType;
@@ -27,7 +27,7 @@ class TopVendors extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<TopVendorsViewModel>.reactive(
       viewModelBuilder: () => TopVendorsViewModel(context, vendorType),
-      onModelReady: (model) => model.initialise(),
+      onViewModelReady: (model) => model.initialise(),
       builder: (context, model, child) {
         return VStack(
           [
@@ -38,7 +38,7 @@ class TopVendors extends StatelessWidget {
                 //
                 CustomButton(
                   title: "Delivery".tr(),
-                  titleStyle: context.textTheme.bodyLarge.copyWith(
+                  titleStyle: context.textTheme.bodyLarge!.copyWith(
                     fontSize: 12,
                     color: Colors.white,
                   ),
@@ -50,7 +50,7 @@ class TopVendors extends StatelessWidget {
                 //
                 CustomButton(
                   title: "Pickup".tr(),
-                  titleStyle: context.textTheme.bodyLarge.copyWith(
+                  titleStyle: context.textTheme.bodyLarge!.copyWith(
                     fontSize: 12,
                     color: Colors.white,
                   ),

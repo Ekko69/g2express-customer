@@ -8,12 +8,12 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class UploadPrescriptionFab extends StatelessWidget {
-  const UploadPrescriptionFab(this.model, {Key key}) : super(key: key);
+  const UploadPrescriptionFab(this.model, {Key? key}) : super(key: key);
 
   final VendorDetailsViewModel model;
   @override
   Widget build(BuildContext context) {
-    return model.vendor.isPharmacyType && AppStrings.enableUploadPrescription
+    return model.vendor!.isPharmacyType && AppStrings.enableUploadPrescription
         ? FloatingActionButton.extended(
             onPressed: model.uploadPrescription,
             backgroundColor: AppColor.primaryColor,

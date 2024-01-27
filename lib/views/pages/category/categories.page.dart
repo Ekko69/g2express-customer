@@ -9,16 +9,19 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 
 class CategoriesPage extends StatelessWidget {
-  const CategoriesPage({this.vendorType, Key key}) : super(key: key);
+  const CategoriesPage({
+    this.vendorType,
+    Key? key,
+  }) : super(key: key);
 
-  final VendorType vendorType;
+  final VendorType? vendorType;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CategoriesViewModel>.reactive(
       viewModelBuilder: () =>
           CategoriesViewModel(context, vendorType: vendorType),
-      onModelReady: (vm) => vm.initialise(all: true),
+      onViewModelReady: (vm) => vm.initialise(all: true),
       builder: (context, vm, child) {
         return BasePage(
           showAppBar: true,
@@ -27,7 +30,7 @@ class CategoriesPage extends StatelessWidget {
           title: "Categories".tr(),
           body: CustomDynamicHeightGridView(
             noScrollPhysics: true,
-            crossAxisCount: AppStrings.categoryPerRow ?? 3,
+            crossAxisCount: AppStrings.categoryPerRow,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             isLoading: vm.isBusy,

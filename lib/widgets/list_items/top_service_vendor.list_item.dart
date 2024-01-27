@@ -7,9 +7,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class TopServiceVendorListItem extends StatelessWidget {
   const TopServiceVendorListItem({
-    this.vendor,
-    this.onPressed,
-    Key key,
+    required this.vendor,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
 
   final Vendor vendor;
@@ -32,7 +32,7 @@ class TopServiceVendorListItem extends StatelessWidget {
           maxRating: 5.0,
           value: double.parse(vendor.rating.toString()),
           isSelectable: false,
-          onRatingUpdate: null,
+          onRatingUpdate: (value) {},
           selectionColor: AppColor.ratingColor,
           size: 14,
         ),

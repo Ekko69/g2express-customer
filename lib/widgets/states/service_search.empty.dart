@@ -4,7 +4,7 @@ import 'package:fuodz/widgets/states/empty.state.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 
 class EmptyServiceSearch extends StatelessWidget {
-  const EmptyServiceSearch({Key key}) : super(key: key);
+  const EmptyServiceSearch({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -50,8 +50,7 @@ class NewTaxiOrderSummaryViewModel extends MyBaseViewModel {
 
   void openPaymentMethodSelection() async {
     //
-    if (taxiViewModel.paymentMethods == null ||
-        taxiViewModel.paymentMethods.isEmpty) {
+    if (taxiViewModel.paymentMethods.isEmpty) {
       await taxiViewModel.fetchTaxiPaymentOptions();
     }
     final mPaymentMethod = await viewContext.push(

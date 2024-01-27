@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:fuodz/constants/app_routes.dart';
 import 'package:fuodz/constants/app_strings.dart';
 import 'package:fuodz/models/vendor.dart';
@@ -18,9 +18,9 @@ class NearbyVendorsViewModel extends MyBaseViewModel {
 
   //
   List<Vendor> vendors = [];
-  VendorType vendorType;
+  VendorType? vendorType;
   int selectedType = 1;
-  StreamSubscription<Address> locationStreamSubscription;
+  StreamSubscription<Address>? locationStreamSubscription;
 
   //
   VendorRequest _vendorRequest = VendorRequest();
@@ -41,7 +41,7 @@ class NearbyVendorsViewModel extends MyBaseViewModel {
 
   //
   fetchTopVendors() async {
-    if (LocationService?.currenctAddress?.coordinates?.latitude == null) {
+    if (LocationService.currenctAddress?.coordinates?.latitude == null) {
       return;
     } else {
       locationStreamSubscription?.cancel();
@@ -53,7 +53,7 @@ class NearbyVendorsViewModel extends MyBaseViewModel {
       vendors = await _vendorRequest.nearbyVendorsRequest(
         byLocation: AppStrings.enableFatchByLocation,
         params: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
         },
       );
 
@@ -77,7 +77,7 @@ class NearbyVendorsViewModel extends MyBaseViewModel {
   }
 
   vendorSelected(Vendor vendor) async {
-    viewContext.navigator.pushNamed(
+    Navigator.of(viewContext).pushNamed(
       AppRoutes.vendorDetails,
       arguments: vendor,
     );

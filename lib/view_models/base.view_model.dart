@@ -22,6 +22,7 @@ import 'package:fuodz/services/geocoder.service.dart';
 import 'package:fuodz/services/location.service.dart';
 import 'package:fuodz/services/navigation.service.dart';
 import 'package:fuodz/services/update.service.dart';
+import 'package:fuodz/utils/utils.dart';
 import 'package:fuodz/view_models/payment.view_model.dart';
 import 'package:fuodz/views/pages/auth/login.page.dart';
 import 'package:fuodz/views/pages/cart/cart.page.dart';
@@ -40,16 +41,16 @@ import 'package:velocity_x/velocity_x.dart';
 
 class MyBaseViewModel extends BaseViewModel with UpdateService {
   //
-  BuildContext viewContext;
+  late BuildContext viewContext;
   GlobalKey pageKey = GlobalKey<State>();
   final formKey = GlobalKey<FormState>();
   final formBuilderKey = GlobalKey<FormBuilderState>();
   GlobalKey genKey = GlobalKey();
   final currencySymbol = AppStrings.currencySymbol;
-  DeliveryAddress deliveryaddress = DeliveryAddress();
-  String firebaseVerificationId;
-  VendorType vendorType;
-  Vendor vendor;
+  DeliveryAddress? deliveryaddress = DeliveryAddress();
+  String? firebaseVerificationId;
+  VendorType? vendorType;
+  Vendor? vendor;
   RefreshController refreshController = RefreshController();
 
   void initialise() {}
@@ -71,7 +72,7 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
   //open delivery address picker
   void pickDeliveryAddress({
     bool vendorCheckRequired = true,
-    Function onselected,
+    Function? onselected,
   }) {
     //
     showModalBottomSheet(
@@ -82,19 +83,20 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
         return DeliveryAddressPicker(
           vendorCheckRequired: vendorCheckRequired,
           allowOnMap: true,
-          onSelectDeliveryAddress: (mDeliveryaddress) {
+          onSelectDeliveryAddress: (mDeliveryaddress) async {
             print("called here");
             viewContext.pop();
             deliveryaddress = mDeliveryaddress;
+            await LocationService.saveSelectedAddressLocally(mDeliveryaddress);
             notifyListeners();
 
             //
             final address = Address(
               coordinates: Coordinates(
-                deliveryaddress.latitude,
-                deliveryaddress.longitude,
+                deliveryaddress?.latitude ?? 0.00,
+                deliveryaddress?.longitude ?? 0.00,
               ),
-              addressLine: deliveryaddress.address,
+              addressLine: deliveryaddress?.address,
             );
             //
             LocationService.currenctAddress = address;
@@ -102,9 +104,7 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
             LocationService.currenctAddressSubject.sink.add(address);
 
             //
-            if (onselected != null) {
-              onselected();
-            }
+            if (onselected != null) onselected();
           },
         );
       },
@@ -118,7 +118,7 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
 
   //
   void openLogin() async {
-    await viewContext.nextPage(LoginPage());
+    viewContext.nextPage(LoginPage());
     notifyListeners();
   }
 
@@ -129,9 +129,9 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
 
   //
   //
-  Future<DeliveryAddress> showDeliveryAddressPicker() async {
+  Future<DeliveryAddress?> showDeliveryAddressPicker() async {
     //
-    DeliveryAddress selectedDeliveryAddress;
+    DeliveryAddress? selectedDeliveryAddress;
 
     //
     await showModalBottomSheet(
@@ -154,15 +154,47 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
   //
   Future<DeliveryAddress> getLocationCityName(
       DeliveryAddress deliveryAddress) async {
-    final coordinates =
-        new Coordinates(deliveryAddress.latitude, deliveryAddress.longitude);
+    final coordinates = new Coordinates(
+      deliveryAddress.latitude ?? 0.00,
+      deliveryAddress.longitude ?? 0.00,
+    );
     final addresses = await GeocoderService().findAddressesFromCoordinates(
       coordinates,
     );
+    //loop through the addresses and get data
+    for (var address in addresses) {
+      //address
+      deliveryAddress.address ??= address.addressLine;
+      //name
+      deliveryAddress.name ??= address.featureName;
+      if (deliveryAddress.name == null || deliveryAddress.name!.isEmpty) {
+        deliveryAddress.name = address.addressLine;
+      }
+      //city
+      deliveryAddress.city ??= address.locality;
+      if (deliveryAddress.city == null || deliveryAddress.city!.isEmpty) {
+        deliveryAddress.city = address.subLocality;
+      }
+      //state
+      deliveryAddress.state ??= address.adminArea;
+      if (deliveryAddress.state == null || deliveryAddress.state!.isEmpty) {
+        deliveryAddress.state = address.subAdminArea;
+      }
+      //country
+      deliveryAddress.country ??= address.countryName;
+
+      //break if all data is set
+      if (deliveryAddress.address != null &&
+          deliveryAddress.city != null &&
+          deliveryAddress.state != null &&
+          deliveryAddress.country != null) {
+        break;
+      }
+    }
     //
-    deliveryAddress.city = addresses.first.locality;
-    deliveryAddress.state = addresses.first.adminArea;
-    deliveryAddress.country = addresses.first.countryName;
+    // deliveryAddress.city = addresses.first.locality;
+    // deliveryAddress.state = addresses.first.adminArea;
+    // deliveryAddress.country = addresses.first.countryName;
     return deliveryAddress;
   }
 
@@ -172,7 +204,7 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
       //
       final mProductsInCart = CartServices.productsInCart;
       final previousProductIndex = mProductsInCart.indexWhere(
-        (e) => e.product.id == product.id,
+        (e) => e.product?.id == product.id,
       );
       //
       if (previousProductIndex >= 0) {
@@ -186,9 +218,9 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
     cart.price = (product.showDiscount ? product.discountPrice : product.price);
     product.selectedQty = qty;
     cart.product = product;
-    cart.selectedQty = product.selectedQty ?? 1;
+    cart.selectedQty = product.selectedQty;
     cart.options = product.selectedOptions ?? [];
-    cart.optionsIds = product.selectedOptions.map((e) => e.id).toList() ?? [];
+    cart.optionsIds = product.selectedOptions!.map((e) => e.id).toList();
 
     //
 
@@ -204,7 +236,7 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
         //
         final mProductsInCart = CartServices.productsInCart;
         final previousProductIndex = mProductsInCart.indexWhere(
-          (e) => e.product.id == product.id,
+          (e) => e.product?.id == product.id,
         );
         //
         if (previousProductIndex >= 0) {
@@ -290,7 +322,7 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
 
   openVendorReviews() {
     viewContext.push(
-      (context) => VendorReviewsPage(vendor),
+      (context) => VendorReviewsPage(vendor!),
     );
   }
 
@@ -307,7 +339,7 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
     );
   }
 
-  toastError(String msg, {Toast length}) {
+  toastError(String msg, {Toast? length}) {
     Fluttertoast.showToast(
       msg: msg,
       toastLength: length ?? Toast.LENGTH_SHORT,
@@ -319,49 +351,75 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
     );
   }
 
-  void fetchCurrentLocation() async {
+  Future<void> fetchCurrentLocation() async {
     //
     Position currentLocation = await Geolocator.getCurrentPosition();
-    if (currentLocation == null) {
-      currentLocation = await Geolocator.getLastKnownPosition();
-    }
     //
     final address = await LocationService.addressFromCoordinates(
-      lat: currentLocation?.latitude,
-      lng: currentLocation?.longitude,
+      lat: currentLocation.latitude,
+      lng: currentLocation.longitude,
     );
     //
     LocationService.currenctAddress = address;
-    LocationService.currenctAddressSubject.sink.add(address);
+    if (address != null) {
+      LocationService.currenctAddressSubject.sink.add(address);
+    }
     deliveryaddress ??= DeliveryAddress();
-    deliveryaddress.address = address?.addressLine;
-    deliveryaddress.latitude = address?.coordinates?.latitude;
-    deliveryaddress.longitude = address?.coordinates?.longitude;
-    deliveryaddress.name = "Current Location".tr();
+    deliveryaddress!.address = address?.addressLine;
+    deliveryaddress!.latitude = address?.coordinates?.latitude;
+    deliveryaddress!.longitude = address?.coordinates?.longitude;
+    deliveryaddress!.name = "Current Location".tr();
     LocationService.deliveryaddress = deliveryaddress;
+    LocationService.currenctDeliveryAddressSubject.add(deliveryaddress!);
+  }
+
+  //handle fetch delivery address
+  preloadDeliveryLocation() async {
+    try {
+      //fetch saved location from local storage
+      deliveryaddress = LocationService.deliveryaddress;
+      if (deliveryaddress == null) {
+        deliveryaddress = await LocationService.getLocallySaveAddress();
+      }
+      notifyListeners();
+    } catch (error) {
+      print("Error getting delivery address => $error");
+    }
   }
 
   // NEW LOCATION PICKER
   Future<dynamic> newPlacePicker() async {
     //
+    LatLng initialPosition = LatLng(0.00, 0.00);
+    double initialZoom = 0;
+    if (LocationService.currenctAddress != null) {
+      initialPosition = LatLng(
+        LocationService.currenctAddress?.coordinates?.latitude ?? 0.00,
+        LocationService.currenctAddress?.coordinates?.longitude ?? 0.00,
+      );
+      initialZoom = 15;
+    }
+    String? mapRegion;
+    try {
+      mapRegion = await Utils.getCurrentCountryCode();
+    } catch (error) {
+      print("Error getting sim country code => $error");
+    }
+    mapRegion ??= AppStrings.countryCode.trim().split(",").firstWhere(
+      (e) => !e.toLowerCase().contains("auto"),
+      orElse: () {
+        return "";
+      },
+    );
+
+    //
     if (!AppMapSettings.useGoogleOnApp) {
       return await viewContext.push(
         (context) => OPSMapPage(
-          // apiKey: AppStrings.googleMapApiKey,
-          // autocompleteLanguage: I18n.language,
-          region: AppStrings.countryCode.trim().split(",").firstWhere(
-            (e) => !e.toLowerCase().contains("auto"),
-            orElse: () {
-              return "";
-            },
-          ),
-          initialPosition: LocationService.currenctAddress != null
-              ? LatLng(
-                  LocationService.currenctAddress?.coordinates?.latitude,
-                  LocationService.currenctAddress?.coordinates?.longitude,
-                )
-              : LatLng(0.00, 0.00),
+          region: mapRegion,
+          initialPosition: initialPosition,
           useCurrentLocation: true,
+          initialZoom: initialZoom,
         ),
       );
     }
@@ -372,22 +430,11 @@ class MyBaseViewModel extends BaseViewModel with UpdateService {
         builder: (context) => PlacePicker(
           apiKey: AppStrings.googleMapApiKey,
           autocompleteLanguage: translator.activeLocale.languageCode,
-          region: AppStrings.countryCode.trim().split(",").firstWhere(
-            (e) => !e.toLowerCase().contains("auto"),
-            orElse: () {
-              return "";
-            },
-          ),
+          region: mapRegion,
           onPlacePicked: (result) {
             Navigator.of(context).pop(result);
           },
-          initialPosition: LocationService.currenctAddress != null
-              ? LatLng(
-                  LocationService.currenctAddress?.coordinates?.latitude,
-                  LocationService.currenctAddress?.coordinates?.longitude,
-                )
-              : LatLng(0.00, 0.00),
-          useCurrentLocation: true,
+          initialPosition: initialPosition,
         ),
       ),
     );

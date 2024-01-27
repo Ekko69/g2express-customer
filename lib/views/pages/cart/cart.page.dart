@@ -15,7 +15,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:dotted_line/dotted_line.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({Key key}) : super(key: key);
+  const CartPage({Key? key}) : super(key: key);
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -31,7 +31,7 @@ class _CartPageState extends State<CartPage> {
       body: SafeArea(
         child: ViewModelBuilder<CartViewModel>.reactive(
           viewModelBuilder: () => CartViewModel(context),
-          onModelReady: (model) => model.initialise(),
+          onViewModelReady: (model) => model.initialise(),
           builder: (context, model, child) {
             return Container(
               key: model.pageKey,
@@ -44,22 +44,24 @@ class _CartPageState extends State<CartPage> {
                     VStack(
                       [
                         //cart items list
-                        UiSpacer.verticalSpace(),
                         CustomListView(
                           noScrollPhysics: true,
                           dataSet: model.cartItems,
                           itemBuilder: (context, index) {
                             //
                             final cart = model.cartItems[index];
-                            return CartListItem(
-                              cart,
-                              onQuantityChange: (qty) =>
-                                  model.updateCartItemQuantity(qty, index),
-                              deleteCartItem: () => model.deleteCartItem(index),
+                            final product = cart.product;
+                            return InkWell(
+                              child: CartListItem(
+                                cart,
+                                onQuantityChange: (qty) =>
+                                    model.updateCartItemQuantity(qty, index),
+                                deleteCartItem: () =>
+                                    model.deleteCartItem(index),
+                              ),
+                              onTap: () => model.productSelected(product!),
                             );
                           },
-                          separatorBuilder: (context, index) =>
-                              UiSpacer.divider(height: 20),
                         ),
 
                         //
@@ -72,11 +74,33 @@ class _CartPageState extends State<CartPage> {
                             "Sub-Total".tr(),
                             "${model.currencySymbol} ${model.subTotalPrice}"
                                 .currencyFormat()),
-                        AmountTile(
-                            "Discount".tr(),
-                            "${model.currencySymbol} ${model.discountCartPrice}"
-                                .currencyFormat()),
-                        DottedLine(dashColor: context.textTheme.bodyLarge.color)
+                        Visibility(
+                          visible: model.coupon != null &&
+                              !model.coupon!.for_delivery,
+                          child: AmountTile(
+                              "Discount".tr(),
+                              "${model.currencySymbol} ${model.discountCartPrice}"
+                                  .currencyFormat()),
+                        ),
+                        //
+                        Visibility(
+                          visible: model.coupon != null &&
+                              model.coupon!.for_delivery,
+                          child: VStack(
+                            [
+                              DottedLine(
+                                dashColor: context.textTheme.bodyLarge!.color!,
+                              ).py12(),
+                              "Discount will be applied to delivery fee on checkout"
+                                  .tr()
+                                  .text
+                                  .medium
+                                  .make(),
+                            ],
+                          ).py(4),
+                        ),
+                        DottedLine(
+                                dashColor: context.textTheme.bodyLarge!.color!)
                             .py12(),
                         AmountTile(
                             "Total".tr(),
@@ -90,10 +114,10 @@ class _CartPageState extends State<CartPage> {
                       ],
                     )
                         .pOnly(bottom: context.mq.viewPadding.bottom)
-                        .scrollVertical()
+                        .scrollVertical(padding: EdgeInsets.all(20))
                         .expand(),
                 ],
-              ).p20(),
+              ),
             );
           },
         ),

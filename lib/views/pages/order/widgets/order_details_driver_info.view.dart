@@ -9,7 +9,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OrderDetailsDriverInfoView extends StatelessWidget {
-  const OrderDetailsDriverInfoView(this.vm, {Key key}) : super(key: key);
+  const OrderDetailsDriverInfoView(this.vm, {Key? key}) : super(key: key);
   final OrderDetailsViewModel vm;
 
   @override
@@ -24,7 +24,7 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
                         VStack(
                           [
                             "Driver".tr().text.gray500.medium.make(),
-                            "${vm.order.driver.name}"
+                            "${vm.order.driver?.name}"
                                 .text
                                 .medium
                                 .xl
@@ -33,32 +33,28 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
                           ],
                         ).expand(),
                         //call
-                        vm.order.canChatDriver
-                            ? CustomButton(
-                                icon: FlutterIcons.phone_call_fea,
-                                iconColor: Colors.white,
-                                title: "",
-                                color: AppColor.primaryColor,
-                                shapeRadius: Vx.dp48,
-                                onPressed: vm.callDriver,
-                              ).wh(Vx.dp64, Vx.dp40).p12()
-                            : UiSpacer.emptySpace(),
+                        Visibility(
+                          visible: vm.order.canChatDriver &&
+                              AppUISettings.canCallDriver,
+                          child: CustomButton(
+                            icon: FlutterIcons.phone_call_fea,
+                            iconColor: Colors.white,
+                            color: AppColor.primaryColor,
+                            shapeRadius: Vx.dp48,
+                            onPressed: vm.callDriver,
+                          ).wh(Vx.dp64, Vx.dp40).p12(),
+                        ),
                       ],
                     )
                   : UiSpacer.emptySpace(),
-              if (vm.order.canChatDriver)
-                Visibility(
-                  visible: AppUISettings.canDriverChat,
-                  child: CustomButton(
-                    icon: FlutterIcons.chat_ent,
-                    iconColor: Colors.white,
-                    title: "Chat with driver".tr(),
-                    color: AppColor.primaryColor,
-                    onPressed: vm.chatDriver,
-                  ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20),
-                )
-              else
-                UiSpacer.emptySpace(),
+              if (vm.order.canChatDriver && AppUISettings.canDriverChat)
+                CustomButton(
+                  icon: FlutterIcons.chat_ent,
+                  iconColor: Colors.white,
+                  title: "Chat with driver".tr(),
+                  color: AppColor.primaryColor,
+                  onPressed: vm.chatDriver,
+                ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20),
 
               //rate driver
               vm.order.canRateDriver
@@ -71,7 +67,7 @@ class OrderDetailsDriverInfoView extends StatelessWidget {
                     ).h(Vx.dp48).pOnly(top: Vx.dp12, bottom: Vx.dp20)
                   : UiSpacer.emptySpace(),
             ],
-          ).p12().card.make().p20()
+          ).px(20)
         : UiSpacer.emptySpace();
   }
 }

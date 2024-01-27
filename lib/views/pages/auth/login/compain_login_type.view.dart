@@ -9,7 +9,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CombinedLoginTypeView extends StatefulWidget {
-  const CombinedLoginTypeView(this.model, {Key key}) : super(key: key);
+  const CombinedLoginTypeView(this.model, {Key? key}) : super(key: key);
 
   final LoginViewModel model;
 
@@ -58,8 +58,10 @@ class _CombinedLoginTypeViewState extends State<CombinedLoginTypeView> {
             ],
           ),
           duration: Duration(milliseconds: 300),
-          highlightColor: Colors.red,
-          splashColor: Colors.green,
+          // customSegmentSettings: CustomSegmentSettings(
+          //   highlightColor: Colors.red,
+          //   splashColor: Colors.green,
+          // ),
           curve: Curves.easeInToLinear,
           onValueChanged: (value) {
             setState(() {

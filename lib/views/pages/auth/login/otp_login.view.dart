@@ -9,7 +9,7 @@ import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class OTPLoginView extends StatelessWidget {
-  const OTPLoginView(this.model, {Key key}) : super(key: key);
+  const OTPLoginView(this.model, {Key? key}) : super(key: key);
 
   final LoginViewModel model;
   @override
@@ -26,13 +26,15 @@ class OTPLoginView extends StatelessWidget {
                   [
                     //icon/flag
                     Flag.fromString(
-                      model.selectedCountry.countryCode,
+                      model.selectedCountry?.countryCode ?? "us",
                       width: 20,
                       height: 20,
                     ),
                     UiSpacer.horizontalSpace(space: 5),
                     //text
-                    ("+" + model.selectedCountry.phoneCode).text.make(),
+                    ("+" + (model.selectedCountry?.phoneCode ?? "1"))
+                        .text
+                        .make(),
                   ],
                 ).px8().onInkTap(model.showCountryDialPicker),
                 labelText: "Phone".tr(),

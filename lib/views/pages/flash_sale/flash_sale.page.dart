@@ -7,7 +7,7 @@ import 'package:fuodz/widgets/custom_dynamic_grid_view.dart';
 import 'package:stacked/stacked.dart';
 
 class FlashSaleItemsPage extends StatelessWidget {
-  const FlashSaleItemsPage(this.flashSale, {Key key}) : super(key: key);
+  const FlashSaleItemsPage(this.flashSale, {Key? key}) : super(key: key);
 
   final FlashSale flashSale;
 
@@ -22,7 +22,7 @@ class FlashSaleItemsPage extends StatelessWidget {
           context,
           flashSale: flashSale,
         ),
-        onModelReady: (vm) => vm.getFlashSaleItems(),
+        onViewModelReady: (vm) => vm.getFlashSaleItems(),
         builder: (context, vm, child) {
           return CustomDynamicHeightGridView(
             refreshController: vm.refreshController,
@@ -32,9 +32,9 @@ class FlashSaleItemsPage extends StatelessWidget {
             onLoading: () => vm.getFlashSaleItems(false),
             noScrollPhysics: true,
             padding: EdgeInsets.all(15),
-            itemCount: flashSale.items.length,
+            itemCount: flashSale.items?.length ?? 0,
             itemBuilder: (ctx, index) {
-              final flashSaleItem = flashSale.items[index];
+              final flashSaleItem = flashSale.items![index];
               return FlashSaleItemListItem(
                 flashSaleItem,
                 fullPage: true,

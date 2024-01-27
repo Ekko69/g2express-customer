@@ -6,8 +6,11 @@ import 'package:velocity_x/velocity_x.dart';
 
 class HorizontalVendorListItem extends StatelessWidget {
   //
-  const HorizontalVendorListItem(this.vendor, {this.onPressed, Key key})
-      : super(key: key);
+  const HorizontalVendorListItem(
+    this.vendor, {
+    required this.onPressed,
+    Key? key,
+  }) : super(key: key);
 
   //
   final Vendor vendor;
@@ -19,7 +22,7 @@ class HorizontalVendorListItem extends StatelessWidget {
       [
         //
         Hero(
-          tag: vendor.heroTag,
+          tag: vendor.heroTag ?? vendor.id,
           child: CustomImage(imageUrl: vendor.logo)
               .wh(Vx.dp64, Vx.dp64)
               .box

@@ -8,10 +8,10 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CustomDynamicHeightGridView extends StatelessWidget {
   //
-  final Widget title;
-  final Widget loadingWidget;
-  final Widget errorWidget;
-  final Widget emptyWidget;
+  final Widget? title;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
+  final Widget? emptyWidget;
   final int itemCount;
   final bool isLoading;
   final bool hasError;
@@ -19,23 +19,23 @@ class CustomDynamicHeightGridView extends StatelessWidget {
   final bool reversed;
   final bool noScrollPhysics;
   final Axis scrollDirection;
-  final EdgeInsets padding;
-  final Function(BuildContext, int) itemBuilder;
-  final Function(BuildContext, int) separatorBuilder;
+  final EdgeInsets? padding;
+  final Widget Function(BuildContext, int) itemBuilder;
+  final Function(BuildContext, int)? separatorBuilder;
   final int crossAxisCount;
-  final double childAspectRatio;
-  final double crossAxisSpacing;
-  final double mainAxisSpacing;
+  final double? childAspectRatio;
+  final double? crossAxisSpacing;
+  final double? mainAxisSpacing;
 
   //
   final bool canRefresh;
-  final RefreshController refreshController;
-  final Function onRefresh;
-  final Function onLoading;
+  final RefreshController? refreshController;
+  final Function? onRefresh;
+  final Function? onLoading;
   final bool canPullUp;
 
   const CustomDynamicHeightGridView({
-    @required this.itemCount,
+    required this.itemCount,
     this.title,
     this.loadingWidget,
     this.errorWidget,
@@ -46,7 +46,7 @@ class CustomDynamicHeightGridView extends StatelessWidget {
     this.reversed = false,
     this.noScrollPhysics = false,
     this.scrollDirection = Axis.vertical,
-    @required this.itemBuilder,
+    required this.itemBuilder,
     this.separatorBuilder,
     this.padding,
     this.crossAxisCount = 2,
@@ -60,7 +60,7 @@ class CustomDynamicHeightGridView extends StatelessWidget {
     this.onRefresh,
     this.onLoading,
     this.canPullUp = false,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -97,9 +97,17 @@ class CustomDynamicHeightGridView extends StatelessWidget {
             scrollDirection: this.scrollDirection,
             enablePullDown: true,
             enablePullUp: canPullUp,
-            controller: this.refreshController,
-            onRefresh: this.onRefresh,
-            onLoading: this.onLoading,
+            controller: this.refreshController!,
+            onRefresh: this.onRefresh != null
+                ? () async {
+                    this.onRefresh!();
+                  }
+                : null,
+            onLoading: this.onLoading != null
+                ? () async {
+                    this.onLoading!();
+                  }
+                : null,
             child: _getListView(),
           )
         : _getListView();

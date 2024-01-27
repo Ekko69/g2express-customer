@@ -9,7 +9,7 @@ class BestSellingProductsViewModel extends MyBaseViewModel {
   ProductRequest _productRequest = ProductRequest();
   //
   List<Product> products = [];
-  VendorType vendorType;
+  VendorType? vendorType;
 
   BestSellingProductsViewModel(BuildContext context, this.vendorType) {
     this.viewContext = context;
@@ -21,7 +21,7 @@ class BestSellingProductsViewModel extends MyBaseViewModel {
     try {
       products = await _productRequest.bestProductsRequest(
         queryParams: {
-          "vendor_type_id": vendorType.id,
+          "vendor_type_id": vendorType?.id,
         },
       );
       clearErrors();

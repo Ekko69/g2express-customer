@@ -8,7 +8,6 @@ import 'package:fuodz/services/cart.service.dart';
 import 'package:fuodz/services/geocoder.service.dart';
 import 'package:fuodz/view_models/base.view_model.dart';
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class DeliveryAddressPickerViewModel extends MyBaseViewModel {
   //
@@ -25,7 +24,7 @@ class DeliveryAddressPickerViewModel extends MyBaseViewModel {
     this.vendorCheckRequired,
   ) {
     this.viewContext = context;
-    if (vendorCheckRequired == null) {
+    if (vendorCheckRequired) {
       vendorCheckRequired = true;
     }
   }
@@ -39,14 +38,14 @@ class DeliveryAddressPickerViewModel extends MyBaseViewModel {
   //
   fetchDeliveryAddresses() async {
     //
-    int vendorId = CartServices.productsInCart.isNotEmpty
-        ? CartServices.productsInCart.first.product.vendor.id
+    int? vendorId = CartServices.productsInCart.isNotEmpty
+        ? CartServices.productsInCart.first.product?.vendor.id
         : AppService().vendorId ?? null;
 
-    List<int> vendorIds = (CartServices.productsInCart.isNotEmpty &&
+    List<int>? vendorIds = (CartServices.productsInCart.isNotEmpty &&
             AppStrings.enableMultipleVendorOrder)
         ? CartServices.productsInCart
-            .map((e) => e.product.vendorId)
+            .map((e) => e.product!.vendorId)
             .toList()
             .toSet()
             .toList()
@@ -73,9 +72,8 @@ class DeliveryAddressPickerViewModel extends MyBaseViewModel {
 
   //
   newDeliveryAddressPressed() async {
-    await viewContext.navigator.pushNamed(
-      AppRoutes.newDeliveryAddressesRoute,
-    );
+    await Navigator.of(viewContext)
+        .pushNamed(AppRoutes.newDeliveryAddressesRoute);
     fetchDeliveryAddresses();
   }
 
@@ -88,27 +86,44 @@ class DeliveryAddressPickerViewModel extends MyBaseViewModel {
     if (result is PickResult) {
       PickResult locationResult = result;
       deliveryAddress.address = locationResult.formattedAddress;
-      deliveryAddress.latitude = locationResult.geometry.location.lat;
-      deliveryAddress.longitude = locationResult.geometry.location.lng;
-      // From coordinates
-      setBusy(true);
-      final coordinates = new Coordinates(
-        deliveryAddress.latitude,
-        deliveryAddress.longitude,
-      );
-      //
-      final addresses = await GeocoderService().findAddressesFromCoordinates(
-        coordinates,
-      );
-      deliveryAddress.city = addresses.first.locality;
-      setBusy(false);
+      deliveryAddress.latitude = locationResult.geometry?.location.lat;
+      deliveryAddress.longitude = locationResult.geometry?.location.lng;
+
+      if (locationResult.addressComponents != null &&
+          locationResult.addressComponents!.isNotEmpty) {
+        //fetch city, state and country from address components
+        locationResult.addressComponents!.forEach((addressComponent) {
+          if (addressComponent.types.contains("locality")) {
+            deliveryAddress.city = addressComponent.longName;
+          }
+          if (addressComponent.types.contains("administrative_area_level_1")) {
+            deliveryAddress.state = addressComponent.longName;
+          }
+          if (addressComponent.types.contains("country")) {
+            deliveryAddress.country = addressComponent.longName;
+          }
+        });
+      } else {
+        // From coordinates
+        setBusy(true);
+        final coordinates = new Coordinates(
+          deliveryAddress.latitude!,
+          deliveryAddress.longitude!,
+        );
+        //
+        final addresses = await GeocoderService().findAddressesFromCoordinates(
+          coordinates,
+        );
+        deliveryAddress.city = addresses.first.locality;
+        setBusy(false);
+      }
       //
       this.onSelectDeliveryAddress(deliveryAddress);
     } else if (result is Address) {
       Address locationResult = result;
       deliveryAddress.address = locationResult.addressLine;
-      deliveryAddress.latitude = locationResult.coordinates.latitude;
-      deliveryAddress.longitude = locationResult.coordinates.longitude;
+      deliveryAddress.latitude = locationResult.coordinates?.latitude;
+      deliveryAddress.longitude = locationResult.coordinates?.longitude;
       deliveryAddress.city = locationResult.locality;
       deliveryAddress.state = locationResult.adminArea;
       deliveryAddress.country = locationResult.countryName;
@@ -118,11 +133,14 @@ class DeliveryAddressPickerViewModel extends MyBaseViewModel {
   }
 
   filterResult(String keyword) {
-    deliveryAddresses = unFilterDeliveryAddresses
-        .where((e) =>
-            e.name.toLowerCase().contains(keyword) ||
-            e.address.toLowerCase().contains(keyword))
-        .toList();
+    deliveryAddresses = unFilterDeliveryAddresses.where((e) {
+      //
+      String name = e.name ?? "";
+      String address = e.address ?? "";
+      //
+      return name.toLowerCase().contains(keyword) ||
+          address.toLowerCase().contains(keyword);
+    }).toList();
     notifyListeners();
   }
 }
