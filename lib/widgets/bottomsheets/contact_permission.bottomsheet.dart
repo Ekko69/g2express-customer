@@ -18,13 +18,14 @@ class ContactPermissionDialog extends StatelessWidget {
           //title
           "Contact Permission Request".tr().text.semiBold.xl.make().py12(),
           ("${AppStrings.appName} " +
-                  "requires your contact/phone book permission to select order recipient info from"
+                  "collects and utilizes your contact information to enable the 'Autofill Recipient Details' feature when you are placing orders. This process involves accessing your contact list solely for the purpose of identifying and suggesting recipient information, ensuring a streamlined and efficient order placement experience."
                       .tr())
               .text
               .make(),
+
           UiSpacer.verticalSpace(),
           CustomButton(
-            title: "Next".tr(),
+            title: "Request Permission".tr(),
             onPressed: () {
               AppService().navigatorKey.currentContext?.pop(true);
             },

@@ -30,6 +30,7 @@ class DigitialProductOrderDownload extends StatelessWidget {
         ? HStack(
             [
               CustomButton(
+                shapeRadius: 5,
                 title: "Download".tr(),
                 child: HStack(
                   [
@@ -42,16 +43,17 @@ class DigitialProductOrderDownload extends StatelessWidget {
                   ],
                 ),
                 onPressed: () => openDownloadLink(downloadLink),
-              ).box.clip(Clip.antiAlias).roundedLg.make().expand(),
+              ).expand(),
               UiSpacer.hSpace(),
               CustomButton(
+                shapeRadius: 5,
                 child: Icon(
                   FlutterIcons.copy_ent,
                   size: 20,
                   color: Utils.textColorByTheme(),
                 ),
                 onPressed: () => copyDownloadLink(downloadLink),
-              ).box.clip(Clip.antiAlias).roundedLg.make(),
+              ),
             ],
           )
         : 0.heightBox;

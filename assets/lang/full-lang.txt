@@ -849,3 +849,5 @@ Description
 Delivery Discount
 Ok
 Selected Options
+collects and utilizes your contact information to enable the 'Autofill Recipient Details' feature when you are placing orders. This process involves accessing your contact list solely for the purpose of identifying and suggesting recipient information, ensuring a streamlined and efficient order placement experience.
+Request Permission

@@ -89,7 +89,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
-                    android:host="g2-express.shop"
+                    android:host="edentech.online"
                     android:scheme="https"/>
             </intent-filter>
 

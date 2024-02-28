@@ -9,11 +9,11 @@ import 'package:fuodz/views/pages/product/widgets/product_details_cart.bottom_sh
 import 'package:fuodz/views/pages/product/widgets/product_option_group.dart';
 import 'package:fuodz/views/pages/product/widgets/product_options.header.dart';
 import 'package:fuodz/widgets/base.page.dart';
-import 'package:fuodz/widgets/busy_indicator.dart';
 import 'package:fuodz/widgets/buttons/share.btn.dart';
 import 'package:fuodz/widgets/cart_page_action.dart';
 import 'package:fuodz/widgets/custom_image.view.dart';
 import 'package:fuodz/widgets/html_text_view.dart';
+import 'package:fuodz/widgets/states/loading_indicator.dart';
 import 'package:localize_and_translate/localize_and_translate.dart';
 import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -99,23 +99,24 @@ class ProductDetailsPage extends StatelessWidget {
                     //options header
                     Visibility(
                       visible: model.product.optionGroups.isNotEmpty,
-                      child: VStack(
-                        [
-                          ProductOptionsHeader(
-                            description:
-                                "Select options to add them to the product/service"
-                                    .tr(),
-                          ),
+                      child: LoadingIndicator(
+                        loading: model.busy(model.product),
+                        child: VStack(
+                          [
+                            ProductOptionsHeader(
+                              description:
+                                  "Select options to add them to the product/service"
+                                      .tr(),
+                            ),
 
-                          //options
-                          model.busy(model.product)
-                              ? BusyIndicator().centered().py20()
-                              : VStack(
-                                  [
-                                    ...buildProductOptions(model),
-                                  ],
-                                ),
-                        ],
+                            //options
+                            VStack(
+                              [
+                                ...buildProductOptions(model),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 

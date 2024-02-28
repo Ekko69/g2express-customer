@@ -157,6 +157,7 @@ class _PackageStopRecipientViewState extends State<PackageStopRecipientView> {
       //show the contact dialog before showing the grant permission
       final result = await showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (ctx) => ContactPermissionDialog(),
       );
       //

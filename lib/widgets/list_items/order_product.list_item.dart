@@ -127,24 +127,29 @@ class OrderProductListItem extends StatelessWidget {
                 ],
               ),
               UiSpacer.divider().py8(),
-              //digital download
-              DigitialProductOrderDownload(order, orderProduct),
             ],
           ).onInkTap(
-            () {
-              //show bottomsheet
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                backgroundColor: Colors.transparent,
-                builder: (ctx) {
-                  return OrderProductActionBottomSheet(orderProduct);
-                },
-              );
-            },
+            () => showOrderProductActions(context),
           ),
         ),
+
+        //download digital product
+        DigitialProductOrderDownload(order, orderProduct),
       ],
+      spacing: 15,
+    );
+  }
+
+  //
+  showOrderProductActions(BuildContext context) {
+    //show bottomsheet
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return OrderProductActionBottomSheet(orderProduct);
+      },
     );
   }
 }
