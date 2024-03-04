@@ -89,7 +89,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
-                    android:host="edentech.online"
+                    android:host="g2-express.shop"
                     android:scheme="https"/>
             </intent-filter>
 
@@ -102,7 +102,7 @@
             android:value="2" />
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyD1hXRa9UWC_nv7VzOwWEZyQMng0MdMMyE"/>
+               android:value="AIzaSyAnQ8rni8HCwQ0_kJD5qHOF77P-ijQsNgc"/>
 
         <provider
             android:name="com.pichillilorenzo.flutter_inappwebview_android.InAppWebViewFileProvider"
